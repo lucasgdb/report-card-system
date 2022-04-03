@@ -1,9 +1,9 @@
 import type { Context } from 'koa';
 
-import exampleConnector from '~/database/exampleConnector';
+import usefazConnector from '~/database/usefazConnector';
 
 export const healthCheckerGet = async (ctx: Context) => {
-  const hasConnection = await exampleConnector.checkConnection();
+  const hasConnection = await usefazConnector.checkConnection();
   if (hasConnection) {
     ctx.status = 200;
     ctx.body = 'OK';

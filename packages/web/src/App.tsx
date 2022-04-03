@@ -1,4 +1,4 @@
-import { ErrorBoundary } from '@example/components';
+import { ErrorBoundary } from '@usefaz/components';
 import CssBaseline from '@mui/material/CssBaseline';
 
 import Providers from './Providers';

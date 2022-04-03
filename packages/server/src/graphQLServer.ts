@@ -9,7 +9,7 @@ import schema from './modules/schema';
 import auth from './utils/auth';
 
 const { NODE_ENV } = process.env;
-const isDevelopmentMode = NODE_ENV?.toUpperCase() === 'DEVELOPMENT';
+const __DEV__ = NODE_ENV?.toUpperCase() === 'DEVELOPMENT';
 
 type Definition = {
   name: { value: string } | undefined;
@@ -32,8 +32,8 @@ router.post(
   '/',
   graphqlHTTP((request) => ({
     schema,
-    graphiql: isDevelopmentMode,
-    pretty: isDevelopmentMode,
+    graphiql: __DEV__,
+    pretty: __DEV__,
     context: {
       user: request.user,
       loginId: request.loginId,

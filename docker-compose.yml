@@ -5,13 +5,13 @@ services:
     image: postgres:latest
     container_name: database
     environment:
-      - POSTGRES_USER=example_user
-      - POSTGRES_DB=example_database
-      - POSTGRES_PASSWORD=example_password
+      - POSTGRES_DB=usefaz_database
+      - POSTGRES_USER=usefaz_user
+      - POSTGRES_PASSWORD=usefaz_password
     ports:
       - 5432:5432
     volumes:
-      - example_database_data:/var/lib/postgresql/data
+      - usefaz_database_data:/var/lib/postgresql/data
     healthcheck:
       test: '!</dev/tcp/db/5432'
       interval: 3s
@@ -51,4 +51,4 @@ services:
         condition: service_healthy
 
 volumes:
-  example_database_data:
+  usefaz_database_data:

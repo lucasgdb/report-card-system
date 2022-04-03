@@ -1,5 +1,5 @@
-import { errorConfig, getError } from '@example/shared';
-import { Notification } from '@example/components';
+import { errorConfig, getError } from '@usefaz/shared';
+import { Notification } from '@usefaz/components';
 import { useMutation } from 'relay-hooks';
 import Button from '@mui/material/Button';
 

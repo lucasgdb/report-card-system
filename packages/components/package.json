@@ -1,5 +1,5 @@
 {
-  "name": "@example/components",
+  "name": "@usefaz/components",
   "private": true,
   "version": "1.0.0",
   "license": "ISC",
@@ -7,7 +7,7 @@
   "dependencies": {
     "@emotion/react": "^11.8.2",
     "@emotion/styled": "^11.8.1",
-    "@example/shared": "*",
+    "@usefaz/shared": "*",
     "@mui/icons-material": "^5.5.1",
     "@mui/material": "^5.5.3",
     "@mui/styled-engine-sc": "^5.5.2",

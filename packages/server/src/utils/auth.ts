@@ -1,11 +1,11 @@
-import { errorConfig } from '@example/shared';
+import { errorConfig } from '@usefaz/shared';
 import passport from 'passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import type { Context, Next } from 'koa';
 
 import UserModel from '~/entities/User/UserModel';
 import AuthModel from '~/entities/Auth/AuthModel';
-import exampleConnector from '~/database/exampleConnector';
+import usefazConnector from '~/database/usefazConnector';
 import type IContext from '~/interfaces/IContext';
 
 const params = {
@@ -53,14 +53,14 @@ const auth = () => {
         return next();
       }
 
-      const authEntity = AuthModel(exampleConnector);
+      const authEntity = AuthModel(usefazConnector);
 
       const login = await authEntity.getLoginById(payload.id);
       if (!login?.active) {
         return next();
       }
 
-      const userEntity = UserModel(exampleConnector);
+      const userEntity = UserModel(usefazConnector);
       const user = await userEntity.getUserById(login.user_id!);
 
       ctx.request.loginId = login.id;

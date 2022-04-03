@@ -1,7 +1,7 @@
-import { errorConfig } from '@example/shared';
+import { errorConfig } from '@usefaz/shared';
 import { mutationWithClientMutationId } from 'graphql-relay';
 
-import exampleConnector from '~/database/exampleConnector';
+import usefazConnector from '~/database/usefazConnector';
 import AuthModel from '~/entities/Auth/AuthModel';
 import type IContext from '~/interfaces/IContext';
 
@@ -14,7 +14,7 @@ const logout = async ({ clientMutationId }: logoutProps, context: IContext) => {
     throw new Error(errorConfig.user.unauthenticated.code);
   }
 
-  const authEntity = AuthModel(exampleConnector);
+  const authEntity = AuthModel(usefazConnector);
 
   await authEntity.logout(context.loginId);
 

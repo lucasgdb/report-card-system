@@ -1,5 +1,5 @@
 {
-  "name": "@example/server",
+  "name": "@usefaz/server",
   "description": "GraphQL Server template",
   "private": true,
   "version": "1.0.0",
@@ -8,7 +8,7 @@
     "start": "knex migrate:latest && node build/index.js",
     "start:dev": "yarn migrate && env-cmd tsnd -r tsconfig-paths/register --inspect=0.0.0.0 --transpile-only --ignore-watch node_modules src/index.ts",
     "build:server": "babel src -d build --extensions \".ts\"",
-    "build:shared": "yarn workspace @example/shared build",
+    "build:shared": "yarn workspace @usefaz/shared build",
     "build": "yarn build:server && yarn build:shared",
     "migrate": "env-cmd knex migrate:latest",
     "migrate:make": "env-cmd knex migrate:make",
@@ -18,7 +18,7 @@
     "rollback:all": "env-cmd knex migrate:rollback --all"
   },
   "dependencies": {
-    "@example/shared": "*",
+    "@usefaz/shared": "*",
     "@koa/cors": "^3.3.0",
     "@koa/router": "^10.1.1",
     "bcryptjs": "^2.4.3",

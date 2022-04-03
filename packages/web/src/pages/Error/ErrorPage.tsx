@@ -1,4 +1,4 @@
-import { DefaultErrorPage } from '@example/components';
+import { DefaultErrorPage } from '@usefaz/components';
 import { useNavigate } from 'react-router-dom';
 
 export default function ErrorPage() {

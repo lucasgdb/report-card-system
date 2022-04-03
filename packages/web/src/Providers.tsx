@@ -1,6 +1,6 @@
 import 'dayjs/locale/pt-br';
 
-import { Notification } from '@example/components';
+import { Notification } from '@usefaz/components';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { RelayEnvironmentProvider } from 'relay-hooks';
 import ptBRLocale from 'date-fns/locale/pt-BR';

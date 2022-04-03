@@ -4,7 +4,7 @@ import Container from '@mui/material/Container';
 import Welcome from '~/components/Home/Welcome';
 import { HomePageQuery } from './__generated__/HomePageQuery.graphql';
 import PageLoader from '~/components/PageLoader';
-import { DefaultErrorPage } from '@example/components';
+import { DefaultErrorPage } from '@usefaz/components';
 import Articles from '~/components/Home/Articles';
 
 const query = graphql`

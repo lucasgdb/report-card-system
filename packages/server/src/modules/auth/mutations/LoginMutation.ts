@@ -1,11 +1,11 @@
-import { errorConfig } from '@example/shared';
+import { errorConfig } from '@usefaz/shared';
 import * as bcrypt from 'bcryptjs';
 import { GraphQLNonNull, GraphQLString } from 'graphql';
 import { mutationWithClientMutationId } from 'graphql-relay';
 import * as jwt from 'jwt-simple';
 
 import UserType from '../../user/UserType';
-import exampleConnector from '~/database/exampleConnector';
+import usefazConnector from '~/database/usefazConnector';
 import UserModel from '~/entities/User/UserModel';
 import AuthModel from '~/entities/Auth/AuthModel';
 import type IUser from '~/models/IUser';
@@ -15,7 +15,7 @@ const getUserJWToken = async (user: IUser, password: string) => {
     return null;
   }
 
-  const authEntity = AuthModel(exampleConnector);
+  const authEntity = AuthModel(usefazConnector);
 
   const loginId = await authEntity.login(user.id!);
 
@@ -36,7 +36,7 @@ type loginProps = {
 };
 
 const login = async ({ email, password, clientMutationId }: loginProps) => {
-  const userEntity = UserModel(exampleConnector);
+  const userEntity = UserModel(usefazConnector);
 
   const user = await userEntity.getUserByEmail(email);
   if (!user) {

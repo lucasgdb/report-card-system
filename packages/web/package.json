@@ -1,5 +1,5 @@
 {
-  "name": "@example/web",
+  "name": "@usefaz/web",
   "description": "Web template with GraphQL Relay",
   "private": true,
   "version": "1.0.0",
@@ -15,8 +15,8 @@
     "@babel/runtime": "^7.17.8",
     "@emotion/react": "^11.8.2",
     "@emotion/styled": "^11.8.1",
-    "@example/components": "*",
-    "@example/shared": "*",
+    "@usefaz/components": "*",
+    "@usefaz/shared": "*",
     "@mui/icons-material": "^5.4.1",
     "@mui/lab": "^5.0.0-alpha.75",
     "@mui/material": "^5.5.3",

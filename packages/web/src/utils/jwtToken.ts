@@ -1,6 +1,6 @@
 import Cookies from 'universal-cookie';
 
-const AuthorizationHeader = 'Web-Example-Authorization';
+const AuthorizationHeader = 'Web-usefaz-Authorization';
 
 const jwtToken = {
   set(token: string) {

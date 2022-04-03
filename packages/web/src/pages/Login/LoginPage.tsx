@@ -3,7 +3,7 @@ import Container from '@mui/material/Container';
 
 import { LoginPageQuery } from './__generated__/LoginPageQuery.graphql';
 import PageLoader from '~/components/PageLoader';
-import { DefaultErrorPage } from '@example/components';
+import { DefaultErrorPage } from '@usefaz/components';
 import Articles from '~/components/Home/Articles';
 import LoginButton from '~/components/LoginButton';
 import RegisterButton from '~/components/RegisterButton';

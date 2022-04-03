@@ -1,9 +1,9 @@
 {
-  "name": "example",
-  "description": "A template for Relay GraphQL Monorepo using Docker",
+  "name": "usefaz",
+  "description": "Sistema de Boletim e Site Institucional da Usefaz Guaratinguetá.",
   "private": true,
   "version": "1.0.0",
-  "license": "MIT",
+  "license": "UNLICENSED",
   "scripts": {
     "delete:node_modules": "find . -name \"node_modules\" -exec rm -rf '{}' +",
     "delete:build": "find . -name \"build\" -exec rm -rf '{}' +",
@@ -12,8 +12,8 @@
     "typesync": "npx typesync --ignoredeps=dev",
     "start": "docker-compose up -d",
     "stop": "docker-compose down",
-    "start:server": "yarn workspace @example/server start:dev",
-    "start:web": "yarn workspace @example/web start:dev",
+    "start:server": "yarn workspace @usefaz/server start:dev",
+    "start:web": "yarn workspace @usefaz/web start:dev",
     "test": "jest --verbose --detectOpenHandles --forceExit",
     "format": "prettier --ignore-path .eslintignore --write --check .",
     "lint": "eslint --cache .",

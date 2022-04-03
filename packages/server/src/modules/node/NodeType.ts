@@ -1,7 +1,7 @@
 import { GraphQLObjectType, GraphQLObjectTypeConfig } from 'graphql';
 import { fromGlobalId, globalIdField, nodeDefinitions } from 'graphql-relay';
 
-import exampleConnector from '~/database/exampleConnector';
+import usefazConnector from '~/database/usefazConnector';
 import type IContext from '~/interfaces/IContext';
 
 type getterType = ({ id }: { id: string }, context: IContext) => Promise<object>;
@@ -20,7 +20,7 @@ const getNode = async (table: string, id: string, context: IContext) => {
     }
   }
 
-  const data = await exampleConnector.knexConnection(table).where('id', id).first();
+  const data = await usefazConnector.knexConnection(table).where('id', id).first();
 
   if (!data) {
     return { _type: table };
