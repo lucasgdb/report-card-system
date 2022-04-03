@@ -1,0 +1,54 @@
+version: '3.9'
+
+services:
+  database:
+    image: postgres:latest
+    container_name: database
+    environment:
+      - POSTGRES_USER=example_user
+      - POSTGRES_DB=example_database
+      - POSTGRES_PASSWORD=example_password
+    ports:
+      - 5432:5432
+    volumes:
+      - example_database_data:/var/lib/postgresql/data
+    healthcheck:
+      test: '!</dev/tcp/db/5432'
+      interval: 3s
+      timeout: 3s
+      start_period: 5s
+
+  server:
+    image: node:lts-alpine3.14
+    container_name: server
+    working_dir: /src/packages/server
+    volumes:
+      - .:/src
+    entrypoint: yarn start:dev
+    ports:
+      - 3000:3000
+      - 9229:9229 # enable nodejs devtools debugger
+    healthcheck:
+      test: 'wget -nv -t1 --spider http://localhost:3000/api/hc || exit 1'
+      interval: 3s
+      timeout: 3s
+      start_period: 5s
+    depends_on:
+      database:
+        condition: service_healthy
+
+  web:
+    image: node:lts-alpine3.14
+    container_name: web
+    working_dir: /src/packages/web
+    volumes:
+      - .:/src
+    entrypoint: yarn start:dev
+    ports:
+      - 8080:8080
+    depends_on:
+      server:
+        condition: service_healthy
+
+volumes:
+  example_database_data:

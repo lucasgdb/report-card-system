@@ -1,0 +1,10 @@
+**/.github
+**/scripts
+**/.husky
+**/.git
+**/.vscode
+**/node_modules
+**/docker-compose.yml
+
+*.md
+*.log

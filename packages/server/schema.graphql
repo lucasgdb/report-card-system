@@ -1,0 +1,136 @@
+type Query {
+  auth: Auth!
+
+  """Fetches an object given its ID"""
+  node(
+    """The ID of an object"""
+    id: ID!
+  ): Node
+
+  """Fetches objects given their IDs"""
+  nodes(
+    """The IDs of objects"""
+    ids: [ID!]!
+  ): [Node]!
+  viewer: User!
+  system: System
+}
+
+type Auth {
+  isLogged: Boolean!
+  user: User
+}
+
+type User implements Node {
+  """The ID of an object"""
+  id: ID!
+  email: String!
+  name: String!
+  lastname: String!
+  fullname: String!
+}
+
+"""An object with an ID"""
+interface Node {
+  """The id of the object."""
+  id: ID!
+}
+
+type System {
+  articles(
+    """Returns the items in the list that come after the specified cursor."""
+    after: String
+
+    """Returns the first n items from the list."""
+    first: Int
+
+    """Returns the items in the list that come before the specified cursor."""
+    before: String
+
+    """Returns the last n items from the list."""
+    last: Int
+  ): ArticleConnection
+}
+
+"""A connection to a list of items."""
+type ArticleConnection {
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """A list of edges."""
+  edges: [ArticleEdge]
+}
+
+"""Information about pagination in a connection."""
+type PageInfo {
+  """When paginating forwards, are there more items?"""
+  hasNextPage: Boolean!
+
+  """When paginating backwards, are there more items?"""
+  hasPreviousPage: Boolean!
+
+  """When paginating backwards, the cursor to continue."""
+  startCursor: String
+
+  """When paginating forwards, the cursor to continue."""
+  endCursor: String
+}
+
+"""An edge in a connection."""
+type ArticleEdge {
+  """The item at the end of the edge"""
+  node: Article
+
+  """A cursor for use in pagination"""
+  cursor: String!
+}
+
+type Article implements Node {
+  """The ID of an object"""
+  id: ID!
+  title: String!
+  text: String!
+  created_at: String!
+}
+
+type Mutation {
+  login(input: LoginMutationInput!): LoginMutationPayload
+
+  """The logOut mutation can be used to log out an existing user."""
+  logout(input: LogoutMutationInput!): LogoutMutationPayload
+  createUser(input: CreateUserMutationInput!): CreateUserMutationPayload
+}
+
+type LoginMutationPayload {
+  jwtToken: String
+  user: User
+  clientMutationId: String
+}
+
+input LoginMutationInput {
+  email: String!
+  password: String!
+  clientMutationId: String
+}
+
+type LogoutMutationPayload {
+  clientMutationId: String
+}
+
+input LogoutMutationInput {
+  clientMutationId: String
+}
+
+type CreateUserMutationPayload {
+  jwtToken: String
+  user: User
+  clientMutationId: String
+}
+
+input CreateUserMutationInput {
+  name: String!
+  lastname: String!
+  email: String!
+  password: String!
+  clientMutationId: String
+}

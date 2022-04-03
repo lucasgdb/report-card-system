@@ -1,0 +1,19 @@
+{
+  "name": "@example/shared",
+  "private": true,
+  "version": "1.0.0",
+  "license": "ISC",
+  "main": "src/index.ts",
+  "scripts": {
+    "clean": "rm -rf build/*",
+    "build": "yarn clean && babel src -d build --extensions \".ts\" --ignore \"**/__tests__\"",
+    "test": "jest --verbose --detectOpenHandles --forceExit"
+  },
+  "devDependencies": {
+    "@babel/plugin-proposal-export-default-from": "^7.16.7",
+    "@babel/plugin-transform-runtime": "^7.17.0",
+    "@babel/preset-env": "^7.16.11",
+    "@babel/preset-typescript": "^7.16.7",
+    "core-js": "^3.21.1"
+  }
+}
