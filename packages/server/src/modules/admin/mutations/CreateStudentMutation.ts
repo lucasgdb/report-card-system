@@ -3,7 +3,9 @@ import { GraphQLNonNull, GraphQLString } from 'graphql';
 import { mutationWithClientMutationId } from 'graphql-relay';
 
 import usefazConnector from '~/database/usefazConnector';
-import StudentModel from '~/entities/Student/StudentModel';
+import { StudentModel } from '~/entities';
+import { IContext } from '~/interfaces';
+import isAdminOrThrowError from '~/utils/isAdminOrThrowError';
 
 type createStudentProps = {
   RM: string;
@@ -12,15 +14,15 @@ type createStudentProps = {
   clientMutationId?: string;
 };
 
-const createStudent = async ({ RM, fullname, password, clientMutationId }: createStudentProps) => {
-  const studentEntity = StudentModel(usefazConnector);
+const createStudent = async ({ RM, fullname, password, clientMutationId }: createStudentProps, context: IContext) => {
+  await isAdminOrThrowError(context);
 
-  const encryptedPassword = bcrypt.hashSync(password, bcrypt.genSaltSync());
+  const studentEntity = StudentModel(usefazConnector);
 
   const newStudent = await studentEntity.createStudent({
     RM,
     fullname,
-    password: encryptedPassword,
+    password: bcrypt.hashSync(password, bcrypt.genSaltSync()),
   });
 
   return {
