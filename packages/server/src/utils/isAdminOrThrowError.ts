@@ -10,8 +10,8 @@ const isAdminOrThrowError = async (context: IContext) => {
   }
 
   const adminEntity = AdminModel(usefazConnector);
-  const adminUser = await adminEntity.getAdminByUserId(context.user.id);
 
+  const adminUser = await adminEntity.getAdminByUserId(context.user.id);
   if (!adminUser) {
     throw new Error(errorConfig.admin.code);
   }
