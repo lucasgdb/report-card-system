@@ -2,8 +2,7 @@ import passport from 'passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import type { Context, Next } from 'koa';
 
-import UserModel from '~/entities/User/UserModel';
-import AuthModel from '~/entities/Auth/AuthModel';
+import { UserModel, AuthModel } from '~/entities';
 import usefazConnector from '~/database/usefazConnector';
 
 const params = {

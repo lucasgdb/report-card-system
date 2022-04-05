@@ -2,7 +2,7 @@ import { errorConfig } from '@usefaz/shared';
 import { mutationWithClientMutationId } from 'graphql-relay';
 
 import usefazConnector from '~/database/usefazConnector';
-import AuthModel from '~/entities/Auth/AuthModel';
+import { AuthModel } from '~/entities';
 import type { IContext } from '~/interfaces';
 
 type logoutProps = {

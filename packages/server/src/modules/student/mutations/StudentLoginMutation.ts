@@ -5,8 +5,7 @@ import { mutationWithClientMutationId } from 'graphql-relay';
 import * as jwt from 'jwt-simple';
 
 import usefazConnector from '~/database/usefazConnector';
-import StudentModel from '~/entities/Student/StudentModel';
-import AuthModel from '~/entities/Auth/AuthModel';
+import { StudentModel, AuthModel } from '~/entities';
 import type { IStudent } from '~/interfaces';
 import StudentType from '~/modules/student/StudentType';
 

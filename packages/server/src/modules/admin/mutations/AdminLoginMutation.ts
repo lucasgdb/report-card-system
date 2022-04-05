@@ -5,8 +5,7 @@ import { mutationWithClientMutationId } from 'graphql-relay';
 import * as jwt from 'jwt-simple';
 
 import usefazConnector from '~/database/usefazConnector';
-import AdminModel from '~/entities/Admin/AdminModel';
-import AuthModel from '~/entities/Auth/AuthModel';
+import { AdminModel, AuthModel } from '~/entities';
 import type { IAdmin } from '~/interfaces';
 import AdminType from '../AdminType';
 

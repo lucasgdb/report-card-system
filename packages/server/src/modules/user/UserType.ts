@@ -1,9 +1,8 @@
 import { GraphQLNonNull } from 'graphql';
 import { connectionDefinitions } from 'graphql-relay';
-import usefazConnector from '~/database/usefazConnector';
-import AdminModel from '~/entities/Admin/AdminModel';
-import StudentModel from '~/entities/Student/StudentModel';
 
+import usefazConnector from '~/database/usefazConnector';
+import { AdminModel, StudentModel } from '~/entities';
 import type { IUser, IContext } from '~/interfaces';
 import { registerGraphQLNodeObjectType } from '../node/NodeType';
 import getUserOrThrowError from '~/utils/getUserOrThrowError';
