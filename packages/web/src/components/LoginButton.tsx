@@ -4,25 +4,25 @@ import { useMutation } from 'relay-hooks';
 import Button from '@mui/material/Button';
 
 import jwtToken from '../utils/jwtToken';
-import LoginMutation from '~/modules/auth/LoginMutation';
-import { LoginMutation as LoginMutationType } from '~/modules/auth/__generated__/LoginMutation.graphql';
+import StudentLoginMutation from '~/modules/student/StudentLoginMutation';
+import { StudentLoginMutation as StudentLoginMutationType } from '~/modules/student/__generated__/StudentLoginMutation.graphql';
 
 export default function LoginButton() {
   const { enqueueSnackbar } = Notification.useSnackbar();
 
-  const [loginMutation, { loading }] = useMutation<LoginMutationType>(LoginMutation, {
-    onCompleted: ({ login }) => {
-      if (login?.jwtToken) {
-        jwtToken.set(login.jwtToken);
+  const [loginMutation, { loading }] = useMutation<StudentLoginMutationType>(StudentLoginMutation, {
+    onCompleted: ({ studentLogin }) => {
+      if (studentLogin?.jwtToken) {
+        jwtToken.set(studentLogin.jwtToken);
         window.location.reload();
       }
     },
     onError: (errors) => {
-      const { notFound } = errorConfig.user;
+      const { notFound } = errorConfig.student;
 
-      const userNotFoundError = getError(errors, notFound.code);
-      if (userNotFoundError) {
-        enqueueSnackbar('User not found.', { variant: 'error' });
+      const studentNotFoundError = getError(errors, notFound.code);
+      if (studentNotFoundError) {
+        enqueueSnackbar('Student not found.', { variant: 'error' });
       }
     },
   });
@@ -30,7 +30,7 @@ export default function LoginButton() {
   const handleClick = () => {
     loginMutation({
       variables: {
-        input: { email: 'lucasgdbittencourt@gmail.com', password: '123' },
+        input: { RM: '12345', password: '123' },
       },
     });
   };

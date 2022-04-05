@@ -1,19 +1,13 @@
-import type IUser from '~/models/IUser';
+import type { Knex } from 'knex';
 import type { DBConnector } from '~/database/dbConnector';
+import type { IUser } from '~/interfaces';
+import callTrxOrKnexConnection from '~/utils/callTrxOrKnexConnection';
 
 const UserModel = (dbConnector: DBConnector) => {
   return {
-    async createUser(user: IUser) {
-      const [newUser] = await dbConnector
-        .knexConnection<IUser>('user')
-        .insert({ ...user, email: user.email?.toLowerCase() })
-        .returning('*');
-
+    async insert(user: IUser, trx?: Knex.Transaction) {
+      const [newUser] = await callTrxOrKnexConnection<IUser>('user', dbConnector, trx).insert(user).returning('*');
       return newUser;
-    },
-
-    getUserByEmail(email: string) {
-      return dbConnector.knexConnection<IUser>('user').whereILike('email', `%${email}%`).first();
     },
 
     getUserById(id: string) {

@@ -1,28 +1,31 @@
-import { GraphQLNonNull, GraphQLString } from 'graphql';
+import { GraphQLNonNull } from 'graphql';
 import { connectionDefinitions } from 'graphql-relay';
+import usefazConnector from '~/database/usefazConnector';
+import AdminModel from '~/entities/Admin/AdminModel';
+import StudentModel from '~/entities/Student/StudentModel';
 
-import type IContext from '~/interfaces/IContext';
-import type IUser from '~/models/IUser';
-import { getUserOrThrowError } from '~/utils/auth';
+import type { IUser, IContext } from '~/interfaces';
 import { registerGraphQLNodeObjectType } from '../node/NodeType';
+import getUserOrThrowError from '~/utils/getUserOrThrowError';
+import AdminType from '../admin/AdminType';
+import StudentType from '../student/StudentType';
 
 const UserType = registerGraphQLNodeObjectType<IUser>('user')({
   name: 'User',
   fields() {
     return {
-      email: {
-        type: new GraphQLNonNull(GraphQLString),
-      },
-      name: {
-        type: new GraphQLNonNull(GraphQLString),
-      },
-      lastname: {
-        type: new GraphQLNonNull(GraphQLString),
-      },
-      fullname: {
-        type: new GraphQLNonNull(GraphQLString),
+      student: {
+        type: StudentType,
         resolve(user) {
-          return `${user.name}${user.lastname ? ` ${user.lastname}` : ''}`;
+          const studentEntity = StudentModel(usefazConnector);
+          return studentEntity.getStudentByUserId(user.id!);
+        },
+      },
+      admin: {
+        type: AdminType,
+        resolve(user) {
+          const adminEntity = AdminModel(usefazConnector);
+          return adminEntity.getAdminByUserId(user.id!);
         },
       },
     };

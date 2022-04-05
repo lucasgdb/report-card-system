@@ -1,5 +1,5 @@
-import type ILogin from '~/models/ILogin';
-import type IUser from '~/models/IUser';
+import ILogin from './ILogin';
+import IUser from './IUser';
 
 type IContext = {
   user: IUser | undefined;

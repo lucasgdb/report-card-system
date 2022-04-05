@@ -1,6 +1,6 @@
 import { GraphQLBoolean, GraphQLNonNull, GraphQLObjectType } from 'graphql';
 
-import type IContext from '~/interfaces/IContext';
+import type { IContext } from '~/interfaces';
 import UserType from '../user/UserType';
 
 const AuthType = new GraphQLObjectType<unknown, IContext>({

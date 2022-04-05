@@ -3,7 +3,7 @@ import type { Knex } from 'knex';
 import ConfigModel from '../Config/ConfigModel';
 import callTrxOrKnexConnection from '~/utils/callTrxOrKnexConnection';
 import type { DBConnector } from '~/database/dbConnector';
-import type ILogin from '~/models/ILogin';
+import type { ILogin } from '~/interfaces';
 
 const AuthModel = (dbConnector: DBConnector) => {
   return {
@@ -22,15 +22,15 @@ const AuthModel = (dbConnector: DBConnector) => {
           .orderBy('created_at', 'desc')
           .limit((maxNumberOfValidLoginsConfig?.value as number) ?? 2);
 
-        const validLoginsId = validLogins.map((validLogin) => validLogin.id!);
+        const validLoginIds = validLogins.map((validLogin) => validLogin.id!);
 
         await trx<ILogin>('login')
-          .whereNotIn('id', validLoginsId)
+          .whereNotIn('id', validLoginIds)
           .andWhere('user_id', user_id)
           .andWhere('active', true)
           .update({ active: false });
 
-        return login!.id;
+        return login.id!;
       });
     },
 

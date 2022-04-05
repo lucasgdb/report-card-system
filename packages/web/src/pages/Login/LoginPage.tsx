@@ -3,36 +3,35 @@ import Container from '@mui/material/Container';
 
 import { LoginPageQuery } from './__generated__/LoginPageQuery.graphql';
 import PageLoader from '~/components/PageLoader';
-import { DefaultErrorPage } from '@usefaz/components';
-import Articles from '~/components/Home/Articles';
 import LoginButton from '~/components/LoginButton';
-import RegisterButton from '~/components/RegisterButton';
+import LogoutButton from '~/components/LogoutButton';
+import Welcome from '~/components/Welcome';
+import AdminLoginButton from '~/components/AdminLoginButton';
 
 const query = graphql`
   query LoginPageQuery {
-    system {
-      ...Articles_system
+    auth {
+      isLogged
     }
   }
 `;
 
 export default function LoginPage() {
-  const { data, error, isLoading } = useQuery<LoginPageQuery>(query);
+  const { data, isLoading } = useQuery<LoginPageQuery>(query);
 
   if (isLoading) {
     return <PageLoader />;
   }
 
-  if (error) {
+  if (data.auth.isLogged) {
     return (
-      <DefaultErrorPage
-        title="Ooops!"
-        description="There was a problem."
-        information={`A server error has occurred. Error code: ${error.message}`}
-        actionText="Try again"
-        onActionClick={() => window.location.reload()}
-        disableOptionalButton
-      />
+      <Container>
+        <p>Congrats, you are authenticated! :D</p>
+
+        <Welcome />
+
+        <LogoutButton />
+      </Container>
     );
   }
 
@@ -41,9 +40,7 @@ export default function LoginPage() {
       <p>You are not authenticated.</p>
 
       <LoginButton />
-      <RegisterButton />
-
-      <Articles system={data!.system!} />
+      <AdminLoginButton />
     </Container>
   );
 }

@@ -2,7 +2,7 @@ import { GraphQLObjectType, GraphQLObjectTypeConfig } from 'graphql';
 import { fromGlobalId, globalIdField, nodeDefinitions } from 'graphql-relay';
 
 import usefazConnector from '~/database/usefazConnector';
-import type IContext from '~/interfaces/IContext';
+import type { IContext } from '~/interfaces';
 
 type getterType = ({ id }: { id: string }, context: IContext) => Promise<object>;
 

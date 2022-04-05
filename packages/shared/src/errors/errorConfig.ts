@@ -2,17 +2,25 @@ const errorConfig = {
   user: {
     code: 'USER_DEFAULT_ERROR',
     message: 'Unexpected error while trying to get user',
-    notFound: {
-      code: 'USER_NOT_FOUND',
-      message: 'Requested user was not found on the system',
-    },
     unauthenticated: {
       code: 'USER_UNAUTHENTICATED',
-      message: 'User was not authenticated when request was made',
+      message: 'user was not authenticated when request was made',
     },
-    duplicatedEmail: {
-      code: 'EMAIL_ALREADY_EXISTS',
-      message: 'This email already exists',
+  },
+  student: {
+    code: 'STUDENT_DEFAULT_ERROR',
+    message: 'Unexpected error while trying to get student',
+    notFound: {
+      code: 'STUDENT_NOT_FOUND',
+      message: 'Requested student was not found on the system',
+    },
+  },
+  admin: {
+    code: 'ADMIN_DEFAULT_ERROR',
+    message: 'Unexpected error while trying to get admin',
+    notFound: {
+      code: 'ADMIN_NOT_FOUND',
+      message: 'Requested admin was not found on the system',
     },
   },
 };

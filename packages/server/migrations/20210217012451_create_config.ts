@@ -1,19 +1,21 @@
 import type { Knex } from 'knex';
 
 export const up = async (knex: Knex) => {
-  const hasConfigTable = await knex.schema.hasTable('config');
-  if (hasConfigTable) {
+  const hasTable = await knex.schema.hasTable('config');
+  if (hasTable) {
     return;
   }
 
-  await knex.schema.createTable('config', (t) => {
-    t.increments('id').unsigned().primary();
+  await knex.schema.createTable('config', (table) => {
+    table.increments('id').unsigned().primary();
 
-    t.string('name').notNullable();
-    t.string('value');
-    t.boolean('public').defaultTo(true);
+    table.string('name').notNullable();
 
-    t.timestamps(true, true);
+    table.string('value').nullable();
+
+    table.boolean('public').defaultTo(true);
+
+    table.timestamps(true, true);
   });
 };
 

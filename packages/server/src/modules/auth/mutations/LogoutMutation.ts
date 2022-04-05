@@ -3,7 +3,7 @@ import { mutationWithClientMutationId } from 'graphql-relay';
 
 import usefazConnector from '~/database/usefazConnector';
 import AuthModel from '~/entities/Auth/AuthModel';
-import type IContext from '~/interfaces/IContext';
+import type { IContext } from '~/interfaces';
 
 type logoutProps = {
   clientMutationId?: string;
