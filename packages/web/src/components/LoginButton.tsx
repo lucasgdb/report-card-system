@@ -37,7 +37,7 @@ export default function LoginButton() {
 
   return (
     <Button color="secondary" onClick={handleClick} disabled={loading}>
-      Login
+      Student Login
     </Button>
   );
 }

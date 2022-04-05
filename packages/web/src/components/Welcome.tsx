@@ -29,10 +29,10 @@ export default function Welcome() {
 
   return (
     <OuterWelcome>
-      <p>Your RM: {data.viewer.student.RM}</p>
+      <p>Your RM: {data.viewer.student?.RM}</p>
 
-      <p>Welcome, {data.viewer.student.fullname}</p>
-      <p>{data.viewer.admin?.email}</p>
+      <p>Welcome, {data.viewer.student?.fullname}</p>
+      <p>E-mail: {data.viewer.admin?.email}</p>
     </OuterWelcome>
   );
 }
