@@ -1,17 +1,12 @@
 import type { Knex } from 'knex';
 
-import ConfigModel from '../Config/ConfigModel';
 import callTrxOrKnexConnection from '~/utils/callTrxOrKnexConnection';
 import type { DBConnector } from '~/database/dbConnector';
 import type { ILogin } from '~/interfaces';
 
 const AuthModel = (dbConnector: DBConnector) => {
   return {
-    async login(user_id: string) {
-      const configEntity = ConfigModel(dbConnector);
-
-      const maxNumberOfValidLoginsConfig = await configEntity.getConfigByName('maximum_number_of_valid_logins');
-
+    login(user_id: string) {
       return dbConnector.knexConnection.transaction(async (trx) => {
         const login = await this.createLogin({ user_id }, trx);
 
@@ -20,7 +15,7 @@ const AuthModel = (dbConnector: DBConnector) => {
           .where('user_id', user_id)
           .where('active', true)
           .orderBy('created_at', 'desc')
-          .limit((maxNumberOfValidLoginsConfig?.value as number) ?? 2);
+          .limit(2);
 
         const validLoginIds = validLogins.map((validLogin) => validLogin.id!);
 

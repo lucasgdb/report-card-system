@@ -1,6 +1,7 @@
-export type { default as IConfig } from './IConfig';
-export type { default as ILogin } from './ILogin';
-export type { default as IUser } from './IUser';
-export type { default as IStudent } from './IStudent';
-export type { default as IAdmin } from './IAdmin';
-export type { default as IContext } from './IContext';
+import type ILogin from './ILogin';
+import type IUser from './IUser';
+import type IStudent from './IStudent';
+import type IAdmin from './IAdmin';
+import type IContext from './IContext';
+
+export type { ILogin, IUser, IStudent, IAdmin, IContext };

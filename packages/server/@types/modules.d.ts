@@ -1,4 +1,4 @@
-import IUser from '~/models/IUser';
+import { IUser } from '~/interfaces';
 
 declare module 'koa' {
   interface Request {

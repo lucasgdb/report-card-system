@@ -1,6 +1,6 @@
 import { GraphQLObjectType } from 'graphql';
 
-import type IContext from '~/interfaces/IContext';
+import type { IContext } from '~/interfaces';
 import { authField } from './auth/AuthType';
 import { nodeField, nodesField } from './node/NodeType';
 import { systemField } from './system/SystemType';
