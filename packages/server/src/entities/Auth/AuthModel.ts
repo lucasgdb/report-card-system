@@ -1,3 +1,4 @@
+import type { RequireAtLeastOne } from '@usefaz/shared';
 import type { Knex } from 'knex';
 
 import callTrxOrKnexConnection from '~/utils/callTrxOrKnexConnection';
@@ -47,8 +48,8 @@ const AuthModel = (dbConnector: DBConnector) => {
       return newLogin;
     },
 
-    getLoginById(id: string) {
-      return dbConnector.knexConnection<ILogin>('login').where('id', id).first();
+    getLoginBy(login: RequireAtLeastOne<ILogin>) {
+      return dbConnector.knexConnection<ILogin>('login').where(login).first();
     },
   };
 };

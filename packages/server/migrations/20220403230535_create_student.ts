@@ -9,7 +9,7 @@ export const up = async (knex: Knex) => {
   await knex.schema.createTable('student', (table) => {
     table.increments('id').unsigned().primary();
 
-    table.integer('user_id').unsigned();
+    table.integer('user_id').unsigned().notNullable();
     table.foreign('user_id').references('user.id');
 
     table.string('RM').unique().notNullable();

@@ -5,7 +5,7 @@ import callTrxOrKnexConnection from '~/utils/callTrxOrKnexConnection';
 
 const UserModel = (dbConnector: DBConnector) => {
   return {
-    async insert(user: IUser, trx?: Knex.Transaction) {
+    async insert(user: Partial<IUser>, trx?: Knex.Transaction) {
       const [newUser] = await callTrxOrKnexConnection<IUser>('user', dbConnector, trx).insert(user).returning('*');
       return newUser;
     },

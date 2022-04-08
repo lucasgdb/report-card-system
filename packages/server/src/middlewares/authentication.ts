@@ -44,7 +44,7 @@ const authentication = () => {
 
       const authEntity = AuthModel(usefazConnector);
 
-      const login = await authEntity.getLoginById(payload.id);
+      const login = await authEntity.getLoginBy({ id: payload.id });
       if (!login?.active) {
         return next();
       }

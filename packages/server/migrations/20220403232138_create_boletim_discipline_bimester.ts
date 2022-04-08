@@ -9,10 +9,10 @@ export const up = async (knex: Knex) => {
   await knex.schema.createTable('boletim_discipline_bimester', (table) => {
     table.increments('id').unsigned().primary();
 
-    table.integer('boletim_discipline_id').unsigned();
+    table.integer('boletim_discipline_id').unsigned().notNullable();
     table.foreign('boletim_discipline_id').references('boletim_discipline.id');
 
-    table.integer('bimester_id').unsigned();
+    table.integer('bimester_id').unsigned().notNullable();
     table.foreign('bimester_id').references('bimester.id');
 
     table.timestamps(true, true);

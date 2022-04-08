@@ -17,14 +17,14 @@ const UserType = registerGraphQLNodeObjectType<IUser>('user')({
         type: StudentType,
         resolve(user) {
           const studentEntity = StudentModel(usefazConnector);
-          return studentEntity.getStudentByUserId(user.id!);
+          return studentEntity.getStudentBy({ user_id: user.id });
         },
       },
       admin: {
         type: AdminType,
         resolve(user) {
           const adminEntity = AdminModel(usefazConnector);
-          return adminEntity.getAdminByUserId(user.id!);
+          return adminEntity.getAdminBy({ user_id: user.id });
         },
       },
     };
@@ -38,7 +38,7 @@ export const UserConnection = connectionDefinitions({
 
 export const viewerField = {
   type: new GraphQLNonNull(UserType),
-  resolve(_root: IUser, _args: unknown, context: IContext) {
+  resolve(_root: IUser | undefined, _args: unknown, context: IContext) {
     return getUserOrThrowError(context);
   },
 };

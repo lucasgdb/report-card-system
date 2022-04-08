@@ -12,7 +12,7 @@ export const up = async (knex: Knex) => {
     table.integer('user_id').unsigned();
     table.foreign('user_id').references('user.id');
 
-    table.boolean('active').defaultTo(true);
+    table.boolean('active').notNullable().defaultTo(true);
 
     table.timestamps(true, true);
   });
