@@ -18,9 +18,10 @@
     "rollback:all": "env-cmd knex migrate:rollback --all"
   },
   "dependencies": {
-    "@usefaz/shared": "*",
+    "@babel/runtime": "^7.17.9",
     "@koa/cors": "^3.3.0",
     "@koa/router": "^10.1.1",
+    "@usefaz/shared": "*",
     "bcryptjs": "^2.4.3",
     "core-js": "^3.21.1",
     "dayjs": "^1.11.0",
