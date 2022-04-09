@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 const OuterMenu = styled.div`
-  background-color: #222;
+  background-color: #0020a2;
 
   width: 100%;
   height: 56px;
@@ -25,9 +25,19 @@ const OuterMenu = styled.div`
   align-items: center;
 `;
 
+const LogoWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+`;
+
+const Logo = styled.img`
+  width: 24px;
+`;
+
 const LogoText = styled.p`
   margin: 0;
-  font: normal normal normal 16px/19px Roboto;
+  font: normal normal normal 16px/19px Lexend;
   color: #fff;
 `;
 
@@ -50,23 +60,13 @@ const SocialMediaIcon = styled.img`
 const socialMedias = [
   {
     id: '0',
-    url: '#',
+    url: 'https://www.facebook.com/usefazguara/',
     Icon: <SocialMediaIcon src="/assets/icons/facebook.svg" />,
   },
   {
     id: '1',
-    url: '#',
+    url: 'https://www.instagram.com/usefaz.escola/',
     Icon: <SocialMediaIcon src="/assets/icons/instagram.svg" />,
-  },
-  {
-    id: '2',
-    url: '#',
-    Icon: <SocialMediaIcon src="/assets/icons/whatsapp.svg" />,
-  },
-  {
-    id: '3',
-    url: '#',
-    Icon: <SocialMediaIcon src="/assets/icons/linkedin.svg" />,
   },
 ];
 
@@ -74,7 +74,10 @@ export default function Menu() {
   return (
     <OuterMenu>
       <Hyperlink href="/">
-        <LogoText>Example</LogoText>
+        <LogoWrapper>
+          <Logo src="/assets/icons/logo.png" />
+          <LogoText>Usefaz</LogoText>
+        </LogoWrapper>
       </Hyperlink>
 
       <SocialMediaWrapper>
