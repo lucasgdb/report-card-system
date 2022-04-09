@@ -5,6 +5,7 @@
     "target": "ESNext",
     "module": "CommonJS",
     "jsx": "react-jsx",
+    "lib": ["ESNext", "DOM"],
     "baseUrl": ".",
     "paths": {
       "~/*": ["src/*"]

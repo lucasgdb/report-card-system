@@ -40,12 +40,16 @@ const theme = createTheme({
     },
   },
 
+  typography: {
+    fontFamily: ['Lexend'].join(','),
+  },
+
   palette: {
     primary: {
-      main: '#200741',
+      main: '#EE7844',
     },
     secondary: {
-      main: '#fe2a59',
+      main: '#0020A2',
     },
   },
 });

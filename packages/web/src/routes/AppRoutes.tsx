@@ -6,6 +6,7 @@ import PageLoader from '~/components/PageLoader';
 const EnvironmentLayout = React.lazy(() => import('~/layout/EnvironmentLayout'));
 const ErrorPage = React.lazy(() => import('~/pages/Error/ErrorPage'));
 const LoginPage = React.lazy(() => import('~/pages/Login/LoginPage'));
+const HomePage = React.lazy(() => import('~/pages/Home/HomePage'));
 
 export default function AppRoutes() {
   return (
@@ -14,6 +15,7 @@ export default function AppRoutes() {
         <Routes>
           <Route element={<EnvironmentLayout />}>
             <Route index element={<LoginPage />} />
+            <Route path="/home" element={<HomePage />} />
           </Route>
 
           <Route path="*" element={<ErrorPage />} />

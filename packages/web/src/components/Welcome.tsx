@@ -1,9 +1,8 @@
+import { Container } from '@mui/material';
 import { graphql, useQuery } from 'relay-hooks';
-import styled from 'styled-components';
+import LogoutButton from './LogoutButton';
 
 import { WelcomeQuery } from './__generated__/WelcomeQuery.graphql';
-
-const OuterWelcome = styled.div``;
 
 const query = graphql`
   query WelcomeQuery {
@@ -11,10 +10,6 @@ const query = graphql`
       student {
         RM
         fullname
-      }
-
-      admin {
-        email
       }
     }
   }
@@ -28,11 +23,12 @@ export default function Welcome() {
   }
 
   return (
-    <OuterWelcome>
-      <p>Your RM: {data.viewer.student?.RM}</p>
+    <Container>
+      <p>Seu RM: {data.viewer.student?.RM}</p>
 
-      <p>Welcome, {data.viewer.student?.fullname}</p>
-      <p>E-mail: {data.viewer.admin?.email}</p>
-    </OuterWelcome>
+      <p>Seja bem-vindo, {data.viewer.student?.fullname}</p>
+
+      <LogoutButton />
+    </Container>
   );
 }
