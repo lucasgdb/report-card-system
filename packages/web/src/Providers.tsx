@@ -9,6 +9,7 @@ import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import dayjs from 'dayjs';
 
 import { environment } from './utils/relay';
+import GlobalStyle from './GlobalStyle';
 
 dayjs.locale('pt-br');
 
@@ -65,6 +66,7 @@ export default function Providers({ children }: ProvidersProps) {
       <ThemeProvider theme={theme}>
         <LocalizationProvider dateAdapter={AdapterDateFns} locale={ptBRLocale}>
           <Notification.SnackbarProvider anchorOrigin={{ vertical: 'top', horizontal: 'right' }}>
+            <GlobalStyle />
             {children}
           </Notification.SnackbarProvider>
         </LocalizationProvider>
