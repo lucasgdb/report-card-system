@@ -2,7 +2,7 @@ import { errorConfig } from '@usefaz/shared';
 import * as bcrypt from 'bcryptjs';
 import { GraphQLNonNull, GraphQLString } from 'graphql';
 import { mutationWithClientMutationId } from 'graphql-relay';
-import * as jwt from 'jwt-simple';
+import * as jwt from 'jsonwebtoken';
 
 import usefazConnector from '~/database/usefazConnector';
 import { StudentModel, AuthModel } from '~/entities';
@@ -24,7 +24,7 @@ const getStudentJwtToken = async (student: IStudent, password: string) => {
     active: true,
   };
 
-  const jwtToken = jwt.encode(payload, process.env.JWT_SECRET!);
+  const jwtToken = jwt.sign(payload, process.env.JWT_SECRET!, { expiresIn: '2h' });
   return jwtToken;
 };
 
