@@ -64,7 +64,7 @@ export default function Providers({ children }: ProvidersProps) {
     <RelayEnvironmentProvider environment={environment}>
       <ThemeProvider theme={theme}>
         <LocalizationProvider dateAdapter={AdapterDateFns} locale={ptBRLocale}>
-          <Notification.SnackbarProvider anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}>
+          <Notification.SnackbarProvider anchorOrigin={{ vertical: 'top', horizontal: 'right' }}>
             {children}
           </Notification.SnackbarProvider>
         </LocalizationProvider>
