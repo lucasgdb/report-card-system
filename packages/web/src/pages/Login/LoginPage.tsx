@@ -93,12 +93,7 @@ export default function LoginPage() {
   }
 
   return (
-    <GoogleReCaptchaProvider
-      reCaptchaKey={process.env.RECAPTCHA_V3_PUBLIC_TOKEN}
-      language="pt-BR"
-      useRecaptchaNet
-      scriptProps={{ async: true }}
-    >
+    <GoogleReCaptchaProvider reCaptchaKey={process.env.RECAPTCHA_V3_PUBLIC_TOKEN} language="pt-BR" useRecaptchaNet>
       <OuterLoginPage>
         {shouldChangeBodyStyle && <GlobalStyle />}
 
