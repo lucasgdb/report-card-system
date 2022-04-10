@@ -7,6 +7,7 @@ import { GoogleReCaptchaProvider } from 'react-google-recaptcha-v3';
 import { LoginPageQuery } from './__generated__/LoginPageQuery.graphql';
 import PageLoader from '~/components/PageLoader';
 import LoginCard from '~/components/Login/LoginCard';
+import AnimatedIcons from '~/components/Login/AnimatedIcons';
 
 const query = graphql`
   query LoginPageQuery {
@@ -61,8 +62,9 @@ const UsefazLogo = styled.img`
     display: none;
   }
 
-  @media (max-width: 1359px) {
-    left: 80px;
+  @media (max-width: 1382px) {
+    left: unset;
+    right: 1000px;
   }
 `;
 
@@ -104,6 +106,7 @@ export default function LoginPage() {
 
         <LoginCard />
 
+        <AnimatedIcons />
         <ReadingBookImage src="/assets/images/reading_book.svg" />
       </OuterLoginPage>
     </GoogleReCaptchaProvider>
