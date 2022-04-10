@@ -14,8 +14,8 @@ export default function AppRoutes() {
       <React.Suspense fallback={<PageLoader />}>
         <Routes>
           <Route element={<EnvironmentLayout />}>
-            <Route index element={<LoginPage />} />
-            <Route path="/home" element={<HomePage />} />
+            <Route index element={<HomePage />} />
+            <Route path="/login" element={<LoginPage />} />
           </Route>
 
           <Route path="*" element={<ErrorPage />} />

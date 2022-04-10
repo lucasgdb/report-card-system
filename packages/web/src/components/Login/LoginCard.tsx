@@ -7,6 +7,8 @@ const OuterLoginCard = styled.div`
   max-width: 358px;
   z-index: 1;
 
+  padding-bottom: 16px;
+
   @media (min-width: 1280px) {
     position: absolute;
     top: 153px;

@@ -1,6 +1,7 @@
 import { graphql, useQuery } from 'relay-hooks';
-import styled from 'styled-components';
+import styled, { createGlobalStyle } from 'styled-components';
 import { useNavigate } from 'react-router';
+import useMediaQuery from '@mui/material/useMediaQuery';
 
 import { LoginPageQuery } from './__generated__/LoginPageQuery.graphql';
 import PageLoader from '~/components/PageLoader';
@@ -14,19 +15,32 @@ const query = graphql`
   }
 `;
 
+const GlobalStyle = createGlobalStyle`
+  body {
+    @media (max-width: 1279px) {
+      background: #0020a2 0 0 no-repeat padding-box !important;
+    }
+  }
+`;
+
 const OuterLoginPage = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  display: grid;
+  place-items: center;
 
   height: 100vh;
-  padding: 0 16px;
+  padding: 16px 16px 0;
 `;
 
 const BackgroundImage = styled.img`
   position: absolute;
   top: 0;
   right: 0;
+
+  max-height: 100%;
+
+  @media (max-width: 1279px) {
+    display: none;
+  }
 `;
 
 const ZLogo = styled.img`
@@ -64,6 +78,8 @@ const ReadingBookImage = styled.img`
 export default function LoginPage() {
   const navigate = useNavigate();
 
+  const shouldChangeBodyStyle = useMediaQuery('(max-width: 1279px)');
+
   const { data, isLoading } = useQuery<LoginPageQuery>(query);
 
   if (isLoading) {
@@ -77,6 +93,8 @@ export default function LoginPage() {
 
   return (
     <OuterLoginPage>
+      {shouldChangeBodyStyle && <GlobalStyle />}
+
       <BackgroundImage src="/assets/images/background_blue.svg" />
       <ZLogo src="/assets/images/z_logo.svg" />
 

@@ -1,5 +1,6 @@
 import { Container } from '@mui/material';
 import { graphql, useQuery } from 'relay-hooks';
+
 import LogoutButton from './LogoutButton';
 
 import { WelcomeQuery } from './__generated__/WelcomeQuery.graphql';
