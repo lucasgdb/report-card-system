@@ -4,7 +4,7 @@ import styled from 'styled-components';
 const RIGHT_DEFAULT_POSITION = 726;
 const TOP_DEFAULT_POSITION = 219;
 
-const Icons = styled.img`
+const IconsImage = styled.img`
   position: absolute;
   right: ${RIGHT_DEFAULT_POSITION}px;
   top: ${TOP_DEFAULT_POSITION}px;
@@ -31,5 +31,5 @@ export default function AnimatedIcons() {
     return () => window.removeEventListener('mousemove', mouseMove);
   }, []);
 
-  return <Icons ref={iconsIconRef} src="/assets/icons/icons.svg" />;
+  return <IconsImage ref={iconsIconRef} src="/assets/images/icons.svg" />;
 }
