@@ -123,14 +123,13 @@ export default function Form() {
 
   return (
     <OuterForm>
-      <form autoComplete="off" onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit}>
         <InputWrapper>
           <StyledTextField
             name="RM"
             placeholder="N° de matrícula"
             type="text"
             variant="outlined"
-            autoComplete="false"
             defaultValue={localStorage.getItem('Usefaz-RM')}
             InputProps={{
               startAdornment: (
