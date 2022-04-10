@@ -15,8 +15,9 @@ export default function AppRoutes() {
         <Routes>
           <Route element={<EnvironmentLayout />}>
             <Route index element={<HomePage />} />
-            <Route path="/login" element={<LoginPage />} />
           </Route>
+
+          <Route path="/login" element={<LoginPage />} />
 
           <Route path="*" element={<ErrorPage />} />
         </Routes>
