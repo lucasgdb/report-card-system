@@ -2,6 +2,7 @@ import { graphql, useQuery } from 'relay-hooks';
 import styled, { createGlobalStyle } from 'styled-components';
 import { useNavigate } from 'react-router';
 import useMediaQuery from '@mui/material/useMediaQuery';
+import { GoogleReCaptchaProvider } from 'react-google-recaptcha-v3';
 
 import { LoginPageQuery } from './__generated__/LoginPageQuery.graphql';
 import PageLoader from '~/components/PageLoader';
@@ -87,22 +88,29 @@ export default function LoginPage() {
   }
 
   if (data.auth.isLogged) {
-    navigate('/home');
+    navigate('/');
     return null;
   }
 
   return (
-    <OuterLoginPage>
-      {shouldChangeBodyStyle && <GlobalStyle />}
+    <GoogleReCaptchaProvider
+      reCaptchaKey={process.env.RECAPTCHA_V3_PUBLIC_TOKEN}
+      language="pt-BR"
+      useRecaptchaNet
+      scriptProps={{ async: true }}
+    >
+      <OuterLoginPage>
+        {shouldChangeBodyStyle && <GlobalStyle />}
 
-      <BackgroundImage src="/assets/images/background_blue.svg" />
-      <ZLogo src="/assets/images/z_logo.svg" />
+        <BackgroundImage src="/assets/images/background_blue.svg" />
+        <ZLogo src="/assets/images/z_logo.svg" />
 
-      <UsefazLogo src="/assets/images/usefaz_logo.svg" />
+        <UsefazLogo src="/assets/images/usefaz_logo.svg" />
 
-      <LoginCard />
+        <LoginCard />
 
-      <ReadingBookImage src="/assets/images/reading_book.svg" />
-    </OuterLoginPage>
+        <ReadingBookImage src="/assets/images/reading_book.svg" />
+      </OuterLoginPage>
+    </GoogleReCaptchaProvider>
   );
 }

@@ -102,5 +102,6 @@ type StudentLoginMutationPayload {
 input StudentLoginMutationInput {
   RM: String!
   password: String!
+  token: String!
   clientMutationId: String
 }

@@ -2,6 +2,8 @@ import { errorConfig } from '@usefaz/shared';
 import * as bcrypt from 'bcryptjs';
 import { GraphQLNonNull, GraphQLString } from 'graphql';
 import { mutationWithClientMutationId } from 'graphql-relay';
+import axios from 'axios';
+import url from 'url';
 import * as jwt from 'jsonwebtoken';
 
 import usefazConnector from '~/database/usefazConnector';
@@ -28,13 +30,37 @@ const getStudentJwtToken = async (student: IStudent, password: string) => {
   return jwtToken;
 };
 
+const getRecaptchaV3Response = async (token: string) => {
+  if (process.env.NODE_ENV?.toUpperCase() === 'DEVELOPMENT') {
+    return { success: true };
+  }
+
+  const params = new url.URLSearchParams({
+    secret: process.env.RECAPTCHA_V3_SECRET_TOKEN!,
+    response: token,
+  });
+
+  const response = await axios.post('https://www.google.com/recaptcha/api/siteverify', params.toString(), {
+    headers: { 'content-type': 'application/x-www-form-urlencoded' },
+  });
+
+  return response?.data;
+};
+
 type studentLoginProps = {
   RM: string;
   password: string;
+  token: string;
   clientMutationId?: string;
 };
 
-const studentLogin = async ({ RM, password, clientMutationId }: studentLoginProps) => {
+const studentLogin = async ({ RM, password, token, clientMutationId }: studentLoginProps) => {
+  const recaptchaResponse = await getRecaptchaV3Response(token);
+
+  if (!recaptchaResponse?.success) {
+    throw new Error('LOGIN.ERROR');
+  }
+
   const studentEntity = StudentModel(usefazConnector);
 
   const student = await studentEntity.getStudentByRM(RM);
@@ -55,6 +81,7 @@ const StudentLoginMutation = mutationWithClientMutationId({
   inputFields: {
     RM: { type: new GraphQLNonNull(GraphQLString) },
     password: { type: new GraphQLNonNull(GraphQLString) },
+    token: { type: new GraphQLNonNull(GraphQLString) },
   },
   outputFields: {
     jwtToken: { type: GraphQLString },

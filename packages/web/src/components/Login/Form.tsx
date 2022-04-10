@@ -14,6 +14,7 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import { useState } from 'react';
 import { useMutation } from 'relay-hooks';
 import { Link } from 'react-router-dom';
+import { useGoogleReCaptcha } from 'react-google-recaptcha-v3';
 
 import jwtToken from '~/utils/jwtToken';
 import StudentLoginMutation from '~/modules/student/StudentLoginMutation';
@@ -70,17 +71,74 @@ const StyledButton = styled(Button)`
   }
 `;
 
-export default function Form() {
-  const { enqueueSnackbar } = Notification.useSnackbar();
+const RMInput = () => {
+  return (
+    <StyledTextField
+      name="RM"
+      placeholder="N° de matrícula"
+      type="text"
+      variant="outlined"
+      defaultValue={localStorage.getItem('Usefaz-RM')}
+      InputProps={{
+        startAdornment: (
+          <InputAdornment position="start">
+            <PersonIcon color="primary" />
+          </InputAdornment>
+        ),
+      }}
+    />
+  );
+};
 
+const PasswordInput = () => {
   const [showPassword, setShowPassword] = useState(false);
-  const [rememberMe, setRememberMe] = useState(true);
 
   const handleClickShowPassword = () => setShowPassword((prevShowPassword) => !prevShowPassword);
 
   const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => event.preventDefault();
 
+  return (
+    <StyledTextField
+      placeholder="Senha"
+      name="password"
+      type={showPassword ? 'text' : 'password'}
+      variant="outlined"
+      InputProps={{
+        startAdornment: (
+          <InputAdornment position="start">
+            <HttpsIcon color="primary" />
+          </InputAdornment>
+        ),
+        endAdornment: (
+          <InputAdornment position="end">
+            <IconButton onClick={handleClickShowPassword} onMouseDown={handleMouseDownPassword} edge="end">
+              {showPassword ? <VisibilityOff color="secondary" /> : <Visibility color="secondary" />}
+            </IconButton>
+          </InputAdornment>
+        ),
+      }}
+    />
+  );
+};
+
+const RememberMeCheckbox = () => {
+  const [rememberMe, setRememberMe] = useState(true);
+
   const handleChangeRememberMe = (event: React.ChangeEvent<HTMLInputElement>) => setRememberMe(event.target.checked);
+
+  return (
+    <StyledFormControlLabel
+      label="Lembrar-me"
+      name="rememberMe"
+      control={<Checkbox checked={rememberMe} onChange={handleChangeRememberMe} />}
+    />
+  );
+};
+
+export default function Form() {
+  const { executeRecaptcha } = useGoogleReCaptcha();
+
+  const { enqueueSnackbar } = Notification.useSnackbar();
 
   const [loginMutation, { loading }] = useMutation<StudentLoginMutationType>(StudentLoginMutation, {
     onError: (errors) => {
@@ -93,18 +151,31 @@ export default function Form() {
     },
   });
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     const formData = new FormData(event.currentTarget);
 
     const RM = formData.get('RM').toString();
+    if (!RM) {
+      enqueueSnackbar('RM obrigatório.', { variant: 'error' });
+      return;
+    }
+
     const password = formData.get('password').toString();
+    if (!password) {
+      enqueueSnackbar('Senha obrigatória.', { variant: 'error' });
+      return;
+    }
+
     const rememberMe = Boolean(formData.get('rememberMe')?.toString());
+
+    const __DEV__ = process.env.NODE_ENV?.toUpperCase() === 'DEVELOPMENT';
+    const token = __DEV__ ? '' : await executeRecaptcha('login');
 
     loginMutation({
       variables: {
-        input: { RM, password },
+        input: { RM, password, token },
       },
       onCompleted: ({ studentLogin }) => {
         if (studentLogin?.jwtToken) {
@@ -115,7 +186,8 @@ export default function Form() {
           }
 
           jwtToken.set(studentLogin.jwtToken);
-          window.location.reload();
+
+          window.location.href = '/';
         }
       },
     });
@@ -125,49 +197,13 @@ export default function Form() {
     <OuterForm>
       <form onSubmit={handleSubmit}>
         <InputWrapper>
-          <StyledTextField
-            name="RM"
-            placeholder="N° de matrícula"
-            type="text"
-            variant="outlined"
-            defaultValue={localStorage.getItem('Usefaz-RM')}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <PersonIcon color="primary" />
-                </InputAdornment>
-              ),
-            }}
-          />
+          <RMInput />
 
-          <StyledTextField
-            placeholder="Senha"
-            name="password"
-            type={showPassword ? 'text' : 'password'}
-            variant="outlined"
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <HttpsIcon color="primary" />
-                </InputAdornment>
-              ),
-              endAdornment: (
-                <InputAdornment position="end">
-                  <IconButton onClick={handleClickShowPassword} onMouseDown={handleMouseDownPassword} edge="end">
-                    {showPassword ? <VisibilityOff color="secondary" /> : <Visibility color="secondary" />}
-                  </IconButton>
-                </InputAdornment>
-              ),
-            }}
-          />
+          <PasswordInput />
         </InputWrapper>
 
         <OptionsWrapper>
-          <StyledFormControlLabel
-            label="Lembrar-me"
-            name="rememberMe"
-            control={<Checkbox checked={rememberMe} onChange={handleChangeRememberMe} />}
-          />
+          <RememberMeCheckbox />
 
           <Hyperlink to="/esqueci-minha-senha">Esqueci minha senha</Hyperlink>
         </OptionsWrapper>
