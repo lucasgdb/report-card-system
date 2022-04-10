@@ -18,7 +18,7 @@ export default function AnimatedIcons() {
   const iconsIconRef = useRef(null);
 
   useLayoutEffect(() => {
-    function mouseMove(event: MouseEvent): void {
+    function mouseMove(event: MouseEvent) {
       const clientXDifference = event.clientX - RIGHT_DEFAULT_POSITION;
       const clientYDifference = event.clientY - TOP_DEFAULT_POSITION;
 
