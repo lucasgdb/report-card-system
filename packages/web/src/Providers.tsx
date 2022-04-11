@@ -18,7 +18,7 @@ const theme = createTheme({
     MuiCssBaseline: {
       styleOverrides: {
         body: {
-          background: '#f5f5fb 0 0 no-repeat padding-box',
+          background: '#fafafa 0 0 no-repeat padding-box',
           overflowX: 'hidden',
 
           '&::-webkit-scrollbar-thumb': {

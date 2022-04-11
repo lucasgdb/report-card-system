@@ -11,6 +11,13 @@ const StudentType = registerGraphQLNodeObjectType<IStudent>('student')({
       RM: {
         type: new GraphQLNonNull(GraphQLString),
       },
+      firstName: {
+        type: new GraphQLNonNull(GraphQLString),
+        resolve: (student) => {
+          const [firstName] = student.fullname.split(' ');
+          return firstName;
+        },
+      },
       fullname: {
         type: new GraphQLNonNull(GraphQLString),
       },

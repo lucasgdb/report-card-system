@@ -38,6 +38,7 @@ type Student implements Node {
   """The ID of an object"""
   id: ID!
   RM: String!
+  firstName: String!
   fullname: String!
 }
 

@@ -45,7 +45,7 @@ const BackgroundImage = styled.img`
   }
 `;
 
-const ZLogo = styled.img`
+const ZLogoImage = styled.img`
   position: absolute;
   top: 0;
   right: 0;
@@ -53,7 +53,7 @@ const ZLogo = styled.img`
   max-width: 80%;
 `;
 
-const UsefazLogo = styled.img`
+const UsefazLogoImage = styled.img`
   position: absolute;
   left: 160px;
   top: 52px;
@@ -100,9 +100,9 @@ export default function LoginPage() {
         {shouldChangeBodyStyle && <GlobalStyle />}
 
         <BackgroundImage src="/assets/images/background_blue.svg" />
-        <ZLogo src="/assets/images/z_logo.svg" />
+        <ZLogoImage src="/assets/images/z_logo.svg" />
 
-        <UsefazLogo src="/assets/images/usefaz_logo.svg" />
+        <UsefazLogoImage src="/assets/images/usefaz_logo.svg" />
 
         <LoginCard />
 

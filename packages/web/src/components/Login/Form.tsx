@@ -32,7 +32,7 @@ const InputWrapper = styled.div`
 
 const StyledTextField = styled(TextField)`
   & .MuiInputBase-root {
-    background-color: #fff;
+    background-color: #f7f5fa;
   }
 `;
 
