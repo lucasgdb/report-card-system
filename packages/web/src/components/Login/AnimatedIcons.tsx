@@ -22,8 +22,8 @@ export default function AnimatedIcons() {
       const clientXDifference = event.clientX - RIGHT_DEFAULT_POSITION;
       const clientYDifference = event.clientY - TOP_DEFAULT_POSITION;
 
-      iconsIconRef.current.style.right = `${RIGHT_DEFAULT_POSITION - clientXDifference * 0.008}px`;
-      iconsIconRef.current.style.top = `${TOP_DEFAULT_POSITION + clientYDifference * 0.008}px`;
+      iconsIconRef.current.style.right = `${RIGHT_DEFAULT_POSITION - clientXDifference * 0.0075}px`;
+      iconsIconRef.current.style.top = `${TOP_DEFAULT_POSITION + clientYDifference * 0.0075}px`;
     }
 
     window.addEventListener('mousemove', mouseMove);
