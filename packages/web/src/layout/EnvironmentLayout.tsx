@@ -1,10 +1,10 @@
 import { graphql, useQuery } from 'relay-hooks';
 import styled from 'styled-components';
 import { Outlet } from 'react-router-dom';
+import * as React from 'react';
 
 import { EnvironmentLayoutQuery } from './__generated__/EnvironmentLayoutQuery.graphql';
 import PageLoader from '~/components/PageLoader';
-import LoginPage from '~/pages/Login/LoginPage';
 
 const query = graphql`
   query EnvironmentLayoutQuery {
@@ -24,7 +24,12 @@ export default function EnvironmentLayout() {
   }
 
   if (!data?.auth?.isLogged) {
-    return <LoginPage />;
+    const LoginPage = React.lazy(() => import('~/pages/Login/LoginPage'));
+    return (
+      <React.Suspense fallback={<PageLoader />}>
+        <LoginPage />
+      </React.Suspense>
+    );
   }
 
   return (
