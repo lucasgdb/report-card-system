@@ -1,12 +1,12 @@
 import * as React from 'react';
 import DefaultErrorPage from './DefaultErrorPage/DefaultErrorPage';
 
-type PropsType = { onActionClick: () => void };
+type ErrorBoundaryProps = { children: React.ReactNode; onActionClick: () => void };
 
-type StatesType = { error: Error | null };
+type StateType = { error: Error | null };
 
-export default class ErrorBoundary extends React.Component<PropsType, StatesType> {
-  constructor(props: PropsType) {
+export default class ErrorBoundary extends React.Component<ErrorBoundaryProps, StateType> {
+  constructor(props: ErrorBoundaryProps) {
     super(props);
     this.state = { error: null };
   }
