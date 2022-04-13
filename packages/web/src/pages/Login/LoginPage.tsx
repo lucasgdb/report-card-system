@@ -6,7 +6,7 @@ import { GoogleReCaptchaProvider } from 'react-google-recaptcha-v3';
 
 import { LoginPageQuery } from './__generated__/LoginPageQuery.graphql';
 import PageLoader from '~/components/PageLoader';
-import LoginCard from '~/components/Login/LoginCard';
+import Login from '~/components/Login/Login';
 import AnimatedIcons from '~/components/Login/AnimatedIcons';
 
 const query = graphql`
@@ -104,7 +104,7 @@ export default function LoginPage() {
 
         <UsefazLogoImage src="/assets/images/usefaz_logo.svg" />
 
-        <LoginCard />
+        <Login />
 
         <AnimatedIcons />
         <ReadingBookImage src="/assets/images/reading_book.svg" />

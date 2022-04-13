@@ -2,10 +2,9 @@ import styled from 'styled-components';
 
 import Form from './Form';
 
-const OuterLoginCard = styled.div`
+const OuterLogin = styled.div`
   width: 100%;
   max-width: 358px;
-  z-index: 1;
 
   padding-bottom: 16px;
 
@@ -32,9 +31,9 @@ const LoginText = styled.p`
   margin: 0;
 `;
 
-export default function LoginCard() {
+export default function Login() {
   return (
-    <OuterLoginCard>
+    <OuterLogin>
       <StudentTextImage src="/assets/images/student.svg" />
 
       <ValueText>
@@ -50,6 +49,6 @@ export default function LoginCard() {
       </LoginText>
 
       <Form />
-    </OuterLoginCard>
+    </OuterLogin>
   );
 }

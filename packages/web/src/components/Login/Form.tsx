@@ -62,7 +62,7 @@ const Hyperlink = styled(Link)`
   }
 `;
 
-const StyledButton = styled(Button)`
+const LoginButton = styled(Button)`
   && {
     color: #fafafa;
     border-radius: 4px;
@@ -178,7 +178,7 @@ export default function Form() {
         input: { RM, password, token },
       },
       onCompleted: ({ studentLogin }) => {
-        if (studentLogin?.jwtToken) {
+        if (studentLogin.jwtToken) {
           if (rememberMe) {
             localStorage.setItem('Usefaz-RM', RM);
           } else {
@@ -198,19 +198,17 @@ export default function Form() {
       <form onSubmit={handleSubmit}>
         <InputWrapper>
           <RMInput />
-
           <PasswordInput />
         </InputWrapper>
 
         <OptionsWrapper>
           <RememberMeCheckbox />
-
           <Hyperlink to="/esqueci-minha-senha">Esqueci minha senha</Hyperlink>
         </OptionsWrapper>
 
-        <StyledButton variant="contained" color="primary" type="submit" disabled={loading} fullWidth>
+        <LoginButton variant="contained" color="primary" type="submit" disabled={loading} fullWidth>
           Entrar
-        </StyledButton>
+        </LoginButton>
       </form>
     </OuterForm>
   );
