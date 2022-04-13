@@ -19,6 +19,9 @@
     "lint": "eslint --cache .",
     "prepare": "husky install"
   },
+  "engines": {
+    "node": "16.x"
+  },
   "lint-staged": {
     "*.{ts,tsx,js,jsx}": [
       "eslint",
