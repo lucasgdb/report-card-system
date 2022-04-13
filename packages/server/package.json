@@ -6,7 +6,7 @@
   "license": "ISC",
   "scripts": {
     "start": "knex migrate:latest && node build/index.js",
-    "start:dev": "yarn migrate && env-cmd tsnd -r tsconfig-paths/register --inspect=0.0.0.0 --transpile-only --ignore-watch node_modules src/index.ts",
+    "start:dev": "yarn migrate && env-cmd tsnd -r tsconfig-paths/register --inspect=0.0.0.0 --transpile-only src/index.ts",
     "build:server": "babel src -d build --extensions \".ts\"",
     "build:shared": "yarn workspace @usefaz/shared build",
     "build": "yarn build:server && yarn build:shared",
