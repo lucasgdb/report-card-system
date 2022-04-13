@@ -21,7 +21,7 @@ services:
   server:
     image: node:lts-alpine3.14
     container_name: server
-    working_dir: /src/packages/server
+    working_dir: /src/apps/server
     volumes:
       - .:/src
     entrypoint: yarn start:dev
@@ -40,7 +40,7 @@ services:
   web:
     image: node:lts-alpine3.14
     container_name: web
-    working_dir: /src/packages/web
+    working_dir: /src/apps/web
     volumes:
       - .:/src
     entrypoint: yarn start:dev

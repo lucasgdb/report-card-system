@@ -75,13 +75,13 @@
     "import/resolver": {
       "typescript": {
         "alwaysTryTypes": true,
-        "project": ["packages/*/tsconfig.json", "*/tsconfig.base.json"]
+        "project": ["packages/*/tsconfig.json", "apps/*/tsconfig.json", "*/tsconfig.base.json"]
       },
       "babel-module": {},
       "node": {
         "paths": ["src"],
         "extensions": [".js", ".jsx", ".ts", ".tsx"],
-        "moduleDirectory": ["packages/*/src"]
+        "moduleDirectory": ["packages/*/src", "apps/*/src"]
       }
     },
     "react": {
