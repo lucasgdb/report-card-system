@@ -4,18 +4,31 @@ import Koa from 'koa';
 import type { Context, Next } from 'koa';
 import Router from '@koa/router';
 import { graphqlHTTP } from 'koa-graphql';
+import cors from '@koa/cors';
 
 import schema from './modules/schema';
 import authentication from './middlewares/authentication';
+import generateSchema from './utils/generateSchema';
 
 const { NODE_ENV } = process.env;
+
 const __DEV__ = NODE_ENV?.toUpperCase() === 'DEVELOPMENT';
+if (__DEV__) {
+  generateSchema();
+}
 
 type Definition = {
   name: { value: string } | undefined;
 } & DefinitionNode;
 
 const graphQLServer = new Koa();
+
+graphQLServer.use(
+  cors({
+    allowMethods: ['POST'],
+    credentials: true,
+  })
+);
 
 const addRequestStartedAt = (ctx: Context, next: Next) => {
   ctx.request.startedAt = Date.now();
