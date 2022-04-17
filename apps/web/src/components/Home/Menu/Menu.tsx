@@ -12,10 +12,14 @@ const fragment = graphql`
 `;
 
 const OuterMenu = styled.div`
-  padding: 36px 160px;
+  padding: 16px 48px;
 
   display: flex;
   justify-content: space-between;
+
+  @media (min-width: 1076px) {
+    padding: 36px 160px;
+  }
 `;
 
 const LeftContentWrapper = styled.div`
@@ -36,10 +40,26 @@ const Divider = styled.div`
   height: 1px;
 `;
 
+const LeftDivider = styled(Divider)`
+  @media (max-width: 874px) {
+    display: none;
+  }
+`;
+
+const RightDivider = styled(Divider)`
+  @media (max-width: 499px) {
+    display: none;
+  }
+`;
+
 const WelcomeInformationWrapper = styled.div`
   display: flex;
   align-items: center;
   gap: 8px;
+
+  @media (max-width: 874px) {
+    display: none;
+  }
 `;
 
 const WelcomeInformation = styled.p`
@@ -67,7 +87,7 @@ export default function Menu({ student }: MenuProps) {
       <LeftContentWrapper>
         <UsefazLogo src="/assets/images/usefaz_logo.svg" />
 
-        <Divider />
+        <LeftDivider />
 
         <WelcomeInformationWrapper>
           <img src="/assets/icons/clap.svg" alt="Olá!" />
@@ -79,7 +99,7 @@ export default function Menu({ student }: MenuProps) {
       <RightContentWrapper>
         <DateInformation />
 
-        <Divider />
+        <RightDivider />
 
         <LogoutButton />
       </RightContentWrapper>

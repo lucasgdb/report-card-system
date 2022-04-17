@@ -6,6 +6,10 @@ const DateText = styled.p`
   font: normal normal 400 16px/19px Inter;
   color: #808080;
   margin: 0;
+
+  @media (max-width: 499px) {
+    display: none;
+  }
 `;
 
 const now = dayjs();
