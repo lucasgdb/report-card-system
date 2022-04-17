@@ -18,6 +18,8 @@ export const up = async (knex: Knex) => {
 
     table.string('password').notNullable();
 
+    table.string('avatar_url').unique().nullable();
+
     table.timestamps(true, true);
   });
 };

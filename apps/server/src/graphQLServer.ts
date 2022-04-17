@@ -39,7 +39,7 @@ const authenticationMiddleware = authentication();
 
 const router = new Router();
 
-router.use(authenticationMiddleware.initialize, authenticationMiddleware.authenticate, addRequestStartedAt);
+router.use(authenticationMiddleware.initialize, authenticationMiddleware.authenticate(), addRequestStartedAt);
 
 router.post(
   '/',

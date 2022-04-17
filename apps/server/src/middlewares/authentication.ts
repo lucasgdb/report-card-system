@@ -4,6 +4,11 @@ import type { Context, Next } from 'koa';
 
 import { UserModel, AuthModel } from '~/entities';
 import usefazConnector from '~/database/usefazConnector';
+import { errorConfig } from '@usefaz/shared';
+
+type authenticateProps = {
+  protectedRoutes: boolean;
+};
 
 const params = {
   secretOrKey: process.env.JWT_SECRET,
@@ -36,27 +41,46 @@ const authentication = () => {
       passport.initialize();
       return next();
     },
-    authenticate: async (ctx: Context, next: Next) => {
-      const payload = await getPayload(ctx);
-      if (!payload) {
-        return next();
-      }
+    authenticate:
+      ({ protectedRoutes }: authenticateProps = { protectedRoutes: false }) =>
+      async (ctx: Context, next: Next) => {
+        try {
+          const payload = await getPayload(ctx);
 
-      const authEntity = AuthModel(usefazConnector);
+          if (protectedRoutes && !payload) {
+            throw new Error(errorConfig.user.unauthenticated.code);
+          }
 
-      const login = await authEntity.getLoginBy({ id: payload.id });
-      if (!login?.active) {
-        return next();
-      }
+          if (!payload) {
+            return next();
+          }
 
-      const userEntity = UserModel(usefazConnector);
-      const user = await userEntity.getUserById(login.user_id!);
+          const authEntity = AuthModel(usefazConnector);
 
-      ctx.request.loginId = login.id;
-      ctx.request.user = user;
+          const login = await authEntity.getLoginBy({ id: payload.id });
 
-      return next();
-    },
+          if (protectedRoutes && !login?.active) {
+            throw new Error(errorConfig.user.unauthenticated.code);
+          }
+
+          if (!login?.active) {
+            return next();
+          }
+
+          const userEntity = UserModel(usefazConnector);
+          const user = await userEntity.getUserById(login.user_id!);
+
+          ctx.request.loginId = login.id;
+          ctx.request.user = user;
+
+          return next();
+        } catch {
+          ctx.status = 401;
+          ctx.body = {
+            message: errorConfig.user.unauthenticated.message,
+          };
+        }
+      },
   };
 };
 

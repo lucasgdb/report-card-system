@@ -34,6 +34,14 @@ const StudentModel = (dbConnector: DBConnector) => {
     getStudentByRM(RM: string) {
       return dbConnector.knexConnection<IStudent>('student').where('RM', RM).first();
     },
+
+    insertAvatarURL(id: string, avatarURL: string) {
+      return dbConnector
+        .knexConnection<IStudent>('student')
+        .update({ avatar_url: avatarURL })
+        .where('id', id)
+        .returning('*');
+    },
   };
 };
 
