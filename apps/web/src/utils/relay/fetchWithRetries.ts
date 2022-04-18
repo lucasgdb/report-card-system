@@ -6,9 +6,13 @@ import jwtToken from '~/utils/jwtToken';
 
 export type fetchWithRetriesConfig = {
   fetchTimeout?: number;
+  retries?: number;
 };
 
-const DEFAULT_TIMEOUT = 15000;
+const DEFAULT_RETRIES_CONFIG = {
+  fetchTimeout: 15000,
+  retries: 3,
+};
 
 class RelayError extends Error {
   response: AxiosResponse;
@@ -24,16 +28,17 @@ class RelayError extends Error {
 
 export default async function fetchWithRetries(
   axiosConfig: AxiosRequestConfig,
-  retriesConfig: fetchWithRetriesConfig = {}
+  retriesConfig: fetchWithRetriesConfig = DEFAULT_RETRIES_CONFIG
 ): Promise<AxiosResponse> {
-  const { fetchTimeout } = retriesConfig;
+  const { fetchTimeout, retries } = retriesConfig;
 
-  const _fetchTimeout = fetchTimeout ?? DEFAULT_TIMEOUT;
+  const _fetchTimeout = fetchTimeout ?? DEFAULT_RETRIES_CONFIG.fetchTimeout;
+  const _retries = retries ?? DEFAULT_RETRIES_CONFIG.retries;
 
   const client = axios.create({ timeout: _fetchTimeout, headers: { Authorization: jwtToken.get() } });
 
   axiosRetry(client, {
-    retries: 3,
+    retries: _retries,
     retryDelay: (retryCount) => retryCount * 3000,
     retryCondition: (error) => isNetworkOrIdempotentRequestError(error) || isRetryableError(error),
   });
@@ -41,7 +46,6 @@ export default async function fetchWithRetries(
   const response = await client(axiosConfig);
 
   if (response.status >= 200 && response.status < 300) {
-    // Got a response code that indicates success, resolve the promise.
     return response;
   }
 
