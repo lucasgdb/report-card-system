@@ -7,7 +7,7 @@ import { graphqlHTTP } from 'koa-graphql';
 import cors from '@koa/cors';
 
 import schema from './modules/schema';
-import authentication from './middlewares/authentication';
+import auth from './middlewares/auth';
 import generateSchema from './utils/generateSchema';
 
 const { NODE_ENV } = process.env;
@@ -35,11 +35,11 @@ const addRequestStartedAt = (ctx: Context, next: Next) => {
   return next();
 };
 
-const authenticationMiddleware = authentication();
+const authMiddleware = auth();
 
 const router = new Router();
 
-router.use(authenticationMiddleware.initialize, authenticationMiddleware.authenticate(), addRequestStartedAt);
+router.use(authMiddleware.initialize, authMiddleware.authenticate(), addRequestStartedAt);
 
 router.post(
   '/',

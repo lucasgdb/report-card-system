@@ -2,12 +2,13 @@ import styled from 'styled-components';
 import { graphql, useFragment } from 'relay-hooks';
 
 import { Profile_student$key } from './__generated__/Profile_student.graphql';
-import UploadPhotoButton from './UploadPhotoButton';
 import Information from './Information';
+import AvatarBackground from './AvatarBackground';
 
 const fragment = graphql`
   fragment Profile_student on Student {
     ...Information_student
+    ...AvatarBackground_student
   }
 `;
 
@@ -34,44 +35,6 @@ const ZLogoImage = styled.img`
   width: 35%;
 `;
 
-const OuterStudentImage = styled.div`
-  width: 320px;
-  height: 100%;
-
-  position: relative;
-`;
-
-const HomeIconsImage = styled.img`
-  position: absolute;
-  top: 50%;
-  left: 0;
-  transform: translateY(-50%);
-`;
-
-const ImageCircle = styled.div`
-  position: absolute;
-  left: 133px;
-  top: 113px;
-
-  width: 150px;
-  height: 150px;
-
-  border-radius: 50%;
-  border: 2px solid #ee7844;
-`;
-
-const StudentImage = () => {
-  return (
-    <OuterStudentImage>
-      <HomeIconsImage src="/assets/images/home_icons.svg" />
-
-      <ImageCircle>
-        <UploadPhotoButton />
-      </ImageCircle>
-    </OuterStudentImage>
-  );
-};
-
 type ProfileProps = {
   student: Profile_student$key;
 };
@@ -81,7 +44,7 @@ export default function Profile({ student }: ProfileProps) {
 
   return (
     <OuterProfile>
-      <StudentImage />
+      <AvatarBackground student={data} />
 
       <Information student={data} />
 

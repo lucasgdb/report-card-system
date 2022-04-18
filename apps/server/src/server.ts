@@ -1,20 +1,22 @@
 import Koa from 'koa';
 import koaStatic from 'koa-static';
 import koaBody from 'koa-body';
-
-import healthCheckerRouter from './routes/healthChecker.routes';
-import uploadPhotoRouter from './routes/uploadPhoto.routes';
-
 import mount from 'koa-mount';
 import path from 'path';
+import cors from '@koa/cors';
+
+import healthCheckerRouter from './routes/healthChecker.routes';
+import avatarRouter from './routes/avatar.routes';
 
 const server = new Koa();
 
-server.use(koaBody());
+server.use(cors({ allowMethods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'] }));
 
 server.use(mount('/public', koaStatic(path.resolve(__dirname, '../public'))));
 
+server.use(koaBody());
+
 server.use(healthCheckerRouter.routes()).use(healthCheckerRouter.allowedMethods());
-server.use(uploadPhotoRouter.routes()).use(uploadPhotoRouter.allowedMethods());
+server.use(avatarRouter.routes()).use(avatarRouter.allowedMethods());
 
 export default server;

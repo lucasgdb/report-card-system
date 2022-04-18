@@ -21,6 +21,10 @@ const StudentType = registerGraphQLNodeObjectType<IStudent>('student')({
       fullname: {
         type: new GraphQLNonNull(GraphQLString),
       },
+      avatarURL: {
+        type: GraphQLString,
+        resolve: (student) => student.avatar_url,
+      },
     };
   },
 });

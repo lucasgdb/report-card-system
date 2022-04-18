@@ -40,6 +40,7 @@ type Student implements Node {
   RM: String!
   firstName: String!
   fullname: String!
+  avatarURL: String
 }
 
 type Admin implements Node {

@@ -2,15 +2,15 @@ import Router from '@koa/router';
 import koaBody from 'koa-body';
 import path from 'path';
 
-import { uploadPhoto } from '~/controllers/uploadPhotoController';
-import authentication from '~/middlewares/authentication';
+import { saveAvatarURL } from '~/controllers/avatarController';
+import auth from '~/middlewares/auth';
 import changeFilenameToRandomUUID from '~/utils/changeFilenameToRandomUUID';
 
 const router = new Router();
 
-const authenticationMiddleware = authentication();
+const authMiddleware = auth();
 
-const koaBodyMiddleware = koaBody({
+const uploadAvatarMiddleware = koaBody({
   multipart: true,
   formidable: {
     uploadDir: path.resolve(__dirname, '../../public'),
@@ -26,11 +26,11 @@ const koaBodyMiddleware = koaBody({
 });
 
 router.post(
-  '/upload-photo',
-  authenticationMiddleware.initialize,
-  authenticationMiddleware.authenticate({ protectedRoutes: true }),
-  koaBodyMiddleware,
-  uploadPhoto
+  '/avatar/upload',
+  authMiddleware.initialize,
+  authMiddleware.authenticate({ requireAuth: true }),
+  uploadAvatarMiddleware,
+  saveAvatarURL
 );
 
 export default router;

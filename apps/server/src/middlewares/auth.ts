@@ -7,12 +7,16 @@ import usefazConnector from '~/database/usefazConnector';
 import { errorConfig } from '@usefaz/shared';
 
 type authenticateProps = {
-  protectedRoutes: boolean;
+  requireAuth: boolean;
 };
 
 const params = {
   secretOrKey: process.env.JWT_SECRET,
   jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+};
+
+const DEFAULT_PARAMS = {
+  requireAuth: false,
 };
 
 const getPayload = (ctx: Context): Promise<{ id: string }> | false => {
@@ -27,7 +31,7 @@ const getPayload = (ctx: Context): Promise<{ id: string }> | false => {
   });
 };
 
-const authentication = () => {
+const auth = () => {
   const strategy = new Strategy(params, (payload: { id: string }, done) => {
     const { id } = payload;
 
@@ -42,16 +46,14 @@ const authentication = () => {
       return next();
     },
     authenticate:
-      ({ protectedRoutes }: authenticateProps = { protectedRoutes: false }) =>
+      ({ requireAuth = false }: authenticateProps = DEFAULT_PARAMS) =>
       async (ctx: Context, next: Next) => {
         try {
           const payload = await getPayload(ctx);
 
-          if (protectedRoutes && !payload) {
+          if (requireAuth && !payload) {
             throw new Error(errorConfig.user.unauthenticated.code);
-          }
-
-          if (!payload) {
+          } else if (!payload) {
             return next();
           }
 
@@ -59,11 +61,9 @@ const authentication = () => {
 
           const login = await authEntity.getLoginBy({ id: payload.id });
 
-          if (protectedRoutes && !login?.active) {
+          if (requireAuth && !login?.active) {
             throw new Error(errorConfig.user.unauthenticated.code);
-          }
-
-          if (!login?.active) {
+          } else if (!login?.active) {
             return next();
           }
 
@@ -84,4 +84,4 @@ const authentication = () => {
   };
 };
 
-export default authentication;
+export default auth;
