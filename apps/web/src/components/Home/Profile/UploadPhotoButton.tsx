@@ -1,9 +1,8 @@
 import styled from 'styled-components';
 import IconButton from '@mui/material/IconButton';
 import CameraAltOutlinedIcon from '@mui/icons-material/CameraAltOutlined';
-import axios from 'axios';
 
-import jwtToken from '~/utils/jwtToken';
+import fetchWithRetries from '~/utils/relay/fetchWithRetries';
 
 const UploadButton = styled((props) => <IconButton {...props} component="span" type="submit" />)`
   && {
@@ -34,17 +33,18 @@ type UploadPhotoButtonProps = {
 
 export default function UploadPhotoButton({ setNewAvatarURL }: UploadPhotoButtonProps) {
   const handleSubmit = async (event: React.FormEvent<HTMLInputElement>) => {
-    event.preventDefault();
-
     const { 0: avatar } = event.currentTarget.files;
 
     if (avatar) {
       const formData = new FormData();
+
       formData.append('avatar', avatar);
 
-      const response = await axios.post(`${process.env.SERVER_BASE_URL}/avatar/upload`, formData, {
+      const response = await fetchWithRetries({
+        method: 'POST',
+        url: `${process.env.SERVER_BASE_URL}/avatar/upload`,
+        data: formData,
         headers: {
-          Authorization: jwtToken.get(),
           'Content-Type': 'multipart/form-data',
         },
       });
