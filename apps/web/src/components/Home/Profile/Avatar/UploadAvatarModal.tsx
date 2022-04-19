@@ -99,10 +99,8 @@ export default function UploadAvatarModal({ open, onClose, student }: UploadAvat
 
   const cropperRef = useRef<ReactCropperElement>(null);
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-
-    const formData = new FormData(event.currentTarget);
+  const handleUploadAvatar = () => {
+    const formData = new FormData();
 
     const imageElement = cropperRef.current;
     const cropper = imageElement.cropper;
@@ -160,11 +158,9 @@ export default function UploadAvatarModal({ open, onClose, student }: UploadAvat
       <DialogActions>
         <InputFileButton onChange={handleChange} />
 
-        <form onSubmit={handleSubmit}>
-          <RightButton variant="contained" color="secondary" type="submit">
-            Salvar
-          </RightButton>
-        </form>
+        <RightButton variant="contained" color="secondary" onClick={handleUploadAvatar}>
+          Salvar
+        </RightButton>
       </DialogActions>
     </StyledDialog>
   );
