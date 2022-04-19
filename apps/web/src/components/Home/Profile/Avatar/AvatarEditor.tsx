@@ -1,8 +1,17 @@
 import 'cropperjs/dist/cropper.css';
 
+import { graphql, useFragment } from 'relay-hooks';
 import { forwardRef } from 'react';
 import { Cropper, ReactCropperElement } from 'react-cropper';
 import styled from 'styled-components';
+
+import { AvatarEditor_student$key } from './__generated__/AvatarEditor_student.graphql';
+
+const fragment = graphql`
+  fragment AvatarEditor_student on Student {
+    avatarURL
+  }
+`;
 
 const StyledCropper = styled(Cropper)`
   && {
@@ -26,11 +35,13 @@ const StyledCropper = styled(Cropper)`
 `;
 
 type AvatarEditorProps = {
-  avatarURL: string | null;
+  student: AvatarEditor_student$key;
 };
 
-const AvatarEditor = forwardRef<HTMLImageElement | ReactCropperElement, AvatarEditorProps>(({ avatarURL }, ref) => {
-  return <StyledCropper src={avatarURL} guides={false} ref={ref} />;
+const AvatarEditor = forwardRef<HTMLImageElement | ReactCropperElement, AvatarEditorProps>(({ student }, ref) => {
+  const data = useFragment<AvatarEditor_student$key>(fragment, student);
+
+  return <StyledCropper src={data.avatarURL} guides={false} ref={ref} />;
 });
 
 export default AvatarEditor;

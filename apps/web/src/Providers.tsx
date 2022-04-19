@@ -61,7 +61,6 @@ type ProvidersProps = {
 
 export default function Providers({ children }: ProvidersProps) {
   return (
-    // @ts-expect-error expected types are differently here but still works
     <RelayEnvironmentProvider environment={environment}>
       <ThemeProvider theme={theme}>
         <LocalizationProvider dateAdapter={AdapterDateFns} locale={ptBRLocale}>

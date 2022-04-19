@@ -1,15 +1,25 @@
+import { graphql, useFragment } from 'relay-hooks';
 import { Notification } from '@usefaz/components';
 import Button from '@mui/material/Button';
-import IconButton from '@mui/material/IconButton';
-import CloseIcon from '@mui/icons-material/Close';
 import Dialog from '@mui/material/Dialog';
 import styled from 'styled-components';
 import { useRef } from 'react';
 import { ReactCropperElement } from 'react-cropper';
+import { commitLocalUpdate } from 'react-relay';
 
+import { UploadAvatarModal_student$key } from './__generated__/UploadAvatarModal_student.graphql';
 import fetchWithRetries from '~/utils/relay/fetchWithRetries';
 import AvatarEditor from './AvatarEditor';
 import InputFileButton from './InputFileButton';
+import CloseButton from './CloseButton';
+import { environment } from '~/utils/relay';
+
+const fragment = graphql`
+  fragment UploadAvatarModal_student on Student {
+    id
+    ...AvatarEditor_student
+  }
+`;
 
 const StyledDialog = styled(Dialog)`
   && {
@@ -67,28 +77,6 @@ const RightButton = styled(Button)`
   }
 `;
 
-const OuterCloseButton = styled(IconButton)`
-  && {
-    width: 24px;
-    height: 24px;
-    padding: 0;
-  }
-`;
-
-const StyledCloseIcon = styled(CloseIcon)`
-  && {
-    color: #333;
-  }
-`;
-
-const CloseButton = ({ onClose }) => {
-  return (
-    <OuterCloseButton onClick={onClose}>
-      <StyledCloseIcon />
-    </OuterCloseButton>
-  );
-};
-
 function getBase64FromFile(file: File): Promise<string> {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -101,14 +89,15 @@ function getBase64FromFile(file: File): Promise<string> {
 type UploadAvatarModalProps = {
   open: boolean;
   onClose(): void;
-  avatarURL: string | null;
-  setNewAvatarURL: React.Dispatch<React.SetStateAction<string>>;
+  student: UploadAvatarModal_student$key;
 };
 
-export default function UploadAvatarModal({ open, onClose, avatarURL, setNewAvatarURL }: UploadAvatarModalProps) {
+export default function UploadAvatarModal({ open, onClose, student }: UploadAvatarModalProps) {
+  const data = useFragment<UploadAvatarModal_student$key>(fragment, student);
+
   const { enqueueSnackbar } = Notification.useSnackbar();
 
-  const cropperRef = useRef<HTMLImageElement>(null);
+  const cropperRef = useRef<ReactCropperElement>(null);
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -131,9 +120,12 @@ export default function UploadAvatarModal({ open, onClose, avatarURL, setNewAvat
           },
         });
 
-        setNewAvatarURL(response.data.avatarURL);
+        commitLocalUpdate(environment, (store) => {
+          const student = store.get(data.id);
+          student.setValue(response.data.avatarURL, 'avatarURL');
+        });
 
-        enqueueSnackbar('Imagem atualizada com sucesso!', { variant: 'success' });
+        enqueueSnackbar('Imagem atualizada com sucesso!', { variant: 'info' });
 
         onClose();
       } catch {
@@ -148,7 +140,7 @@ export default function UploadAvatarModal({ open, onClose, avatarURL, setNewAvat
     if (avatar) {
       const avatarBase64 = await getBase64FromFile(avatar);
 
-      const imageElement = cropperRef.current as ReactCropperElement;
+      const imageElement = cropperRef.current;
       const cropper = imageElement.cropper;
 
       cropper.replace(avatarBase64);
@@ -156,26 +148,25 @@ export default function UploadAvatarModal({ open, onClose, avatarURL, setNewAvat
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <StyledDialog open={open} onClose={onClose} disablePortal>
-        <Header>
-          <Title>Carregar nova imagem</Title>
+    <StyledDialog open={open} onClose={onClose}>
+      <Header>
+        <Title>Carregar nova imagem</Title>
+        <CloseButton onClose={onClose} />
+      </Header>
 
-          <CloseButton onClose={onClose} />
-        </Header>
+      <DialogContent>
+        <AvatarEditor student={data} ref={cropperRef} />
+      </DialogContent>
 
-        <DialogContent>
-          <AvatarEditor avatarURL={avatarURL} ref={cropperRef} />
-        </DialogContent>
+      <DialogActions>
+        <InputFileButton onChange={handleChange} />
 
-        <DialogActions>
-          <InputFileButton onChange={handleChange} />
-
+        <form onSubmit={handleSubmit}>
           <RightButton variant="contained" color="secondary" type="submit">
             Salvar
           </RightButton>
-        </DialogActions>
-      </StyledDialog>
-    </form>
+        </form>
+      </DialogActions>
+    </StyledDialog>
   );
 }

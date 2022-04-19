@@ -1,11 +1,19 @@
+import { graphql, useFragment } from 'relay-hooks';
 import styled from 'styled-components';
 import IconButton from '@mui/material/IconButton';
 import CameraAltOutlinedIcon from '@mui/icons-material/CameraAltOutlined';
 import { useState } from 'react';
 
+import { OpenUploadAvatarModalButton_student$key } from './__generated__/OpenUploadAvatarModalButton_student.graphql';
 import UploadAvatarModal from './UploadAvatarModal';
 
-const UploadButton = styled((props) => <IconButton {...props} component="span" type="submit" />)`
+const fragment = graphql`
+  fragment OpenUploadAvatarModalButton_student on Student {
+    ...UploadAvatarModal_student
+  }
+`;
+
+const UploadButton = styled(IconButton)`
   && {
     position: absolute;
     bottom: 0;
@@ -29,14 +37,16 @@ const StyledCameraAltOutlinedIcon = styled(CameraAltOutlinedIcon)`
 `;
 
 type OpenUploadAvatarModalButtonProps = {
-  avatarURL: string | null;
-  setNewAvatarURL: React.Dispatch<React.SetStateAction<string>>;
+  student: OpenUploadAvatarModalButton_student$key;
 };
 
-export default function OpenUploadAvatarModalButton({ avatarURL, setNewAvatarURL }: OpenUploadAvatarModalButtonProps) {
+export default function OpenUploadAvatarModalButton({ student }: OpenUploadAvatarModalButtonProps) {
+  const data = useFragment<OpenUploadAvatarModalButton_student$key>(fragment, student);
+
   const [isOpen, setIsOpen] = useState(false);
 
   const handleOpenModal = () => setIsOpen(true);
+
   const handleCloseModal = () => setIsOpen(false);
 
   return (
@@ -45,12 +55,7 @@ export default function OpenUploadAvatarModalButton({ avatarURL, setNewAvatarURL
         <StyledCameraAltOutlinedIcon />
       </UploadButton>
 
-      <UploadAvatarModal
-        open={isOpen}
-        onClose={handleCloseModal}
-        avatarURL={avatarURL}
-        setNewAvatarURL={setNewAvatarURL}
-      />
+      <UploadAvatarModal open={isOpen} onClose={handleCloseModal} student={data} />
     </>
   );
 }

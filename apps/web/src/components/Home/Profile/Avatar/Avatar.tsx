@@ -1,6 +1,5 @@
 import styled from 'styled-components';
 import { graphql, useFragment } from 'relay-hooks';
-import { useState } from 'react';
 
 import { Avatar_student$key } from './__generated__/Avatar_student.graphql';
 import OpenUploadAvatarModalButton from './OpenUploadAvatarModalButton';
@@ -8,6 +7,7 @@ import OpenUploadAvatarModalButton from './OpenUploadAvatarModalButton';
 const fragment = graphql`
   fragment Avatar_student on Student {
     avatarURL
+    ...OpenUploadAvatarModalButton_student
   }
 `;
 
@@ -36,14 +36,10 @@ type AvatarProps = {
 export default function Avatar({ student }: AvatarProps) {
   const data = useFragment<Avatar_student$key>(fragment, student);
 
-  const [newAvatarURL, setNewAvatarURL] = useState<string | null>(null);
-
-  const avatarURL = newAvatarURL ?? data.avatarURL;
-
   return (
     <OuterAvatar>
-      <AvatarImage src={avatarURL} />
-      <OpenUploadAvatarModalButton avatarURL={avatarURL} setNewAvatarURL={setNewAvatarURL} />
+      <AvatarImage src={data.avatarURL} />
+      <OpenUploadAvatarModalButton student={data} />
     </OuterAvatar>
   );
 }

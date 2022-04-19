@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { graphql, useFragment } from 'relay-hooks';
 
 import { AvatarBackground_student$key } from './__generated__/AvatarBackground_student.graphql';
-import Avatar from './Avatar';
+import Avatar from './Avatar/Avatar';
 
 const fragment = graphql`
   fragment AvatarBackground_student on Student {
