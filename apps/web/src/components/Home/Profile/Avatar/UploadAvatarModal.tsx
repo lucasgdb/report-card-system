@@ -108,9 +108,9 @@ export default function UploadAvatarModal({ open, onClose, student }: UploadAvat
     const cropper = imageElement.cropper;
 
     cropper.getCroppedCanvas().toBlob(async (blob) => {
-      formData.append('avatar', blob);
-
       try {
+        formData.append('avatar', blob);
+
         const response = await fetchWithRetries({
           method: 'POST',
           url: `${process.env.SERVER_BASE_URL}/avatar/upload`,
@@ -126,10 +126,9 @@ export default function UploadAvatarModal({ open, onClose, student }: UploadAvat
         });
 
         enqueueSnackbar('Imagem atualizada com sucesso!', { variant: 'info' });
-
         onClose();
       } catch {
-        enqueueSnackbar('Não foi possível fazer upload da imagem.', { variant: 'error' });
+        enqueueSnackbar('Não foi possível atualizar a imagem.', { variant: 'error' });
       }
     });
   };
