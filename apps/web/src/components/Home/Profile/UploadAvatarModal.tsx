@@ -121,20 +121,22 @@ export default function UploadAvatarModal({ open, onClose, avatarURL, setNewAvat
     cropper.getCroppedCanvas().toBlob(async (blob) => {
       formData.append('avatar', blob, 'test.jpg');
 
-      const response = await fetchWithRetries({
-        method: 'POST',
-        url: `${process.env.SERVER_BASE_URL}/avatar/upload`,
-        data: formData,
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
+      try {
+        const response = await fetchWithRetries({
+          method: 'POST',
+          url: `${process.env.SERVER_BASE_URL}/avatar/upload`,
+          data: formData,
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        });
 
-      if (response.data?.avatarURL) {
         setNewAvatarURL(response.data.avatarURL);
-        onClose();
+
         enqueueSnackbar('Imagem atualizada com sucesso!', { variant: 'success' });
-      } else {
+
+        onClose();
+      } catch {
         enqueueSnackbar('Não foi possível fazer upload da imagem.', { variant: 'error' });
       }
     });
