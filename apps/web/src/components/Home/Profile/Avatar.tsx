@@ -3,7 +3,7 @@ import { graphql, useFragment } from 'relay-hooks';
 import { useState } from 'react';
 
 import { Avatar_student$key } from './__generated__/Avatar_student.graphql';
-import UploadPhotoButton from './UploadPhotoButton';
+import OpenUploadAvatarModalButton from './OpenUploadAvatarModalButton';
 
 const fragment = graphql`
   fragment Avatar_student on Student {
@@ -23,7 +23,7 @@ const OuterAvatar = styled.div`
   border: 2px solid #ee7844;
 `;
 
-const AvatarPhoto = styled.img`
+const AvatarImage = styled.img`
   width: 100%;
   height: 100%;
   border-radius: 50%;
@@ -38,10 +38,12 @@ export default function Avatar({ student }: AvatarProps) {
 
   const [newAvatarURL, setNewAvatarURL] = useState<string | null>(null);
 
+  const avatarURL = newAvatarURL ?? data.avatarURL;
+
   return (
     <OuterAvatar>
-      <AvatarPhoto src={newAvatarURL ?? data.avatarURL} />
-      <UploadPhotoButton setNewAvatarURL={setNewAvatarURL} />
+      <AvatarImage src={avatarURL} />
+      <OpenUploadAvatarModalButton avatarURL={avatarURL} setNewAvatarURL={setNewAvatarURL} />
     </OuterAvatar>
   );
 }

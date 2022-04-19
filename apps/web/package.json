@@ -27,6 +27,7 @@
     "date-fns": "^2.28.0",
     "dayjs": "^1.11.0",
     "react": "^18.0.0",
+    "react-cropper": "^2.1.8",
     "react-dom": "^18.0.0",
     "react-google-recaptcha-v3": "^1.9.7",
     "react-relay": "^13.2.0",

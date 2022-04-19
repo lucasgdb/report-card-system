@@ -34,6 +34,7 @@
     "react/jsx-filename-extension": ["off", { "extensions": [".js", ".jsx"] }],
     "react/prop-types": "off",
     "react/require-default-props": "off",
+    "react/display-name": "off",
 
     "arrow-body-style": "off",
     "require-await": "error",
