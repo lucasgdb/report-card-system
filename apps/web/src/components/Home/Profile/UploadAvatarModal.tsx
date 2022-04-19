@@ -1,3 +1,4 @@
+import { Notification } from '@usefaz/components';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
@@ -57,6 +58,7 @@ const RightButton = styled(Button)`
     border-radius: 8px;
     padding: 8px 16px;
     font: normal normal normal 16px/16px Lexend;
+
     :disabled {
       background-color: #fe2a59;
       color: #fff;
@@ -104,6 +106,8 @@ type UploadAvatarModalProps = {
 };
 
 export default function UploadAvatarModal({ open, onClose, avatarURL, setNewAvatarURL }: UploadAvatarModalProps) {
+  const { enqueueSnackbar } = Notification.useSnackbar();
+
   const cropperRef = useRef<HTMLImageElement>(null);
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -128,6 +132,10 @@ export default function UploadAvatarModal({ open, onClose, avatarURL, setNewAvat
 
       if (response.data?.avatarURL) {
         setNewAvatarURL(response.data.avatarURL);
+        onClose();
+        enqueueSnackbar('Imagem atualizada com sucesso!', { variant: 'success' });
+      } else {
+        enqueueSnackbar('Não foi possível fazer upload da imagem.', { variant: 'error' });
       }
     });
   };
