@@ -108,7 +108,7 @@ export default function UploadAvatarModal({ open, onClose, student }: UploadAvat
     const cropper = imageElement.cropper;
 
     cropper.getCroppedCanvas().toBlob(async (blob) => {
-      formData.append('avatar', blob, 'test.jpg');
+      formData.append('avatar', blob);
 
       try {
         const response = await fetchWithRetries({
