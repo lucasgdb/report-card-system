@@ -23,7 +23,7 @@ export default function EnvironmentLayout() {
     return <PageLoader />;
   }
 
-  if (!data?.auth?.isLogged) {
+  if (!data.auth.isLogged) {
     const LoginPage = React.lazy(() => import('~/pages/Login/LoginPage'));
     return (
       <React.Suspense fallback={<PageLoader />}>

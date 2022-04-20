@@ -16,7 +16,7 @@ type InputFileButtonProps = {
 export default function InputFileButton({ onChange }: InputFileButtonProps) {
   return (
     <label htmlFor="avatar">
-      <input type="file" id="avatar" onChange={onChange} accept="image/*" hidden />
+      <input type="file" id="avatar" accept="image/*" onChange={onChange} hidden />
 
       <LeftButton variant="text" color="secondary">
         Upload

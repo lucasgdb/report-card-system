@@ -1,21 +1,8 @@
-import { graphql, useQuery } from 'relay-hooks';
 import styled, { createGlobalStyle } from 'styled-components';
-import { useNavigate } from 'react-router';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { GoogleReCaptchaProvider } from 'react-google-recaptcha-v3';
 
-import { LoginPageQuery } from './__generated__/LoginPageQuery.graphql';
-import PageLoader from '~/components/PageLoader';
 import Login from '~/components/Login/Login';
-import AnimatedIcons from '~/components/Login/AnimatedIcons';
-
-const query = graphql`
-  query LoginPageQuery {
-    auth {
-      isLogged
-    }
-  }
-`;
 
 const GlobalStyle = createGlobalStyle`
   body {
@@ -79,34 +66,21 @@ const ReadingBookImage = styled.img`
 `;
 
 export default function LoginPage() {
-  const navigate = useNavigate();
-
   const shouldChangeBodyStyle = useMediaQuery('(max-width: 1279px)');
-
-  const { data, isLoading } = useQuery<LoginPageQuery>(query);
-
-  if (isLoading) {
-    return <PageLoader />;
-  }
-
-  if (data.auth.isLogged) {
-    navigate('/');
-    return null;
-  }
 
   return (
     <GoogleReCaptchaProvider reCaptchaKey={process.env.RECAPTCHA_V3_PUBLIC_TOKEN} language="pt-BR" useRecaptchaNet>
-      <OuterLoginPage>
-        {shouldChangeBodyStyle && <GlobalStyle />}
+      {shouldChangeBodyStyle && <GlobalStyle />}
 
+      <OuterLoginPage>
         <BackgroundImage src="/assets/images/background_blue.svg" />
+
         <ZLogoImage src="/assets/images/z_logo.svg" />
 
         <UsefazLogoImage src="/assets/images/usefaz_logo.svg" />
 
         <Login />
 
-        <AnimatedIcons />
         <ReadingBookImage src="/assets/images/reading_book.svg" />
       </OuterLoginPage>
     </GoogleReCaptchaProvider>

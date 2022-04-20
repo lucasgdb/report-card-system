@@ -15,8 +15,7 @@ const fragment = graphql`
 
 const StyledCropper = styled(Cropper)`
   && {
-    height: 400px;
-    width: 100%;
+    min-height: 350px;
   }
 
   & .cropper-view-box {
