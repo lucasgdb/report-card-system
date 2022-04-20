@@ -1,3 +1,4 @@
+import { __DEV__ } from '@usefaz/shared';
 import dayjs from 'dayjs';
 import type { DefinitionNode } from 'graphql';
 import Koa from 'koa';
@@ -10,9 +11,6 @@ import schema from './modules/schema';
 import auth from './middlewares/auth';
 import generateSchema from './utils/generateSchema';
 
-const { NODE_ENV } = process.env;
-
-const __DEV__ = NODE_ENV?.toUpperCase() === 'DEVELOPMENT';
 if (__DEV__) {
   generateSchema();
 }

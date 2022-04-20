@@ -1,4 +1,4 @@
-import { errorConfig, getError } from '@usefaz/shared';
+import { errorConfig, getError, __DEV__ } from '@usefaz/shared';
 import { Notification } from '@usefaz/components';
 import styled from 'styled-components';
 import TextField from '@mui/material/TextField';
@@ -170,7 +170,6 @@ export default function Form() {
 
     const rememberMe = Boolean(formData.get('rememberMe')?.toString());
 
-    const __DEV__ = process.env.NODE_ENV?.toUpperCase() === 'DEVELOPMENT';
     const token = __DEV__ ? '' : await executeRecaptcha('login');
 
     loginMutation({
