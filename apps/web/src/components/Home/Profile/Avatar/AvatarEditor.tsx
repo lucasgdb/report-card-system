@@ -15,6 +15,7 @@ const fragment = graphql`
 
 const StyledCropper = styled(Cropper)`
   && {
+    width: 100%;
     min-height: 350px;
   }
 
@@ -35,12 +36,15 @@ const StyledCropper = styled(Cropper)`
 
 type AvatarEditorProps = {
   student: AvatarEditor_student$key;
+  onReady(): void;
 };
 
-const AvatarEditor = forwardRef<HTMLImageElement | ReactCropperElement, AvatarEditorProps>(({ student }, ref) => {
-  const data = useFragment<AvatarEditor_student$key>(fragment, student);
+const AvatarEditor = forwardRef<HTMLImageElement | ReactCropperElement, AvatarEditorProps>(
+  ({ student, onReady }, ref) => {
+    const data = useFragment<AvatarEditor_student$key>(fragment, student);
 
-  return <StyledCropper src={data.avatarURL} guides={false} ref={ref} />;
-});
+    return <StyledCropper ready={onReady} src={data.avatarURL} ref={ref} />;
+  }
+);
 
 export default AvatarEditor;

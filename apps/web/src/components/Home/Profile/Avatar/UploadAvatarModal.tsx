@@ -1,23 +1,29 @@
 import { graphql, useFragment } from 'relay-hooks';
-import { Notification } from '@usefaz/components';
-import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import styled from 'styled-components';
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { ReactCropperElement } from 'react-cropper';
-import { commitLocalUpdate } from 'react-relay';
+import Grow from '@mui/material/Grow';
 
-import { UploadAvatarModal_student$key } from './__generated__/UploadAvatarModal_student.graphql';
-import fetchWithRetries from '~/utils/relay/fetchWithRetries';
+import {
+  UploadAvatarModal_student$data,
+  UploadAvatarModal_student$key,
+} from './__generated__/UploadAvatarModal_student.graphql';
 import AvatarEditor from './AvatarEditor';
 import InputFileButton from './InputFileButton';
 import CloseButton from './CloseButton';
-import { environment } from '~/utils/relay';
+import RemoveAvatarButton from './RemoveAvatarButton';
+import DefaultAvatar from './DefaultAvatar';
+import UploadAvatarButton from './UploadAvatarButton';
+import { CircularProgress } from '@mui/material';
 
 const fragment = graphql`
   fragment UploadAvatarModal_student on Student {
-    id
+    avatarURL
+
     ...AvatarEditor_student
+    ...DefaultAvatar_student
+    ...UploadAvatarButton_student
   }
 `;
 
@@ -50,8 +56,9 @@ const Title = styled.span`
 
 const DialogContent = styled.div`
   padding: 24px 32px;
+
   display: flex;
-  flex-direction: column;
+  justify-content: center;
   gap: 16px;
 `;
 
@@ -63,104 +70,92 @@ const DialogActions = styled.div`
   gap: 16px;
 `;
 
-const RightButton = styled(Button)`
-  && {
-    border-radius: 8px;
-    padding: 8px 16px;
-    font: normal normal normal 16px/16px Lexend;
+const OuterDefaultBehavior = styled.div`
+  width: 240px;
+  height: 240px;
 
-    :disabled {
-      background-color: #fe2a59;
-      color: #fff;
-      opacity: 30%;
-    }
-  }
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;
 
-function getBase64FromFile(file: File): Promise<string> {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = () => resolve(reader.result?.toString());
-    reader.onerror = (error) => reject(error);
-  });
-}
+type DefaultBehaviorProps = {
+  student: UploadAvatarModal_student$data;
+  readyToEdit: boolean;
+};
+
+const DefaultBehavior = ({ student, readyToEdit }: DefaultBehaviorProps) => {
+  if (readyToEdit) {
+    return null;
+  }
+
+  if (!student.avatarURL) {
+    return (
+      <OuterDefaultBehavior>
+        <DefaultAvatar student={student} />
+      </OuterDefaultBehavior>
+    );
+  }
+
+  return (
+    <OuterDefaultBehavior>
+      <CircularProgress />
+    </OuterDefaultBehavior>
+  );
+};
 
 type UploadAvatarModalProps = {
+  student: UploadAvatarModal_student$key;
   open: boolean;
   onClose(): void;
-  student: UploadAvatarModal_student$key;
 };
 
 export default function UploadAvatarModal({ open, onClose, student }: UploadAvatarModalProps) {
   const data = useFragment<UploadAvatarModal_student$key>(fragment, student);
 
-  const { enqueueSnackbar } = Notification.useSnackbar();
-
   const cropperRef = useRef<ReactCropperElement>(null);
 
-  const handleUploadAvatar = () => {
-    const formData = new FormData();
+  const [readyToEdit, setReadyToEdit] = useState(false);
 
-    const imageElement = cropperRef.current;
-    const cropper = imageElement.cropper;
+  const handleReadyToEdit = () => setReadyToEdit(true);
 
-    cropper.getCroppedCanvas().toBlob(async (blob) => {
-      try {
-        formData.append('avatar', blob);
-
-        const response = await fetchWithRetries({
-          method: 'POST',
-          url: `${process.env.SERVER_BASE_URL}/avatar/upload`,
-          data: formData,
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
-        });
-
-        commitLocalUpdate(environment, (store) => {
-          const student = store.get(data.id);
-          student.setValue(response.data.avatarURL, 'avatarURL');
-        });
-
-        enqueueSnackbar('Imagem atualizada com sucesso!', { variant: 'success' });
-        onClose();
-      } catch {
-        enqueueSnackbar('Não foi possível alterar a imagem.', { variant: 'error' });
-      }
-    });
-  };
-
-  const handleChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { 0: avatar } = event.target.files;
-
-    if (avatar) {
-      const avatarBase64 = await getBase64FromFile(avatar);
-
-      const imageElement = cropperRef.current;
-      const cropper = imageElement.cropper;
-
-      cropper.replace(avatarBase64);
-    }
-  };
+  const handleExit = () => setReadyToEdit(false);
 
   return (
-    <StyledDialog open={open} onClose={onClose}>
+    <StyledDialog
+      open={open}
+      onClose={onClose}
+      keepMounted={false}
+      transitionDuration={{ exit: 0 }}
+      TransitionProps={{ onExit: handleExit }}
+    >
       <Header>
         <Title>Carregar nova imagem</Title>
         <CloseButton onClose={onClose} />
       </Header>
 
       <DialogContent>
-        <AvatarEditor student={data} ref={cropperRef} />
+        <AvatarEditor student={data} onReady={handleReadyToEdit} ref={cropperRef} />
+        <DefaultBehavior student={data} readyToEdit={readyToEdit} />
       </DialogContent>
 
       <DialogActions>
-        <InputFileButton onChange={handleChange} />
+        <div>
+          <InputFileButton cropperRef={cropperRef} />
 
-        <RightButton variant="contained" color="secondary" onClick={handleUploadAvatar}>
-          Salvar
-        </RightButton>
+          <Grow in={Boolean(data.avatarURL)} mountOnEnter unmountOnExit>
+            <RemoveAvatarButton onClose={onClose} />
+          </Grow>
+        </div>
+
+        <Grow in={readyToEdit} mountOnEnter unmountOnExit>
+          <UploadAvatarButton student={data} cropperRef={cropperRef} onClose={onClose} />
+        </Grow>
       </DialogActions>
     </StyledDialog>
   );

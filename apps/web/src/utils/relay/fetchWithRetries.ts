@@ -35,24 +35,28 @@ export default async function fetchWithRetries(
   const _fetchTimeout = fetchTimeout ?? DEFAULT_RETRIES_CONFIG.fetchTimeout;
   const _retries = retries ?? DEFAULT_RETRIES_CONFIG.retries;
 
-  const client = axios.create({ timeout: _fetchTimeout, headers: { Authorization: jwtToken.get() } });
+  try {
+    const client = axios.create({ timeout: _fetchTimeout, headers: { Authorization: jwtToken.get() } });
 
-  axiosRetry(client, {
-    retries: _retries,
-    retryDelay: (retryCount) => retryCount * 3000,
-    retryCondition: (error) => isNetworkOrIdempotentRequestError(error) || isRetryableError(error),
-  });
+    axiosRetry(client, {
+      retries: _retries,
+      retryDelay: (retryCount) => retryCount * 3000,
+      retryCondition: (error) => isNetworkOrIdempotentRequestError(error) || isRetryableError(error),
+    });
 
-  const response = await client(axiosConfig);
+    const response = await client(axiosConfig);
 
-  if (response.status >= 200 && response.status < 300) {
     return response;
-  }
+  } catch (err) {
+    if (err.response.status === 401) {
+      window.location.reload();
+    }
 
-  if (response.status >= 500) {
-    const error = new RelayError();
-    error.response = response;
+    if (err.response.status >= 500) {
+      const error = new RelayError();
+      error.response = err.response;
 
-    throw error;
+      throw error;
+    }
   }
 }

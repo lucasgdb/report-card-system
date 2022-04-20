@@ -141,7 +141,7 @@ export default function Form() {
   const { enqueueSnackbar } = Notification.useSnackbar();
 
   const [loginMutation, { loading }] = useMutation<StudentLoginMutationType>(StudentLoginMutation, {
-    onError: (errors) => {
+    onError(errors) {
       const { notFound } = errorConfig.student;
 
       const studentNotFoundError = getError(errors, notFound.code);

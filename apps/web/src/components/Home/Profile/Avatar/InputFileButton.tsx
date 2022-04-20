@@ -1,7 +1,10 @@
 import Button from '@mui/material/Button';
+import type { ReactCropperElement } from 'react-cropper';
 import styled from 'styled-components';
 
-const LeftButton = styled((props) => <Button {...props} component="span" />)`
+import getBase64FromFile from '~/utils/getBase64FromFile';
+
+const UploadButton = styled((props) => <Button {...props} component="span" />)`
   && {
     border-radius: 8px;
     padding: 8px 16px;
@@ -10,17 +13,30 @@ const LeftButton = styled((props) => <Button {...props} component="span" />)`
 `;
 
 type InputFileButtonProps = {
-  onChange(event: React.ChangeEvent<HTMLInputElement>): void;
+  cropperRef: React.MutableRefObject<ReactCropperElement>;
 };
 
-export default function InputFileButton({ onChange }: InputFileButtonProps) {
+export default function InputFileButton({ cropperRef }: InputFileButtonProps) {
+  const handleChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { 0: avatar } = event.target.files;
+
+    if (avatar) {
+      const avatarBase64 = await getBase64FromFile(avatar);
+
+      const imageElement = cropperRef.current;
+      const cropper = imageElement.cropper;
+
+      cropper.replace(avatarBase64);
+    }
+  };
+
   return (
     <label htmlFor="avatar">
-      <input type="file" id="avatar" accept="image/*" onChange={onChange} hidden />
+      <input type="file" id="avatar" accept="image/*" onChange={handleChange} hidden />
 
-      <LeftButton variant="text" color="secondary">
+      <UploadButton variant="text" color="secondary">
         Upload
-      </LeftButton>
+      </UploadButton>
     </label>
   );
 }

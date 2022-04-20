@@ -42,6 +42,14 @@ const StudentModel = (dbConnector: DBConnector) => {
         .where('id', id)
         .returning('*');
     },
+
+    removeAvatarURL(id: string) {
+      return dbConnector
+        .knexConnection<IStudent>('student')
+        .update({ avatar_url: null })
+        .where('id', id)
+        .returning('*');
+    },
   };
 };
 

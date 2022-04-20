@@ -21,11 +21,11 @@ const StyledPowerSettingsNewIcon = styled(PowerSettingsNewIcon)`
 
 export default function LogoutButton() {
   const [logoutMutation, { loading }] = useMutation(LogoutMutation, {
-    onCompleted: () => {
+    onCompleted() {
       jwtToken.destroy();
       window.location.reload();
     },
-    onError: () => {
+    onError() {
       window.location.reload();
     },
   });

@@ -60,6 +60,7 @@ type Mutation {
 
   """The logOut mutation can be used to log out an existing user."""
   logout(input: LogoutMutationInput!): LogoutMutationPayload
+  removeAvatar(input: RemoveAvatarMutationInput!): RemoveAvatarMutationPayload
   studentLogin(input: StudentLoginMutationInput!): StudentLoginMutationPayload
 }
 
@@ -92,6 +93,15 @@ type LogoutMutationPayload {
 }
 
 input LogoutMutationInput {
+  clientMutationId: String
+}
+
+type RemoveAvatarMutationPayload {
+  student: Student!
+  clientMutationId: String
+}
+
+input RemoveAvatarMutationInput {
   clientMutationId: String
 }
 
