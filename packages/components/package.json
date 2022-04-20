@@ -8,10 +8,10 @@
     "@emotion/react": "^11.9.0",
     "@emotion/styled": "^11.8.1",
     "@usefaz/shared": "*",
-    "@mui/icons-material": "^5.6.0",
-    "@mui/material": "^5.6.0",
-    "@mui/styled-engine-sc": "^5.5.2",
-    "notistack": "^2.0.3",
+    "@mui/icons-material": "^5.6.2",
+    "@mui/material": "^5.6.2",
+    "@mui/styled-engine-sc": "^5.6.1",
+    "notistack": "^2.0.4",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
     "styled-components": "^5.3.5"
@@ -19,6 +19,6 @@
   "devDependencies": {
     "@types/react": "^17.0.43",
     "@types/react-dom": "^17.0.14",
-    "@types/styled-components": "^5.1.22"
+    "@types/styled-components": "^5.1.25"
   }
 }

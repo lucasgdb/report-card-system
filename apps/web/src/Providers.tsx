@@ -42,7 +42,7 @@ const theme = createTheme({
   },
 
   typography: {
-    fontFamily: ['Lexend'].join(','),
+    fontFamily: 'Lexend',
   },
 
   palette: {
