@@ -1,10 +1,10 @@
+import { errorConfig } from '@usefaz/shared';
 import passport from 'passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import type { Context, Next } from 'koa';
 
 import { UserModel, AuthModel } from '~/entities';
 import usefazConnector from '~/database/usefazConnector';
-import { errorConfig } from '@usefaz/shared';
 
 type authenticateProps = {
   requireAuth: boolean;
@@ -77,7 +77,7 @@ const auth = () => {
         } catch {
           ctx.status = 401;
           ctx.body = {
-            message: errorConfig.user.unauthenticated.message,
+            message: errorConfig.user.unauthenticated.code,
           };
         }
       },

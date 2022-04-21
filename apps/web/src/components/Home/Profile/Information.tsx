@@ -60,6 +60,7 @@ export default function Information({ student }: InformationProps) {
     <OuterProfileInformation>
       <RMText>RM: {data.RM}</RMText>
       <FullnameText>NOME: {data.fullname}</FullnameText>
+
       <Status>
         <StatusText>APROVADO</StatusText>
       </Status>

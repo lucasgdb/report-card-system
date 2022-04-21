@@ -3,15 +3,12 @@ import styled from 'styled-components';
 
 import { Avatar_student$key } from './__generated__/Avatar_student.graphql';
 import OpenUploadAvatarModalButton from './OpenUploadAvatarModalButton';
-import AvatarImageWithLoader from './AvatarImageWithLoader';
-import DefaultAvatar from './DefaultAvatar';
+import AvatarImage from './AvatarImage';
 
 const fragment = graphql`
   fragment Avatar_student on Student {
-    avatarURL
-
+    ...AvatarImage_student
     ...OpenUploadAvatarModalButton_student
-    ...DefaultAvatar_student
   }
 `;
 
@@ -40,7 +37,7 @@ export default function Avatar({ student }: AvatarProps) {
 
   return (
     <OuterAvatar>
-      {data.avatarURL ? <AvatarImageWithLoader src={data.avatarURL} /> : <DefaultAvatar student={data} />}
+      <AvatarImage student={data} />
       <OpenUploadAvatarModalButton student={data} />
     </OuterAvatar>
   );

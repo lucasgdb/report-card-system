@@ -45,9 +45,7 @@ export default function Profile({ student }: ProfileProps) {
   return (
     <OuterProfile>
       <AvatarBackground student={data} />
-
       <Information student={data} />
-
       <ZLogoImage src="/assets/images/z_logo.svg" />
     </OuterProfile>
   );
