@@ -1,5 +1,4 @@
 import Button from '@mui/material/Button';
-import type { ReactCropperElement } from 'react-cropper';
 import styled from 'styled-components';
 
 import getBase64FromFile from '~/utils/getBase64FromFile';
@@ -13,20 +12,16 @@ const UploadButton = styled((props) => <Button {...props} component="span" />)`
 `;
 
 type InputFileButtonProps = {
-  cropperRef: React.MutableRefObject<ReactCropperElement>;
+  setAvatarToEdit: React.Dispatch<React.SetStateAction<string>>;
 };
 
-export default function InputFileButton({ cropperRef }: InputFileButtonProps) {
+export default function InputFileButton({ setAvatarToEdit }: InputFileButtonProps) {
   const handleChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { 0: avatar } = event.target.files;
-
+    const avatar = event.target.files.item(0);
     if (avatar) {
-      const avatarBase64 = await getBase64FromFile(avatar);
-
-      const imageElement = cropperRef.current;
-      const cropper = imageElement.cropper;
-
-      cropper.replace(avatarBase64);
+      const avatarToEdit = await getBase64FromFile(avatar);
+      setAvatarToEdit(avatarToEdit);
+      event.target.value = null;
     }
   };
 

@@ -10,7 +10,7 @@ import { forwardRef } from 'react';
 const OuterRemoveAvatarButton = styled(Button)`
   && {
     border-radius: 8px;
-    padding: 8px 16px;
+    padding: 16px 24px;
     font: normal normal normal 16px/16px Lexend;
   }
 `;
@@ -35,7 +35,13 @@ const RemoveAvatarButton = forwardRef<HTMLButtonElement, RemoveAvatarButtonProps
   const handleRemoveAvatar = () => loginMutation({ variables: { input: {} } });
 
   return (
-    <OuterRemoveAvatarButton onClick={handleRemoveAvatar} disabled={loading} color="error" ref={ref}>
+    <OuterRemoveAvatarButton
+      onClick={handleRemoveAvatar}
+      disabled={loading}
+      color="error"
+      variant="contained"
+      ref={ref}
+    >
       Remover
     </OuterRemoveAvatarButton>
   );
