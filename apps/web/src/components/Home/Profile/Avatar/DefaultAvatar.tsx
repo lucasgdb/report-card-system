@@ -25,6 +25,7 @@ const InitialName = styled.span`
   font: normal normal bold 56px/64px Lexend;
   text-transform: uppercase;
   color: #fafafa;
+  user-select: none;
 `;
 
 const getNameInitials = (name: string) => {
