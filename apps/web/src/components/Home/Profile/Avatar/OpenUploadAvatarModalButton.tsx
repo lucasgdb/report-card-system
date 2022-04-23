@@ -25,7 +25,7 @@ const UploadButton = styled(IconButton)`
     background-color: #ee7844;
 
     :hover {
-      background-color: #ee7844;
+      background-color: #d66c3d;
     }
   }
 `;

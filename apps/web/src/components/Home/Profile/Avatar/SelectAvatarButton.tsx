@@ -21,6 +21,7 @@ export default function SelectAvatarButton({ setAvatarToEdit }: SelectAvatarButt
     if (avatar) {
       const avatarToEdit = await getBase64FromFile(avatar);
       setAvatarToEdit(avatarToEdit);
+
       event.target.value = null;
     }
   };
