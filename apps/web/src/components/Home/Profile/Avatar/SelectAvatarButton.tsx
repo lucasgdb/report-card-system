@@ -11,11 +11,11 @@ const UploadButton = styled((props) => <Button {...props} component="span" />)`
   }
 `;
 
-type InputFileButtonProps = {
+type SelectAvatarButtonProps = {
   setAvatarToEdit: React.Dispatch<React.SetStateAction<string>>;
 };
 
-export default function InputFileButton({ setAvatarToEdit }: InputFileButtonProps) {
+export default function SelectAvatarButton({ setAvatarToEdit }: SelectAvatarButtonProps) {
   const handleChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const avatar = event.target.files.item(0);
     if (avatar) {

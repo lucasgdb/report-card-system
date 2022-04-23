@@ -7,7 +7,7 @@ import Button from '@mui/material/Button';
 
 import { UploadAvatarModal_student$key } from './__generated__/UploadAvatarModal_student.graphql';
 import AvatarEditor from './AvatarEditor';
-import InputFileButton from './InputFileButton';
+import SelectAvatarButton from './SelectAvatarButton';
 import CloseButton from './CloseButton';
 import UploadAvatarButton from './UploadAvatarButton';
 import AvatarImage from './AvatarImage';
@@ -137,7 +137,7 @@ export default function UploadAvatarModal({ open, onClose, student }: UploadAvat
 
       <DialogActions>
         <LeftDialogActions>
-          <InputFileButton setAvatarToEdit={setAvatarToEdit} />
+          <SelectAvatarButton setAvatarToEdit={setAvatarToEdit} />
 
           {!readyToEdit && data.avatarURL && <OpenRemoveAvatarModalButton />}
         </LeftDialogActions>
