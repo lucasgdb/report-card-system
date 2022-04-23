@@ -10,7 +10,7 @@ import { forwardRef } from 'react';
 const OuterRemoveAvatarButton = styled(Button)`
   && {
     border-radius: 8px;
-    padding: 16px 24px;
+    padding: 8px 16px;
     font: normal normal normal 16px/16px Lexend;
   }
 `;

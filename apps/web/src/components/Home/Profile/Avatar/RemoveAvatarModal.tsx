@@ -1,35 +1,13 @@
+import { SimpleDialog, DialogHeader, DialogTitle, CloseButton, DialogContent, DialogActions } from '@usefaz/components';
 import Button from '@mui/material/Button';
-import Dialog from '@mui/material/Dialog';
 import styled from 'styled-components';
 
 import RemoveAvatarButton from './RemoveAvatarButton';
 
-const StyledDialog = styled(Dialog)`
-  && {
-    padding: 0 16px;
-  }
-
+const StyledSimpleDialog = styled(SimpleDialog)`
   & .MuiDialog-paper {
-    width: 100%;
     max-width: 320px;
-
-    margin: 0;
-    padding: 24px 32px;
-    box-sizing: border-box;
-
-    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.125), 0px -1px 4px rgba(0, 0, 0, 0.1);
-    border-radius: 8px;
   }
-`;
-
-const Title = styled.h1`
-  font: normal normal normal 20px/24px Lexend;
-  color: #333;
-  margin: 0;
-`;
-
-const DialogContent = styled.div`
-  margin-top: 32px;
 `;
 
 const Description = styled.p`
@@ -38,19 +16,10 @@ const Description = styled.p`
   margin: 0;
 `;
 
-const DialogActions = styled.div`
-  margin-top: 32px;
-
-  display: flex;
-  justify-content: center;
-  gap: 16px;
-`;
-
 const CancelButton = styled(Button)`
   && {
     border-radius: 8px;
-    padding: 16px 24px;
-
+    padding: 8px 16px;
     font: normal normal normal 16px/16px Lexend;
   }
 `;
@@ -62,8 +31,11 @@ type RemoveAvatarModalProps = {
 
 export default function RemoveAvatarModal({ open, onClose }: RemoveAvatarModalProps) {
   return (
-    <StyledDialog open={open} onClose={onClose}>
-      <Title>Remover avatar</Title>
+    <StyledSimpleDialog open={open} onClose={onClose}>
+      <DialogHeader>
+        <DialogTitle>Remover avatar</DialogTitle>
+        <CloseButton onClose={onClose} />
+      </DialogHeader>
 
       <DialogContent>
         <Description>Tem certeza que deseja remover seu avatar atual?</Description>
@@ -76,6 +48,6 @@ export default function RemoveAvatarModal({ open, onClose }: RemoveAvatarModalPr
 
         <RemoveAvatarButton onClose={onClose} />
       </DialogActions>
-    </StyledDialog>
+    </StyledSimpleDialog>
   );
 }
