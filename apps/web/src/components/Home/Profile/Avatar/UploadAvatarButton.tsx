@@ -8,7 +8,7 @@ import type { ReactCropperElement } from 'react-cropper';
 
 import { UploadAvatarButton_student$key } from './__generated__/UploadAvatarButton_student.graphql';
 import { environment } from '~/utils/relay';
-import fetchWithRetries from '~/utils/relay/fetchWithRetries';
+import fetchWithRetries from '~/utils/fetchWithRetries';
 
 const fragment = graphql`
   fragment UploadAvatarButton_student on Student {

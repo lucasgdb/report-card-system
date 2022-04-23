@@ -1,6 +1,6 @@
 import type { RequestParameters, Variables } from 'relay-runtime';
 
-import fetchWithRetries from './fetchWithRetries';
+import fetchWithRetries from '~/utils/fetchWithRetries';
 import { isMutation } from './helpers';
 
 export const GRAPHQL_URL = `${process.env.SERVER_BASE_URL}/graphql`;

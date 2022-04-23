@@ -72,9 +72,8 @@ export default function UploadAvatarModal({ open, onClose, student }: UploadAvat
     <SimpleDialog
       open={open}
       onClose={onClose}
-      keepMounted={false}
       transitionDuration={{ exit: 0, enter: 225 }}
-      TransitionProps={{ onExit: handleReset }}
+      TransitionProps={{ onExited: handleReset }}
     >
       <DialogHeader>
         <DialogTitle>Carregar nova imagem</DialogTitle>
