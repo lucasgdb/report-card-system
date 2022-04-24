@@ -2,7 +2,7 @@ import axios from 'axios';
 import type { AxiosRequestConfig, AxiosResponse } from 'axios';
 import axiosRetry, { isNetworkOrIdempotentRequestError, isRetryableError } from 'axios-retry';
 
-import jwtToken from '~/utils/jwtToken';
+import jwtToken from '../hash/jwtToken';
 
 export type fetchWithRetriesConfig = {
   fetchTimeout?: number;
@@ -14,8 +14,8 @@ const DEFAULT_RETRIES_CONFIG = {
   retries: 3,
 };
 
-class RelayError extends Error {
-  response: AxiosResponse;
+class ApplicationError extends Error {
+  response?: AxiosResponse;
 
   constructor(message?: string) {
     super(message);
@@ -29,7 +29,7 @@ class RelayError extends Error {
 export default async function fetchWithRetries(
   axiosConfig: AxiosRequestConfig,
   retriesConfig: fetchWithRetriesConfig = DEFAULT_RETRIES_CONFIG
-): Promise<AxiosResponse> {
+) {
   const { fetchTimeout, retries } = retriesConfig;
 
   const _fetchTimeout = fetchTimeout ?? DEFAULT_RETRIES_CONFIG.fetchTimeout;
@@ -47,13 +47,13 @@ export default async function fetchWithRetries(
     const response = await client(axiosConfig);
 
     return response;
-  } catch (err) {
+  } catch (err: any) {
     if (err.response.status === 401) {
       window.location.reload();
     }
 
     if (err.response.status >= 500) {
-      const error = new RelayError();
+      const error = new ApplicationError();
       error.response = err.response;
 
       throw error;
