@@ -1,3 +1,4 @@
+import { fetchWithRetries } from '@usefaz/shared';
 import { Notification } from '@usefaz/components';
 import { graphql, useFragment } from 'relay-hooks';
 import Button from '@mui/material/Button';
@@ -8,7 +9,6 @@ import type { ReactCropperElement } from 'react-cropper';
 
 import { UploadAvatarButton_student$key } from './__generated__/UploadAvatarButton_student.graphql';
 import { environment } from '~/utils/relay';
-import fetchWithRetries from '~/utils/fetchWithRetries';
 
 const fragment = graphql`
   fragment UploadAvatarButton_student on Student {

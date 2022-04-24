@@ -1,3 +1,4 @@
+import { jwtToken } from '@usefaz/shared';
 import styled from 'styled-components';
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
@@ -5,7 +6,6 @@ import PowerSettingsNewIcon from '@mui/icons-material/PowerSettingsNew';
 import { useMutation } from 'relay-hooks';
 
 import LogoutMutation from '~/modules/auth/LogoutMutation';
-import jwtToken from '~/utils/jwtToken';
 
 const StyledIconButton = styled(IconButton)`
   && {
