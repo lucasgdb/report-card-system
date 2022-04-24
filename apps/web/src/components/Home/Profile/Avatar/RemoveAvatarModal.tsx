@@ -4,12 +4,6 @@ import styled from 'styled-components';
 
 import RemoveAvatarButton from './RemoveAvatarButton';
 
-const StyledSimpleDialog = styled(SimpleDialog)`
-  & .MuiDialog-paper {
-    max-width: 320px;
-  }
-`;
-
 const Description = styled.p`
   font: normal normal normal 16px/19px Lexend;
   color: #666;
@@ -31,7 +25,7 @@ type RemoveAvatarModalProps = {
 
 export default function RemoveAvatarModal({ open, onClose }: RemoveAvatarModalProps) {
   return (
-    <StyledSimpleDialog open={open} onClose={onClose}>
+    <SimpleDialog open={open} onClose={onClose} maxWidth="xs" fullWidth>
       <DialogHeader>
         <DialogTitle>Remover avatar</DialogTitle>
         <CloseButton onClose={onClose} />
@@ -48,6 +42,6 @@ export default function RemoveAvatarModal({ open, onClose }: RemoveAvatarModalPr
 
         <RemoveAvatarButton onClose={onClose} />
       </DialogActions>
-    </StyledSimpleDialog>
+    </SimpleDialog>
   );
 }

@@ -7,8 +7,6 @@ export const SimpleDialog = styled(Dialog)`
   }
 
   & .MuiDialog-paper {
-    width: 100%;
-    max-width: 600px;
     margin: 0;
     box-sizing: border-box;
     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.125), 0px -1px 4px rgba(0, 0, 0, 0.1);
