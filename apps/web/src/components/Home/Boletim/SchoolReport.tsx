@@ -30,14 +30,25 @@ const TableData = styled.td`
   color: #808080;
 `;
 
-const TableRow = styled.tr``;
-
-const TableBody = styled.tbody``;
+const TableRow = styled.tr`
+  ${TableHeader}:first-child,${TableData}:first-child {
+    position: sticky;
+    left: 0;
+    z-index: 1;
+    background-color: #fafafa;
+  }
+`;
 
 const FirstRowColumn = styled.div`
   display: flex;
   align-items: center;
   gap: 8px;
+`;
+
+const SubjectIcon = styled.img`
+  @media (max-width: 599px) {
+    display: none;
+  }
 `;
 
 const SubjectName = styled.p`
@@ -51,47 +62,47 @@ export default function SchoolReport() {
     () => [
       {
         Header: 'Disciplina',
-        accessor: 'col1',
+        accessor: 'subject',
       },
       {
         Header: '1° Bimestre',
-        accessor: 'col2',
+        accessor: 'firstBimester',
       },
       {
         Header: 'Faltas',
-        accessor: 'col3',
+        accessor: 'firstBimesterAbsences',
       },
       {
         Header: '2° Bimestre',
-        accessor: 'col4',
+        accessor: 'secondBimester',
       },
       {
         Header: 'Faltas',
-        accessor: 'col5',
+        accessor: 'secondBimesterAbsences',
       },
       {
         Header: '3° Bimestre',
-        accessor: 'col6',
+        accessor: 'thirdBimester',
       },
       {
         Header: 'Faltas',
-        accessor: 'col7',
+        accessor: 'thirdBimesterAbsences',
       },
       {
         Header: '4° Bimestre',
-        accessor: 'col8',
+        accessor: 'fourthBimester',
       },
       {
         Header: 'Faltas',
-        accessor: 'col9',
+        accessor: 'fourthBimesterAbsences',
       },
       {
         Header: 'Média final',
-        accessor: 'col10',
+        accessor: 'finalAverage',
       },
       {
         Header: 'Total de faltas',
-        accessor: 'col11',
+        accessor: 'totalAbsences',
       },
     ],
     []
@@ -100,385 +111,389 @@ export default function SchoolReport() {
   const data = useMemo(
     () => [
       {
-        col1: (
+        subject: (
           <FirstRowColumn>
-            <img src="/assets/icons/portuguese_language.svg" />
+            <SubjectIcon src="/assets/icons/portuguese_language.svg" />
             <SubjectName>
               Língua <br />
               Portuguesa
             </SubjectName>
           </FirstRowColumn>
         ),
-        col2: (
+        firstBimester: (
           <span>
             Nota: 8,0
             <br />
             Rec: -
           </span>
         ),
-        col3: '0',
-        col4: (
+        firstBimesterAbsences: '0',
+        secondBimester: (
           <span>
             Nota: 8,0
             <br />
             Rec: -
           </span>
         ),
-        col5: '0',
-        col6: (
+        secondBimesterAbsences: '0',
+        thirdBimester: (
           <span>
             Nota: 8,0
             <br />
             Rec: -
           </span>
         ),
-        col7: '0',
-        col8: (
+        thirdBimesterAbsences: '0',
+        fourthBimester: (
           <span>
             Nota: 8,0
             <br />
             Rec: -
           </span>
         ),
-        col9: '0',
-        col10: <GradeBadge number={8} />,
-        col11: <AbsencesBadge number={0} />,
+        fourthBimesterAbsences: '0',
+        finalAverage: <GradeBadge number={8} />,
+        totalAbsences: <AbsencesBadge number={0} />,
       },
       {
-        col1: (
+        subject: (
           <FirstRowColumn>
-            <img src="/assets/icons/math.svg" />
+            <SubjectIcon src="/assets/icons/math.svg" />
             <SubjectName>Matemática</SubjectName>
           </FirstRowColumn>
         ),
-        col2: (
+        firstBimester: (
           <span>
             Nota: 8,0
             <br />
             Rec: -
           </span>
         ),
-        col3: '0',
-        col4: (
+        firstBimesterAbsences: '0',
+        secondBimester: (
           <span>
             Nota: 8,0
             <br />
             Rec: -
           </span>
         ),
-        col5: '0',
-        col6: (
+        secondBimesterAbsences: '0',
+        thirdBimester: (
           <span>
             Nota: 8,0
             <br />
             Rec: -
           </span>
         ),
-        col7: '0',
-        col8: (
+        thirdBimesterAbsences: '0',
+        fourthBimester: (
           <span>
             Nota: 8,0
             <br />
             Rec: -
           </span>
         ),
-        col9: '0',
-        col10: <GradeBadge number={6} />,
-        col11: <AbsencesBadge number={11} />,
+        fourthBimesterAbsences: '0',
+        finalAverage: <GradeBadge number={6} />,
+        totalAbsences: <AbsencesBadge number={11} />,
       },
       {
-        col1: (
+        subject: (
           <FirstRowColumn>
-            <img src="/assets/icons/science.svg" />
+            <SubjectIcon src="/assets/icons/science.svg" />
             <SubjectName>Ciências</SubjectName>
           </FirstRowColumn>
         ),
-        col2: (
+        firstBimester: (
           <span>
             Nota: 8,0
             <br />
             Rec: -
           </span>
         ),
-        col3: '0',
-        col4: (
+        firstBimesterAbsences: '0',
+        secondBimester: (
           <span>
             Nota: 8,0
             <br />
             Rec: -
           </span>
         ),
-        col5: '0',
-        col6: (
+        secondBimesterAbsences: '0',
+        thirdBimester: (
           <span>
             Nota: 8,0
             <br />
             Rec: -
           </span>
         ),
-        col7: '0',
-        col8: (
+        thirdBimesterAbsences: '0',
+        fourthBimester: (
           <span>
             Nota: 8,0
             <br />
             Rec: -
           </span>
         ),
-        col9: '0',
-        col10: <GradeBadge number={4} />,
-        col11: <AbsencesBadge number={20} />,
+        fourthBimesterAbsences: '0',
+        finalAverage: <GradeBadge number={4} />,
+        totalAbsences: <AbsencesBadge number={20} />,
       },
       {
-        col1: (
+        subject: (
           <FirstRowColumn>
-            <img src="/assets/icons/history.svg" />
+            <SubjectIcon src="/assets/icons/history.svg" />
             <SubjectName>História</SubjectName>
           </FirstRowColumn>
         ),
-        col2: (
+        firstBimester: (
           <span>
             Nota: 8,0
             <br />
             Rec: -
           </span>
         ),
-        col3: '0',
-        col4: (
+        firstBimesterAbsences: '0',
+        secondBimester: (
           <span>
             Nota: 8,0
             <br />
             Rec: -
           </span>
         ),
-        col5: '0',
-        col6: (
+        secondBimesterAbsences: '0',
+        thirdBimester: (
           <span>
             Nota: 8,0
             <br />
             Rec: -
           </span>
         ),
-        col7: '0',
-        col8: (
+        thirdBimesterAbsences: '0',
+        fourthBimester: (
           <span>
             Nota: 8,0
             <br />
             Rec: -
           </span>
         ),
-        col9: '0',
-        col10: <GradeBadge number={8} />,
-        col11: <AbsencesBadge number={0} />,
+        fourthBimesterAbsences: '0',
+        finalAverage: <GradeBadge number={8} />,
+        totalAbsences: <AbsencesBadge number={0} />,
       },
       {
-        col1: (
+        subject: (
           <FirstRowColumn>
-            <img src="/assets/icons/geography.svg" />
+            <SubjectIcon src="/assets/icons/geography.svg" />
             <SubjectName>Geografia</SubjectName>
           </FirstRowColumn>
         ),
-        col2: (
+        firstBimester: (
           <span>
             Nota: 8,0
             <br />
             Rec: -
           </span>
         ),
-        col3: '0',
-        col4: (
+        firstBimesterAbsences: '0',
+        secondBimester: (
           <span>
             Nota: 8,0
             <br />
             Rec: -
           </span>
         ),
-        col5: '0',
-        col6: (
+        secondBimesterAbsences: '0',
+        thirdBimester: (
           <span>
             Nota: 8,0
             <br />
             Rec: -
           </span>
         ),
-        col7: '0',
-        col8: (
+        thirdBimesterAbsences: '0',
+        fourthBimester: (
           <span>
             Nota: 8,0
             <br />
             Rec: -
           </span>
         ),
-        col9: '0',
-        col10: <GradeBadge number={8} />,
-        col11: <AbsencesBadge number={0} />,
+        fourthBimesterAbsences: '0',
+        finalAverage: <GradeBadge number={8} />,
+        totalAbsences: <AbsencesBadge number={0} />,
       },
       {
-        col1: (
+        subject: (
           <FirstRowColumn>
-            <img src="/assets/icons/art.svg" />
+            <SubjectIcon src="/assets/icons/art.svg" />
             <SubjectName>Artes</SubjectName>
           </FirstRowColumn>
         ),
-        col2: (
+        firstBimester: (
           <span>
             Nota: 8,0
             <br />
             Rec: -
           </span>
         ),
-        col3: '0',
-        col4: (
+        firstBimesterAbsences: '0',
+        secondBimester: (
           <span>
             Nota: 8,0
             <br />
             Rec: -
           </span>
         ),
-        col5: '0',
-        col6: (
+        secondBimesterAbsences: '0',
+        thirdBimester: (
           <span>
             Nota: 8,0
             <br />
             Rec: -
           </span>
         ),
-        col7: '0',
-        col8: (
+        thirdBimesterAbsences: '0',
+        fourthBimester: (
           <span>
             Nota: 8,0
             <br />
             Rec: -
           </span>
         ),
-        col9: '0',
-        col10: <GradeBadge number={8} />,
-        col11: <AbsencesBadge number={0} />,
+        fourthBimesterAbsences: '0',
+        finalAverage: <GradeBadge number={8} />,
+        totalAbsences: <AbsencesBadge number={0} />,
       },
       {
-        col1: (
+        subject: (
           <FirstRowColumn>
-            <img src="/assets/icons/physical_education.svg" />
-            <SubjectName>Educação Física</SubjectName>
+            <SubjectIcon src="/assets/icons/physical_education.svg" />
+            <SubjectName>
+              Educação
+              <br />
+              Física
+            </SubjectName>
           </FirstRowColumn>
         ),
-        col2: (
+        firstBimester: (
           <span>
             Nota: 8,0
             <br />
             Rec: -
           </span>
         ),
-        col3: '0',
-        col4: (
+        firstBimesterAbsences: '0',
+        secondBimester: (
           <span>
             Nota: 8,0
             <br />
             Rec: -
           </span>
         ),
-        col5: '0',
-        col6: (
+        secondBimesterAbsences: '0',
+        thirdBimester: (
           <span>
             Nota: 8,0
             <br />
             Rec: -
           </span>
         ),
-        col7: '0',
-        col8: (
+        thirdBimesterAbsences: '0',
+        fourthBimester: (
           <span>
             Nota: 8,0
             <br />
             Rec: -
           </span>
         ),
-        col9: '0',
-        col10: <GradeBadge number={8} />,
-        col11: <AbsencesBadge number={0} />,
+        fourthBimesterAbsences: '0',
+        finalAverage: <GradeBadge number={8} />,
+        totalAbsences: <AbsencesBadge number={0} />,
       },
       {
-        col1: (
+        subject: (
           <FirstRowColumn>
-            <img src="/assets/icons/english.svg" />
+            <SubjectIcon src="/assets/icons/english.svg" />
             <SubjectName>Inglês</SubjectName>
           </FirstRowColumn>
         ),
-        col2: (
+        firstBimester: (
           <span>
             Nota: 8,0
             <br />
             Rec: -
           </span>
         ),
-        col3: '0',
-        col4: (
+        firstBimesterAbsences: '0',
+        secondBimester: (
           <span>
             Nota: 8,0
             <br />
             Rec: -
           </span>
         ),
-        col5: '0',
-        col6: (
+        secondBimesterAbsences: '0',
+        thirdBimester: (
           <span>
             Nota: 8,0
             <br />
             Rec: -
           </span>
         ),
-        col7: '0',
-        col8: (
+        thirdBimesterAbsences: '0',
+        fourthBimester: (
           <span>
             Nota: 8,0
             <br />
             Rec: -
           </span>
         ),
-        col9: '0',
-        col10: <GradeBadge number={8} />,
-        col11: <AbsencesBadge number={0} />,
+        fourthBimesterAbsences: '0',
+        finalAverage: <GradeBadge number={8} />,
+        totalAbsences: <AbsencesBadge number={0} />,
       },
       {
-        col1: (
+        subject: (
           <FirstRowColumn>
-            <img src="/assets/icons/computing.svg" />
+            <SubjectIcon src="/assets/icons/computing.svg" />
             <SubjectName>Informática</SubjectName>
           </FirstRowColumn>
         ),
-        col2: (
+        firstBimester: (
           <span>
             Nota: 8,0
             <br />
             Rec: -
           </span>
         ),
-        col3: '0',
-        col4: (
+        firstBimesterAbsences: '0',
+        secondBimester: (
           <span>
             Nota: 8,0
             <br />
             Rec: -
           </span>
         ),
-        col5: '0',
-        col6: (
+        secondBimesterAbsences: '0',
+        thirdBimester: (
           <span>
             Nota: 8,0
             <br />
             Rec: -
           </span>
         ),
-        col7: '0',
-        col8: (
+        thirdBimesterAbsences: '0',
+        fourthBimester: (
           <span>
             Nota: 8,0
             <br />
             Rec: -
           </span>
         ),
-        col9: '0',
-        col10: <GradeBadge number={8} />,
-        col11: <AbsencesBadge number={0} />,
+        fourthBimesterAbsences: '0',
+        finalAverage: <GradeBadge number={8} />,
+        totalAbsences: <AbsencesBadge number={0} />,
       },
     ],
     []
@@ -502,7 +517,7 @@ export default function SchoolReport() {
         ))}
       </thead>
 
-      <TableBody {...getTableBodyProps()}>
+      <tbody {...getTableBodyProps()}>
         {rows.map((row) => {
           prepareRow(row);
           return (
@@ -517,7 +532,7 @@ export default function SchoolReport() {
             </TableRow>
           );
         })}
-      </TableBody>
+      </tbody>
     </Table>
   );
 }
