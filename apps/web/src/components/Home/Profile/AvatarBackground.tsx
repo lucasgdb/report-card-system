@@ -11,10 +11,17 @@ const fragment = graphql`
 `;
 
 const OuterAvatarBackground = styled.div`
-  width: 320px;
-  height: 100%;
+  display: flex;
+  justify-content: center;
 
-  position: relative;
+  @media (min-width: 864px) {
+    width: 320px;
+    height: 100%;
+
+    position: relative;
+
+    display: block;
+  }
 `;
 
 const HomeIconsImage = styled.img`
@@ -22,6 +29,10 @@ const HomeIconsImage = styled.img`
   top: 50%;
   left: 0;
   transform: translateY(-50%);
+
+  @media (max-width: 863px) {
+    display: none;
+  }
 `;
 
 type AvatarBackgroundProps = {

@@ -14,17 +14,25 @@ const fragment = graphql`
 
 const OuterProfile = styled.div`
   width: 100%;
-  height: 375px;
 
   background: linear-gradient(92.84deg, #011461 -8.18%, #0020a2 47.5%, #00d4ff 106.78%);
 
   display: flex;
-  align-items: center;
+  flex-direction: column;
   gap: 8px;
 
-  padding-left: 48px;
-
   position: relative;
+
+  padding: 16px 0;
+
+  @media (min-width: 864px) {
+    height: 375px;
+
+    padding: 0 0 0 48px;
+
+    flex-direction: row;
+    align-items: center;
+  }
 `;
 
 const ZLogoImage = styled.img`
@@ -33,6 +41,10 @@ const ZLogoImage = styled.img`
   right: 0;
 
   width: 35%;
+
+  @media (max-width: 863px) {
+    display: none;
+  }
 `;
 
 type ProfileProps = {

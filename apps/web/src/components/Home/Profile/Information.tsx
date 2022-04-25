@@ -15,21 +15,33 @@ const OuterProfileInformation = styled.div`
   flex-direction: column;
   justify-content: center;
   gap: 16px;
+
+  @media (max-width: 863px) {
+    padding: 0 24px;
+  }
 `;
 
 const RMText = styled.p`
-  font: normal normal 700 32px/40px Lexend;
+  font: normal normal 700 24px/28px Lexend;
   color: #fafafa;
 
   margin: 0;
+
+  @media (min-width: 864px) {
+    font: normal normal 700 32px/40px Lexend;
+  }
 `;
 
 const FullnameText = styled.p`
-  font: normal normal 700 32px/40px Lexend;
+  font: normal normal 700 24px/28px Lexend;
   color: #fafafa;
 
   text-transform: uppercase;
   margin: 0;
+
+  @media (min-width: 864px) {
+    font: normal normal 700 32px/40px Lexend;
+  }
 `;
 
 const Status = styled.div`

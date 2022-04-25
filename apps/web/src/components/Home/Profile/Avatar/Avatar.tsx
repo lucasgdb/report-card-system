@@ -13,9 +13,7 @@ const fragment = graphql`
 `;
 
 const OuterAvatar = styled.div`
-  position: absolute;
-  left: 133px;
-  top: 113px;
+  position: relative;
 
   width: 150px;
   height: 150px;
@@ -23,9 +21,11 @@ const OuterAvatar = styled.div`
   border-radius: 50%;
   border: 4px solid #ee7844;
 
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  @media (min-width: 864px) {
+    position: absolute;
+    left: 133px;
+    top: 113px;
+  }
 `;
 
 type AvatarProps = {
