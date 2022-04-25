@@ -3,7 +3,7 @@ import { graphql, useQuery } from 'relay-hooks';
 
 import { HomePageQuery } from './__generated__/HomePageQuery.graphql';
 import PageLoader from '~/components/PageLoader';
-import Menu from '~/components/Home/Menu/Menu';
+import Menu from '~/components/Menu/Menu';
 import Profile from '~/components/Home/Profile/Profile';
 import Boletim from '~/components/Home/Boletim/Boletim';
 
