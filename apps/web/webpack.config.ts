@@ -17,6 +17,9 @@ const config: webpack.Configuration = {
     alias: {
       '~': path.resolve(__dirname, 'src'),
     },
+    fallback: {
+      url: require.resolve('url'),
+    },
   },
   watchOptions: {
     ignored: ['**/node_modules'],

@@ -9,7 +9,7 @@
     "@emotion/styled": "^11.8.1",
     "@usefaz/shared": "*",
     "@mui/icons-material": "^5.6.2",
-    "@mui/material": "^5.6.2",
+    "@mui/material": "^5.6.3",
     "@mui/styled-engine-sc": "^5.6.1",
     "notistack": "^2.0.4",
     "react": "^18.0.0",
