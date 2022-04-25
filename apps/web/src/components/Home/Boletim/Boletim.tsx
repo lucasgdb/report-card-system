@@ -1,9 +1,9 @@
 import styled from 'styled-components';
 
-const OuterBoletim = styled.div`
-  margin-top: 64px;
+import SchoolReport from './SchoolReport';
 
-  padding: 0 160px;
+const OuterBoletim = styled.div`
+  padding: 64px 8%;
 `;
 
 const Title = styled.p`
@@ -11,10 +11,18 @@ const Title = styled.p`
   color: #494d4b;
 `;
 
+const SchoolReportWrapper = styled.div`
+  overflow-x: auto;
+`;
+
 export default function Boletim() {
   return (
     <OuterBoletim>
       <Title>Boletim escolar</Title>
+
+      <SchoolReportWrapper>
+        <SchoolReport />
+      </SchoolReportWrapper>
     </OuterBoletim>
   );
 }
