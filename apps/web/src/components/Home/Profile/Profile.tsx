@@ -23,7 +23,7 @@ const OuterProfile = styled.div`
 
   position: relative;
 
-  padding: 16px 0;
+  padding: 24px 0;
 
   @media (min-width: 864px) {
     height: 375px;

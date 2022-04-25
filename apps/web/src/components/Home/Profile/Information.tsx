@@ -18,6 +18,7 @@ const OuterProfileInformation = styled.div`
 
   @media (max-width: 863px) {
     padding: 0 24px;
+    margin-top: 8px;
   }
 `;
 
