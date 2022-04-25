@@ -9,10 +9,14 @@ const OuterBoletim = styled.div`
 const Title = styled.p`
   font: normal normal 600 24px/30px Lexend;
   color: #494d4b;
+
+  margin: 0;
 `;
 
 const SchoolReportWrapper = styled.div`
   overflow-x: auto;
+
+  margin-top: 32px;
 `;
 
 export default function Boletim() {

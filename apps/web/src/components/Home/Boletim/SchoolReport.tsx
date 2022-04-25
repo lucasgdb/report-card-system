@@ -2,6 +2,9 @@ import { useTable, Column } from 'react-table';
 import { useMemo } from 'react';
 import styled from 'styled-components';
 
+import GradeBadge from './GradeBadge';
+import AbsencesBadge from './AbsencesBadge';
+
 const Table = styled.table`
   border-collapse: collapse;
   width: 100%;
@@ -22,21 +25,25 @@ const TableData = styled.td`
   border-top: 1px solid #e6e8eb;
   border-bottom: 1px solid #e6e8eb;
   padding: 12px;
+
+  font: normal normal 400 14px/17px Inter;
+  color: #808080;
 `;
 
 const TableRow = styled.tr``;
 
-const TableBody = styled.tbody`
-  ${TableRow} ${TableData}:first-child {
-    font: normal normal 600 16px/20px Lexend;
-    color: #494d4b;
-    white-space: nowrap;
-  }
+const TableBody = styled.tbody``;
 
-  ${TableRow} ${TableData}:not(:first-child) {
-    font: normal normal 400 14px/17px Inter;
-    color: #808080;
-  }
+const FirstRowColumn = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+`;
+
+const SubjectName = styled.p`
+  font: normal normal 600 16px/20px Lexend;
+  color: #494d4b;
+  margin: 0;
 `;
 
 export default function SchoolReport() {
@@ -93,7 +100,15 @@ export default function SchoolReport() {
   const data = useMemo(
     () => [
       {
-        col1: 'Língua Portuguesa',
+        col1: (
+          <FirstRowColumn>
+            <img src="/assets/icons/portuguese_language.svg" />
+            <SubjectName>
+              Língua <br />
+              Portuguesa
+            </SubjectName>
+          </FirstRowColumn>
+        ),
         col2: (
           <span>
             Nota: 8,0
@@ -126,11 +141,16 @@ export default function SchoolReport() {
           </span>
         ),
         col9: '0',
-        col10: '8,0',
-        col11: '0',
+        col10: <GradeBadge number={8} />,
+        col11: <AbsencesBadge number={0} />,
       },
       {
-        col1: 'Matemática',
+        col1: (
+          <FirstRowColumn>
+            <img src="/assets/icons/math.svg" />
+            <SubjectName>Matemática</SubjectName>
+          </FirstRowColumn>
+        ),
         col2: (
           <span>
             Nota: 8,0
@@ -163,11 +183,16 @@ export default function SchoolReport() {
           </span>
         ),
         col9: '0',
-        col10: '8,0',
-        col11: '0',
+        col10: <GradeBadge number={6} />,
+        col11: <AbsencesBadge number={11} />,
       },
       {
-        col1: 'Ciências',
+        col1: (
+          <FirstRowColumn>
+            <img src="/assets/icons/science.svg" />
+            <SubjectName>Ciências</SubjectName>
+          </FirstRowColumn>
+        ),
         col2: (
           <span>
             Nota: 8,0
@@ -200,11 +225,16 @@ export default function SchoolReport() {
           </span>
         ),
         col9: '0',
-        col10: '8,0',
-        col11: '0',
+        col10: <GradeBadge number={4} />,
+        col11: <AbsencesBadge number={20} />,
       },
       {
-        col1: 'História',
+        col1: (
+          <FirstRowColumn>
+            <img src="/assets/icons/history.svg" />
+            <SubjectName>História</SubjectName>
+          </FirstRowColumn>
+        ),
         col2: (
           <span>
             Nota: 8,0
@@ -237,11 +267,16 @@ export default function SchoolReport() {
           </span>
         ),
         col9: '0',
-        col10: '8,0',
-        col11: '0',
+        col10: <GradeBadge number={8} />,
+        col11: <AbsencesBadge number={0} />,
       },
       {
-        col1: 'Geografia',
+        col1: (
+          <FirstRowColumn>
+            <img src="/assets/icons/geography.svg" />
+            <SubjectName>Geografia</SubjectName>
+          </FirstRowColumn>
+        ),
         col2: (
           <span>
             Nota: 8,0
@@ -274,11 +309,16 @@ export default function SchoolReport() {
           </span>
         ),
         col9: '0',
-        col10: '8,0',
-        col11: '0',
+        col10: <GradeBadge number={8} />,
+        col11: <AbsencesBadge number={0} />,
       },
       {
-        col1: 'Arte',
+        col1: (
+          <FirstRowColumn>
+            <img src="/assets/icons/art.svg" />
+            <SubjectName>Artes</SubjectName>
+          </FirstRowColumn>
+        ),
         col2: (
           <span>
             Nota: 8,0
@@ -311,11 +351,16 @@ export default function SchoolReport() {
           </span>
         ),
         col9: '0',
-        col10: '8,0',
-        col11: '0',
+        col10: <GradeBadge number={8} />,
+        col11: <AbsencesBadge number={0} />,
       },
       {
-        col1: 'Educação Física',
+        col1: (
+          <FirstRowColumn>
+            <img src="/assets/icons/physical_education.svg" />
+            <SubjectName>Educação Física</SubjectName>
+          </FirstRowColumn>
+        ),
         col2: (
           <span>
             Nota: 8,0
@@ -348,11 +393,16 @@ export default function SchoolReport() {
           </span>
         ),
         col9: '0',
-        col10: '8,0',
-        col11: '0',
+        col10: <GradeBadge number={8} />,
+        col11: <AbsencesBadge number={0} />,
       },
       {
-        col1: 'Inglês',
+        col1: (
+          <FirstRowColumn>
+            <img src="/assets/icons/english.svg" />
+            <SubjectName>Inglês</SubjectName>
+          </FirstRowColumn>
+        ),
         col2: (
           <span>
             Nota: 8,0
@@ -385,11 +435,16 @@ export default function SchoolReport() {
           </span>
         ),
         col9: '0',
-        col10: '8,0',
-        col11: '0',
+        col10: <GradeBadge number={8} />,
+        col11: <AbsencesBadge number={0} />,
       },
       {
-        col1: 'Informática',
+        col1: (
+          <FirstRowColumn>
+            <img src="/assets/icons/computing.svg" />
+            <SubjectName>Informática</SubjectName>
+          </FirstRowColumn>
+        ),
         col2: (
           <span>
             Nota: 8,0
@@ -422,8 +477,8 @@ export default function SchoolReport() {
           </span>
         ),
         col9: '0',
-        col10: '8,0',
-        col11: '0',
+        col10: <GradeBadge number={8} />,
+        col11: <AbsencesBadge number={0} />,
       },
     ],
     []
