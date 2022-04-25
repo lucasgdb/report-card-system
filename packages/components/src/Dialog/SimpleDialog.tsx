@@ -2,10 +2,6 @@ import Dialog from '@mui/material/Dialog';
 import styled from 'styled-components';
 
 export const SimpleDialog = styled(Dialog)`
-  && {
-    padding: 0 16px;
-  }
-
   & .MuiDialog-paper {
     margin: 0;
     box-sizing: border-box;

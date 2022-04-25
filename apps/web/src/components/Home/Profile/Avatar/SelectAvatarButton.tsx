@@ -31,7 +31,7 @@ export default function SelectAvatarButton({ setAvatarToEdit }: SelectAvatarButt
       <input type="file" id="avatar" accept="image/*" onChange={handleChange} hidden />
 
       <UploadButton variant="text" color="secondary">
-        Upload
+        Selecionar
       </UploadButton>
     </label>
   );
