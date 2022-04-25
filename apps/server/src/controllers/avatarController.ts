@@ -3,8 +3,8 @@ import type { Context } from 'koa';
 import usefazConnector from '~/database/usefazConnector';
 import { StudentModel } from '~/entities';
 
-type RequestType = {
-  files: { avatar: File };
+type FilesType = {
+  avatar: File;
 };
 
 export const saveAvatarURL = async (ctx: Context) => {
@@ -13,9 +13,7 @@ export const saveAvatarURL = async (ctx: Context) => {
 
     const student = await studentEntity.getStudentBy({ user_id: ctx.request.user!.id }).select('id');
 
-    const {
-      files: { avatar },
-    } = <RequestType>(ctx.request as unknown);
+    const { avatar } = <FilesType>(ctx.request.files as unknown);
 
     const avatarURL = `${process.env.BASE_URL}/public/${avatar.name}`;
 
