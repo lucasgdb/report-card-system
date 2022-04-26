@@ -1,9 +1,13 @@
 import styled from 'styled-components';
 
-import SchoolReport from './SchoolReport';
+import SchoolReport from './SchoolReport/SchoolReport';
 
 const OuterBoletim = styled.div`
-  padding: 64px 8%;
+  padding: 48px 20px;
+
+  @media (min-width: 600px) {
+    padding: 64px 8%;
+  }
 `;
 
 const Title = styled.p`

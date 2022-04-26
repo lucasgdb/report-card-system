@@ -1,10 +1,10 @@
 import styled from 'styled-components';
 
-type OuterGradeBadgeProps = {
+type OuterFinalAverageBadgeProps = {
   number: number;
 };
 
-const OuterGradeBadge = styled.div<OuterGradeBadgeProps>`
+const OuterFinalAverageBadge = styled.div<OuterFinalAverageBadgeProps>`
   border-radius: 4px;
 
   width: 48px;
@@ -31,14 +31,14 @@ const Text = styled.p`
   text-align: center;
 `;
 
-type GradeBadgeProps = {
+type FinalAverageBadgeProps = {
   number: number;
 };
 
-export default function GradeBadge({ number }: GradeBadgeProps) {
+export default function FinalAverageBadge({ number }: FinalAverageBadgeProps) {
   return (
-    <OuterGradeBadge number={number}>
+    <OuterFinalAverageBadge number={number}>
       <Text>{number.toLocaleString('pt-BR', { minimumFractionDigits: 1, maximumFractionDigits: 2 })}</Text>
-    </OuterGradeBadge>
+    </OuterFinalAverageBadge>
   );
 }

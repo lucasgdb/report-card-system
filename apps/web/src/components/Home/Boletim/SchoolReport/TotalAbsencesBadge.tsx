@@ -4,7 +4,7 @@ type OuterBadgeProps = {
   number: number;
 };
 
-const OuterAbsencesBadge = styled.div<OuterBadgeProps>`
+const OuterTotalAbsencesBadge = styled.div<OuterBadgeProps>`
   border-radius: 4px;
 
   width: 48px;
@@ -31,14 +31,14 @@ const Text = styled.p`
   text-align: center;
 `;
 
-type AbsencesBadgeProps = {
+type TotalAbsencesBadgeProps = {
   number: number;
 };
 
-export default function AbsencesBadge({ number }: AbsencesBadgeProps) {
+export default function TotalAbsencesBadge({ number }: TotalAbsencesBadgeProps) {
   return (
-    <OuterAbsencesBadge number={number}>
+    <OuterTotalAbsencesBadge number={number}>
       <Text>{number.toLocaleString('pt-BR')}</Text>
-    </OuterAbsencesBadge>
+    </OuterTotalAbsencesBadge>
   );
 }
