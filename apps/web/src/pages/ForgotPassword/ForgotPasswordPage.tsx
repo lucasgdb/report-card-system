@@ -1,8 +1,7 @@
 import styled, { createGlobalStyle } from 'styled-components';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import { GoogleReCaptchaProvider } from 'react-google-recaptcha-v3';
 
-import Login from '~/components/Login/Login';
+import ForgotPassword from '~/components/ForgotPassword/ForgotPassword';
 
 const GlobalStyle = createGlobalStyle`
   body {
@@ -12,7 +11,7 @@ const GlobalStyle = createGlobalStyle`
   }
 `;
 
-const OuterLoginPage = styled.div`
+const OuterForgotPasswordPage = styled.div`
   display: grid;
   place-items: center;
 
@@ -56,34 +55,34 @@ const UsefazLogoImage = styled.img`
   }
 `;
 
-const ReadingBookImage = styled.img`
+const PasswordRecoveryImage = styled.img`
   position: absolute;
-  right: 726px;
-  top: 219px;
+  right: 654px;
+  top: 347px;
 
   @media (max-width: 1299px) {
     display: none;
   }
 `;
 
-export default function LoginPage() {
+export default function ForgotPasswordPage() {
   const shouldChangeBodyStyle = useMediaQuery('(max-width: 1279px)');
 
   return (
-    <GoogleReCaptchaProvider reCaptchaKey={process.env.RECAPTCHA_V3_PUBLIC_TOKEN} language="pt-BR" useRecaptchaNet>
+    <>
       {shouldChangeBodyStyle && <GlobalStyle />}
 
-      <OuterLoginPage>
+      <OuterForgotPasswordPage>
         <BackgroundImage src="/assets/images/background_blue.svg" />
 
         <ZLogoImage src="/assets/images/z_logo.svg" />
 
         <UsefazLogoImage src="/assets/images/usefaz_logo.svg" />
 
-        <Login />
+        <ForgotPassword />
 
-        <ReadingBookImage src="/assets/images/reading_book.svg" />
-      </OuterLoginPage>
-    </GoogleReCaptchaProvider>
+        <PasswordRecoveryImage src="/assets/images/password_recovery_man.svg" />
+      </OuterForgotPasswordPage>
+    </>
   );
 }

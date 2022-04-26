@@ -15,7 +15,9 @@ const OuterLogin = styled.div`
   }
 `;
 
-const StudentTextImage = styled.img``;
+const StudentTextImage = styled.img`
+  max-width: 100%;
+`;
 
 const ValueText = styled.h1`
   font: normal normal 700 36px/54px Lexend;
@@ -34,7 +36,7 @@ const LoginText = styled.p`
 export default function Login() {
   return (
     <OuterLogin>
-      <StudentTextImage src="/assets/images/student.svg" />
+      <StudentTextImage src="/assets/images/student_text.svg" />
 
       <ValueText>
         você é nosso
