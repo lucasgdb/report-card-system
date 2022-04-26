@@ -5,8 +5,8 @@ import Button from '@mui/material/Button';
 import { useNavigate } from 'react-router';
 import { useMutation } from 'relay-hooks';
 
-import StudentLoginMutation from '~/modules/student/StudentLoginMutation';
-import { StudentLoginMutation as StudentLoginMutationType } from '~/modules/student/__generated__/StudentLoginMutation.graphql';
+import SendRecoveryEmailMutation from '~/modules/student/SendRecoveryEmailMutation';
+import { SendRecoveryEmailMutation as SendRecoveryEmailMutationType } from '~/modules/student/__generated__/SendRecoveryEmailMutation.graphql';
 import RMInput from './RMinput';
 import EmailInput from './EmailInput';
 
@@ -36,7 +36,7 @@ export default function Form() {
 
   const navigate = useNavigate();
 
-  const [loginMutation, { loading }] = useMutation<StudentLoginMutationType>(StudentLoginMutation, {
+  const [loginMutation, { loading }] = useMutation<SendRecoveryEmailMutationType>(SendRecoveryEmailMutation, {
     onError(errors) {
       const { notFound } = errorConfig.student;
 
@@ -64,14 +64,18 @@ export default function Form() {
       return;
     }
 
-    navigate('/solicitacao-enviada');
-
-    // loginMutation({
-    //   variables: {
-    //     input: { RM, email },
-    //   },
-    //   onCompleted: ({}) => {},
-    // });
+    loginMutation({
+      variables: {
+        input: { RM, email },
+      },
+      onCompleted() {
+        enqueueSnackbar('Solicitação de recuperação de senha enviada com sucesso.', { variant: 'success' });
+        navigate('/solicitacao-enviada');
+      },
+      onError() {
+        enqueueSnackbar('Falha ao enviar a solicitação de recuperação de senha.', { variant: 'error' });
+      },
+    });
   };
 
   return (

@@ -61,6 +61,7 @@ type Mutation {
   """The logOut mutation can be used to log out an existing user."""
   logout(input: LogoutMutationInput!): LogoutMutationPayload
   removeAvatar(input: RemoveAvatarMutationInput!): RemoveAvatarMutationPayload
+  sendRecoveryEmail(input: SendRecoveryEmailMutationInput!): SendRecoveryEmailMutationPayload
   studentLogin(input: StudentLoginMutationInput!): StudentLoginMutationPayload
 }
 
@@ -102,6 +103,16 @@ type RemoveAvatarMutationPayload {
 }
 
 input RemoveAvatarMutationInput {
+  clientMutationId: String
+}
+
+type SendRecoveryEmailMutationPayload {
+  clientMutationId: String
+}
+
+input SendRecoveryEmailMutationInput {
+  RM: String!
+  email: String!
   clientMutationId: String
 }
 
