@@ -1,6 +1,5 @@
 import 'dayjs/locale/pt-br';
 
-import { Notification } from '@usefaz/components';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { RelayEnvironmentProvider } from 'relay-hooks';
 import ptBRLocale from 'date-fns/locale/pt-BR';
@@ -10,6 +9,7 @@ import dayjs from 'dayjs';
 
 import { environment } from './utils/relay';
 import GlobalStyle from './GlobalStyle';
+import CustomSnackbarProvider from './components/CustomSnackbarProvider';
 
 dayjs.locale('pt-br');
 
@@ -64,10 +64,10 @@ export default function Providers({ children }: ProvidersProps) {
     <RelayEnvironmentProvider environment={environment}>
       <ThemeProvider theme={theme}>
         <LocalizationProvider dateAdapter={AdapterDateFns} locale={ptBRLocale}>
-          <Notification.SnackbarProvider anchorOrigin={{ vertical: 'top', horizontal: 'right' }}>
+          <CustomSnackbarProvider anchorOrigin={{ vertical: 'top', horizontal: 'right' }}>
             <GlobalStyle />
             {children}
-          </Notification.SnackbarProvider>
+          </CustomSnackbarProvider>
         </LocalizationProvider>
       </ThemeProvider>
     </RelayEnvironmentProvider>
