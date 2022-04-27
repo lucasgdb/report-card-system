@@ -18,6 +18,10 @@ const OuterAvatar = styled.div`
   width: 150px;
   height: 150px;
 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
   border-radius: 50%;
   border: 4px solid #ee7844;
 
