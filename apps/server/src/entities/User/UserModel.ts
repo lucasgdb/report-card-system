@@ -1,4 +1,5 @@
 import type { Knex } from 'knex';
+
 import type { DBConnector } from '~/database/dbConnector';
 import type { IUser } from '~/interfaces';
 import callTrxOrKnexConnection from '~/utils/callTrxOrKnexConnection';

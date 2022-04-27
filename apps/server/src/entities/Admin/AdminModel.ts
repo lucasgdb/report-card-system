@@ -1,4 +1,5 @@
 import type { RequireAtLeastOne } from '@usefaz/shared';
+
 import type { DBConnector } from '~/database/dbConnector';
 import type { IAdmin } from '~/interfaces';
 
