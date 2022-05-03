@@ -1,23 +1,21 @@
 import UniversalCookie from 'universal-cookie';
 
-const authorizationPolicy = 'Usefaz-Authorization-Header';
-
 const cookie = new UniversalCookie();
 
 const jwtToken = {
   set(token: string) {
-    return cookie.set(authorizationPolicy, `Bearer ${token}`, {
+    return cookie.set(process.env.AUTHORIZATION_HEADER!, `Bearer ${token}`, {
       path: '/',
       domain: process.env.DOMAIN,
     });
   },
 
   get() {
-    return decodeURIComponent(cookie.get(authorizationPolicy) ?? '');
+    return decodeURIComponent(cookie.get(process.env.AUTHORIZATION_HEADER!) ?? '');
   },
 
   destroy() {
-    return cookie.remove(authorizationPolicy, {
+    return cookie.remove(process.env.AUTHORIZATION_HEADER!, {
       path: '/',
       domain: process.env.DOMAIN,
     });

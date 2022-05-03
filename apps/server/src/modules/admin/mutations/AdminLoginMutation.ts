@@ -7,6 +7,7 @@ import * as jwt from 'jsonwebtoken';
 import usefazConnector from '~/database/usefazConnector';
 import { AdminModel, AuthModel } from '~/entities';
 import type { IAdmin } from '~/interfaces';
+import validateRecaptchaToken from '~/utils/validateRecaptchaToken';
 import AdminType from '../AdminType';
 
 const getAdminJwtToken = async (admin: IAdmin, password: string) => {
@@ -28,13 +29,16 @@ const getAdminJwtToken = async (admin: IAdmin, password: string) => {
   return jwtToken;
 };
 
-type studentLoginProps = {
+type adminLoginProps = {
   email: string;
   password: string;
+  token: string;
   clientMutationId?: string;
 };
 
-const studentLogin = async ({ email, password, clientMutationId }: studentLoginProps) => {
+const adminLogin = async ({ email, password, token, clientMutationId }: adminLoginProps) => {
+  await validateRecaptchaToken(token);
+
   const adminEntity = AdminModel(usefazConnector);
 
   const admin = await adminEntity.getAdminByEmail(email);
@@ -55,12 +59,13 @@ const AdminLoginMutation = mutationWithClientMutationId({
   inputFields: {
     email: { type: new GraphQLNonNull(GraphQLString) },
     password: { type: new GraphQLNonNull(GraphQLString) },
+    token: { type: new GraphQLNonNull(GraphQLString) },
   },
   outputFields: {
     jwtToken: { type: GraphQLString },
     admin: { type: AdminType },
   },
-  mutateAndGetPayload: studentLogin,
+  mutateAndGetPayload: adminLogin,
 });
 
 export default AdminLoginMutation;

@@ -37,15 +37,28 @@ services:
       database:
         condition: service_healthy
 
-  web:
+  boletim:
     image: node:lts-alpine3.14
-    container_name: web
-    working_dir: /src/apps/web
+    container_name: boletim
+    working_dir: /src/apps/boletim
     volumes:
       - .:/src
     entrypoint: yarn start:dev
     ports:
       - 8080:8080
+    depends_on:
+      server:
+        condition: service_healthy
+
+  admin:
+    image: node:lts-alpine3.14
+    container_name: admin
+    working_dir: /src/apps/admin
+    volumes:
+      - .:/src
+    entrypoint: yarn start:dev
+    ports:
+      - 8081:8081
     depends_on:
       server:
         condition: service_healthy

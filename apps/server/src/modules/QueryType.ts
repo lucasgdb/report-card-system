@@ -1,7 +1,8 @@
 import { GraphQLObjectType } from 'graphql';
 
 import type { IContext } from '~/interfaces';
-import { authField } from './auth/AuthType';
+import { studentAuthField } from './auth/StudentAuthType';
+import { adminAuthField } from './auth/AdminAuthType';
 import { nodeField, nodesField } from './node/NodeType';
 import { systemField } from './system/SystemType';
 import { viewerField } from './user/UserType';
@@ -9,7 +10,8 @@ import { viewerField } from './user/UserType';
 const QueryType = new GraphQLObjectType<any, IContext>({
   name: 'Query',
   fields: {
-    auth: authField,
+    studentAuth: studentAuthField,
+    adminAuth: adminAuthField,
     node: nodeField,
     nodes: nodesField,
     viewer: viewerField,

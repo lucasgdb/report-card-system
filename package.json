@@ -13,7 +13,7 @@
     "start": "docker-compose up -d",
     "stop": "docker-compose down",
     "start:server": "yarn workspace @usefaz/server start:dev",
-    "start:web": "yarn workspace @usefaz/web start:dev",
+    "start:boletim": "yarn workspace @usefaz/boletim start:dev",
     "test": "jest --verbose --detectOpenHandles --forceExit",
     "format": "prettier --ignore-path .eslintignore --write --check .",
     "lint": "eslint --cache .",

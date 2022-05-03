@@ -47,6 +47,8 @@ router.post(
     pretty: __DEV__,
     context: {
       user: request.user,
+      admin: request.admin,
+      student: request.student,
       loginId: request.loginId,
     },
     customFormatErrorFn: (error) => {

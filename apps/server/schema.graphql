@@ -1,5 +1,6 @@
 type Query {
-  auth: Auth!
+  studentAuth: StudentAuth!
+  adminAuth: AdminAuth!
 
   """Fetches an object given its ID"""
   node(
@@ -16,9 +17,18 @@ type Query {
   system: System
 }
 
-type Auth {
+type StudentAuth {
   isLogged: Boolean!
-  user: User
+}
+
+type AdminAuth {
+  isLogged: Boolean!
+}
+
+"""An object with an ID"""
+interface Node {
+  """The id of the object."""
+  id: ID!
 }
 
 type User implements Node {
@@ -26,12 +36,6 @@ type User implements Node {
   id: ID!
   student: Student
   admin: Admin
-}
-
-"""An object with an ID"""
-interface Node {
-  """The id of the object."""
-  id: ID!
 }
 
 type Student implements Node {
@@ -74,6 +78,7 @@ type AdminLoginMutationPayload {
 input AdminLoginMutationInput {
   email: String!
   password: String!
+  token: String!
   clientMutationId: String
 }
 

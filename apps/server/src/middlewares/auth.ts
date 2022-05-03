@@ -3,7 +3,7 @@ import passport from 'passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import type { Context, Next } from 'koa';
 
-import { UserModel, AuthModel } from '~/entities';
+import { UserModel, AuthModel, AdminModel, StudentModel } from '~/entities';
 import usefazConnector from '~/database/usefazConnector';
 
 type authenticateProps = {
@@ -19,7 +19,13 @@ const DEFAULT_PARAMS = {
   requireAuth: false,
 };
 
-const getPayload = (ctx: Context): Promise<{ id: string }> | false => {
+type Payload = {
+  id: string;
+  RM: string | undefined;
+  email: string | undefined;
+};
+
+const getPayload = (ctx: Context): Promise<Payload> | false => {
   return new Promise((resolve, reject) => {
     passport.authenticate('jwt', (err, payload) => {
       if (err) {
@@ -32,10 +38,10 @@ const getPayload = (ctx: Context): Promise<{ id: string }> | false => {
 };
 
 const auth = () => {
-  const strategy = new Strategy(params, (payload: { id: string }, done) => {
-    const { id } = payload;
+  const strategy = new Strategy(params, (payload: Payload, done) => {
+    const { id, RM, email } = payload;
 
-    return done(null, { id });
+    return done(null, { id, RM, email });
   });
 
   passport.use(strategy);
@@ -69,6 +75,16 @@ const auth = () => {
 
           const userEntity = UserModel(usefazConnector);
           const user = await userEntity.getUserById(login.user_id!);
+
+          if (payload.email) {
+            const adminEntity = AdminModel(usefazConnector);
+            const admin = await adminEntity.getAdminByEmail(payload.email);
+            ctx.request.admin = admin;
+          } else if (payload.RM) {
+            const studentEntity = StudentModel(usefazConnector);
+            const student = await studentEntity.getStudentByRM(payload.RM);
+            ctx.request.student = student;
+          }
 
           ctx.request.loginId = login.id;
           ctx.request.user = user;
