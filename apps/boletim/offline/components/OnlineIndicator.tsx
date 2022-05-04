@@ -4,11 +4,11 @@ import { useEffect } from 'react';
 export default function OnlineIndicator() {
   const { enqueueSnackbar, closeSnackbar } = Notification.useSnackbar();
 
-  const hideOnlineNotification = () => closeSnackbar();
-
-  const showOnlineNotification = () => enqueueSnackbar('Sua conexão voltou.', { variant: 'success' });
-
   useEffect(() => {
+    const hideOnlineNotification = () => closeSnackbar();
+
+    const showOnlineNotification = () => enqueueSnackbar('Sua conexão voltou.', { variant: 'success' });
+
     window.addEventListener('offline', hideOnlineNotification);
     window.addEventListener('online', showOnlineNotification);
 
@@ -16,8 +16,6 @@ export default function OnlineIndicator() {
       window.removeEventListener('offline', hideOnlineNotification);
       window.removeEventListener('online', showOnlineNotification);
     };
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return null;
