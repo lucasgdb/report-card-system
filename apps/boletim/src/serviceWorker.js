@@ -23,6 +23,7 @@ const assetsToCache = [
   '/assets/icons/portuguese_language.svg',
   '/assets/icons/science.svg',
   '/assets/icons/clap.svg',
+  '/assets/icons/logo.png',
 
   '/assets/images/usefaz_logo.svg',
   '/assets/images/z_logo.svg',
