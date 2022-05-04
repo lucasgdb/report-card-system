@@ -55,6 +55,7 @@ const setUpServiceWorker = async () => {
 
     window.addEventListener('appinstalled', () => {
       window.hideInstallButton();
+      window.installButtonShouldBeHidden = true;
     });
   }
 };

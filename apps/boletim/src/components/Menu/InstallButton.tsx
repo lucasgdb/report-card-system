@@ -8,6 +8,7 @@ import { useEffect } from 'react';
 declare global {
   interface Window {
     deferredPrompt: Event;
+    installButtonShouldBeHidden: true | undefined;
     addInstallButtonEventListener(): void;
     showInstallButton(): void;
   }
@@ -35,7 +36,7 @@ export default function InstallButton() {
   const isMobile = useMediaQuery('(max-width: 499px)');
 
   useEffect(() => {
-    if (window.deferredPrompt) {
+    if (window.deferredPrompt && !window.installButtonShouldBeHidden) {
       window.addInstallButtonEventListener();
       window.showInstallButton();
     }
