@@ -7,7 +7,7 @@ const DateText = styled.p`
   color: #808080;
   margin: 0;
 
-  @media (max-width: 499px) {
+  @media (max-width: 599px) {
     display: none;
   }
 `;
