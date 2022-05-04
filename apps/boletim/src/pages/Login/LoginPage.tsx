@@ -1,6 +1,7 @@
 import styled, { createGlobalStyle } from 'styled-components';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { GoogleReCaptchaProvider } from 'react-google-recaptcha-v3';
+import { Link } from 'react-router-dom';
 
 import Login from '~/components/Login/Login';
 
@@ -78,7 +79,9 @@ export default function LoginPage() {
 
         <ZLogoImage src="/assets/images/z_logo.svg" />
 
-        <UsefazLogoImage src="/assets/images/usefaz_logo.svg" />
+        <Link to="/">
+          <UsefazLogoImage src="/assets/images/usefaz_logo.svg" />
+        </Link>
 
         <Login />
 

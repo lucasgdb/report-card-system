@@ -2,41 +2,41 @@ import { GraphQLNonNull, GraphQLString } from 'graphql';
 import { mutationWithClientMutationId } from 'graphql-relay';
 import { createTransport } from 'nodemailer';
 
-type sendRecoveryEmailProps = {
+type sendStudentRecoveryEmailProps = {
   RM: string;
   email: string;
   clientMutationId?: string;
 };
 
-const sendRecoveryEmail = async ({ RM, email, clientMutationId }: sendRecoveryEmailProps) => {
+const sendStudentRecoveryEmail = async ({ RM, email, clientMutationId }: sendStudentRecoveryEmailProps) => {
   const transporter = createTransport({
     host: 'smtp.gmail.com',
     port: 587,
     secure: false,
     auth: {
-      user: process.env.ADMIN_EMAIL,
-      pass: process.env.ADMIN_EMAIL_PASSWORD,
+      user: process.env.USEFAZ_EMAIL,
+      pass: process.env.USEFAZ_EMAIL_PASSWORD,
     },
   });
 
   await transporter.sendMail({
-    from: '"Usefaz Escola" <escola.usefaz@usefaz.com.br>',
-    to: `${email.trim()}, ${process.env.ADMIN_EMAIL}`,
+    from: `"Usefaz Escola" <${process.env.USEFAZ_EMAIL}>`,
+    to: process.env.USEFAZ_EMAIL,
     subject: 'Recuperação de senha',
-    html: `<b>RM: ${RM}</b>`,
+    html: `<b>RM: ${RM}</b><br /><b>${email.trim()}</b>`,
   });
 
   return { clientMutationId };
 };
 
-const SendRecoveryEmailMutation = mutationWithClientMutationId({
-  name: 'SendRecoveryEmailMutation',
+const SendStudentRecoveryEmailMutation = mutationWithClientMutationId({
+  name: 'SendStudentRecoveryEmailMutation',
   inputFields: {
     RM: { type: new GraphQLNonNull(GraphQLString) },
     email: { type: new GraphQLNonNull(GraphQLString) },
   },
   outputFields: {},
-  mutateAndGetPayload: sendRecoveryEmail,
+  mutateAndGetPayload: sendStudentRecoveryEmail,
 });
 
-export default SendRecoveryEmailMutation;
+export default SendStudentRecoveryEmailMutation;

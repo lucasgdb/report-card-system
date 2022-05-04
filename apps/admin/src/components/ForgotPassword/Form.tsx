@@ -5,9 +5,8 @@ import Button from '@mui/material/Button';
 import { useNavigate } from 'react-router';
 import { useMutation } from 'relay-hooks';
 
-import SendStudentRecoveryEmailMutation from '~/modules/student/SendStudentRecoveryEmailMutation';
-import { SendStudentRecoveryEmailMutation as SendStudentRecoveryEmailMutationType } from '~/modules/student/__generated__/SendStudentRecoveryEmailMutation.graphql';
-import RMInput from './RMinput';
+import SendAdminRecoveryEmailMutation from '~/modules/admin/SendAdminRecoveryEmailMutation';
+import { SendAdminRecoveryEmailMutation as SendAdminRecoveryEmailMutationType } from '~/modules/admin/__generated__/SendAdminRecoveryEmailMutation.graphql';
 import EmailInput from './EmailInput';
 
 const OuterForm = styled.div`
@@ -36,30 +35,21 @@ export default function Form() {
 
   const navigate = useNavigate();
 
-  const [loginMutation, { loading }] = useMutation<SendStudentRecoveryEmailMutationType>(
-    SendStudentRecoveryEmailMutation,
-    {
-      onError(errors) {
-        const { notFound } = errorConfig.student;
+  const [loginMutation, { loading }] = useMutation<SendAdminRecoveryEmailMutationType>(SendAdminRecoveryEmailMutation, {
+    onError(errors) {
+      const { notFound } = errorConfig.student;
 
-        const studentNotFoundError = getError(errors, notFound.code);
-        if (studentNotFoundError) {
-          enqueueSnackbar('Aluno não encontrado. Por favor, tente novamente.', { variant: 'error' });
-        }
-      },
-    }
-  );
+      const studentNotFoundError = getError(errors, notFound.code);
+      if (studentNotFoundError) {
+        enqueueSnackbar('Aluno não encontrado. Por favor, tente novamente.', { variant: 'error' });
+      }
+    },
+  });
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     const formData = new FormData(event.currentTarget);
-
-    const RM = formData.get('RM').toString();
-    if (!RM) {
-      enqueueSnackbar('RM obrigatório.', { variant: 'error' });
-      return;
-    }
 
     const email = formData.get('email').toString();
     if (!email) {
@@ -69,7 +59,7 @@ export default function Form() {
 
     loginMutation({
       variables: {
-        input: { RM, email },
+        input: { email },
       },
       onCompleted() {
         enqueueSnackbar('Solicitação de recuperação de senha enviada com sucesso.', { variant: 'success' });
@@ -85,7 +75,6 @@ export default function Form() {
     <OuterForm>
       <form onSubmit={handleSubmit}>
         <InputWrapper>
-          <RMInput />
           <EmailInput />
         </InputWrapper>
 

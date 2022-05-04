@@ -8,7 +8,10 @@ import UserModel from '../User/UserModel';
 
 const StudentModel = (dbConnector: DBConnector) => {
   return {
-    async insert(student: RequiredExceptFor<IStudent, 'id' | 'created_at' | 'updated_at'>, trx?: Knex.Transaction) {
+    async insert(
+      student: RequiredExceptFor<IStudent, 'id' | 'avatar_url' | 'created_at' | 'updated_at'>,
+      trx?: Knex.Transaction
+    ) {
       const [newStudent] = await callTrxOrKnexConnection<IStudent>('student', dbConnector, trx)
         .insert(student)
         .returning('*');
@@ -16,7 +19,7 @@ const StudentModel = (dbConnector: DBConnector) => {
       return newStudent;
     },
 
-    createStudent(student: RequiredExceptFor<IStudent, 'id' | 'user_id' | 'created_at' | 'updated_at'>) {
+    createStudent(student: RequiredExceptFor<IStudent, 'id' | 'user_id' | 'avatar_url' | 'created_at' | 'updated_at'>) {
       return dbConnector.knexConnection.transaction(async (trx) => {
         const userEntity = UserModel(dbConnector);
 

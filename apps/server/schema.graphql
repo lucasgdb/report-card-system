@@ -61,11 +61,12 @@ type System {
 type Mutation {
   adminLogin(input: AdminLoginMutationInput!): AdminLoginMutationPayload
   createStudent(input: CreateStudentMutationInput!): CreateStudentMutationPayload
+  sendAdminRecoveryEmail(input: SendAdminRecoveryEmailMutationInput!): SendAdminRecoveryEmailMutationPayload
 
   """The logOut mutation can be used to log out an existing user."""
   logout(input: LogoutMutationInput!): LogoutMutationPayload
   removeAvatar(input: RemoveAvatarMutationInput!): RemoveAvatarMutationPayload
-  sendRecoveryEmail(input: SendRecoveryEmailMutationInput!): SendRecoveryEmailMutationPayload
+  sendStudentRecoveryEmail(input: SendStudentRecoveryEmailMutationInput!): SendStudentRecoveryEmailMutationPayload
   studentLogin(input: StudentLoginMutationInput!): StudentLoginMutationPayload
 }
 
@@ -94,6 +95,15 @@ input CreateStudentMutationInput {
   clientMutationId: String
 }
 
+type SendAdminRecoveryEmailMutationPayload {
+  clientMutationId: String
+}
+
+input SendAdminRecoveryEmailMutationInput {
+  email: String!
+  clientMutationId: String
+}
+
 type LogoutMutationPayload {
   clientMutationId: String
 }
@@ -111,11 +121,11 @@ input RemoveAvatarMutationInput {
   clientMutationId: String
 }
 
-type SendRecoveryEmailMutationPayload {
+type SendStudentRecoveryEmailMutationPayload {
   clientMutationId: String
 }
 
-input SendRecoveryEmailMutationInput {
+input SendStudentRecoveryEmailMutationInput {
   RM: String!
   email: String!
   clientMutationId: String
