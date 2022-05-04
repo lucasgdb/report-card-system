@@ -57,7 +57,7 @@ export default function RequestSent() {
       <RecoverySuccessImage src="/assets/images/recovery_success.svg" />
       <RequestSentTextImage src="/assets/images/request_sent_text.svg" />
 
-      <HelpText>Agora é só checar o e-mail que foi enviado para você redefinir sua senha.</HelpText>
+      <HelpText>Agora é só aguardar um Administrador Usefaz entrar em contato pelo e-mail fornecido.</HelpText>
 
       <LoginButton variant="contained" color="primary" onClick={handleBackToLoginPage} fullWidth>
         <StyledArrowBackIcon />
