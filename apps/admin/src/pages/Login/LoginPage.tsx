@@ -42,14 +42,18 @@ const ZLogoImage = styled.img`
   max-width: 80%;
 `;
 
+const StyledLink = styled(Link)`
+  && {
+    @media (max-width: 1279px) {
+      display: none;
+    }
+  }
+`;
+
 const UsefazLogoImage = styled.img`
   position: absolute;
   left: 160px;
   top: 52px;
-
-  @media (max-width: 1279px) {
-    display: none;
-  }
 
   @media (max-width: 1382px) {
     left: unset;
@@ -79,9 +83,9 @@ export default function LoginPage() {
 
         <ZLogoImage src="/assets/images/z_logo.svg" />
 
-        <Link to="/">
+        <StyledLink to="/">
           <UsefazLogoImage src="/assets/images/usefaz_logo.svg" />
-        </Link>
+        </StyledLink>
 
         <Login />
 

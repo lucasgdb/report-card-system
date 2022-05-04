@@ -1,0 +1,32 @@
+{
+  "name": "Boletim | Usefaz",
+  "short_name": "Boletim | Usefaz",
+  "id": "usefaz_escola_boletim",
+  "start_url": "./?utm_source=homescreen&utm_medium=shortcut",
+  "description": "Usefaz Escola - Boletim",
+  "lang": "pt",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#0020A2",
+  "theme_color": "#0020A2",
+  "categories": ["books", "education", "productivity"],
+  "prefer_related_applications": false,
+  "icons": [
+    {
+      "src": "/assets/images/logo192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/assets/images/logo144x144.png",
+      "sizes": "144x144",
+      "type": "image/png"
+    },
+    {
+      "src": "/assets/images/logo512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "capture_links": "existing_client_event"
+}
