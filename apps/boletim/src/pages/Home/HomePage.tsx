@@ -9,11 +9,9 @@ import Boletim from '~/components/Home/Boletim/Boletim';
 
 const query = graphql`
   query HomePageQuery {
-    viewer {
-      student {
-        ...Menu_student
-        ...Profile_student
-      }
+    student {
+      ...Menu_student
+      ...Profile_student
     }
   }
 `;
@@ -29,8 +27,8 @@ export default function HomePage() {
 
   return (
     <OuterHomePage>
-      <Menu student={data.viewer.student} />
-      <Profile student={data.viewer.student} />
+      <Menu student={data.student} />
+      <Profile student={data.student} />
       <Boletim />
     </OuterHomePage>
   );

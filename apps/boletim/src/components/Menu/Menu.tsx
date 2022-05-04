@@ -7,7 +7,7 @@ import DateInformation from './DateInformation';
 
 const fragment = graphql`
   fragment Menu_student on Student {
-    firstName
+    firstname
   }
 `;
 
@@ -92,7 +92,7 @@ export default function Menu({ student }: MenuProps) {
         <WelcomeInformationWrapper>
           <img src="/assets/icons/clap.svg" alt="Olá!" />
 
-          <WelcomeInformation>Seja bem-vindo, {data.firstName}!</WelcomeInformation>
+          <WelcomeInformation>Seja bem-vindo, {data.firstname}!</WelcomeInformation>
         </WelcomeInformationWrapper>
       </LeftContentWrapper>
 

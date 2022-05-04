@@ -41,39 +41,41 @@ router.use(authMiddleware.initialize, authMiddleware.authenticate(), addRequestS
 
 router.post(
   '/',
-  graphqlHTTP((request) => ({
-    schema,
-    graphiql: __DEV__,
-    pretty: __DEV__,
-    context: {
-      user: request.user,
-      admin: request.admin,
-      student: request.student,
-      loginId: request.loginId,
-    },
-    customFormatErrorFn: (error) => {
-      console.error(
-        `ERROR[${dayjs().format('HH:mm:ss DD/MM/YYYY')}][${error.path?.join(' -> ') ?? ''}] ===> ${error.message}`
-      );
+  graphqlHTTP((request) => {
+    return {
+      schema,
+      graphiql: __DEV__,
+      pretty: __DEV__,
+      context: {
+        user: request.user,
+        admin: request.admin,
+        student: request.student,
+        loginId: request.loginId,
+      },
+      customFormatErrorFn: (error) => {
+        console.error(
+          `ERROR[${dayjs().format('HH:mm:ss DD/MM/YYYY')}][${error.path?.join(' -> ') ?? ''}] ===> ${error.message}`
+        );
 
-      return error;
-    },
-    extensions: ({ document }) => {
-      document.definitions.forEach((definition) => {
-        const { name } = <Definition>definition;
-        if (!name) {
-          return;
-        }
+        return error;
+      },
+      extensions: ({ document }) => {
+        document.definitions.forEach((definition) => {
+          const { name } = <Definition>definition;
+          if (!name) {
+            return;
+          }
 
-        const now = dayjs().format('HH:mm:ss DD/MM/YYYY');
-        const difference = Date.now() - request.startedAt!;
+          const now = dayjs().format('HH:mm:ss DD/MM/YYYY');
+          const difference = Date.now() - request.startedAt!;
 
-        console.info(`[${now}] - ${name.value} = ${difference}`);
-      });
+          console.info(`[${now}] - ${name.value} = ${difference}`);
+        });
 
-      return {};
-    },
-  }))
+        return {};
+      },
+    };
+  })
 );
 
 graphQLServer.use(router.routes()).use(router.allowedMethods());

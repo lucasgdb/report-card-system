@@ -4,10 +4,10 @@ import type IStudent from './IStudent';
 import type IUser from './IUser';
 
 type IContext = {
-  user: IUser | undefined;
-  loginId: ILogin['id'];
-  admin: IAdmin | undefined;
-  student: IStudent | undefined;
+  user?: IUser | null;
+  loginId?: ILogin['id'];
+  admin?: IAdmin | null;
+  student?: IStudent | null;
 };
 
 export default IContext;

@@ -2,9 +2,9 @@ import type { IAdmin, IStudent, IUser } from '~/interfaces';
 
 declare module 'koa' {
   interface Request {
-    user?: IUser;
-    admin?: IAdmin;
-    student?: IStudent;
+    user?: IUser | null;
+    admin?: IAdmin | null;
+    student?: IStudent | null;
     loginId?: string;
     startedAt?: number;
   }

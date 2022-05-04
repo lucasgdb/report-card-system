@@ -6,10 +6,8 @@ import { HomePageQuery } from './__generated__/HomePageQuery.graphql';
 
 const query = graphql`
   query HomePageQuery {
-    viewer {
-      admin {
-        id
-      }
+    admin {
+      id
     }
   }
 `;
@@ -23,5 +21,5 @@ export default function HomePage() {
     return <PageLoader />;
   }
 
-  return <OuterHomePage>{data.viewer.admin.id}</OuterHomePage>;
+  return <OuterHomePage>{data.admin.id}</OuterHomePage>;
 }

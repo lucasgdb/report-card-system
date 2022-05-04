@@ -76,6 +76,11 @@ const auth = () => {
           const userEntity = UserModel(usefazConnector);
           const user = await userEntity.getUserById(login.user_id!);
 
+          ctx.request.loginId = login.id;
+          ctx.request.user = user ?? null;
+          ctx.request.admin = null;
+          ctx.request.student = null;
+
           if (payload.email) {
             const adminEntity = AdminModel(usefazConnector);
             const admin = await adminEntity.getAdminByEmail(payload.email);
@@ -85,9 +90,6 @@ const auth = () => {
             const student = await studentEntity.getStudentByRM(payload.RM);
             ctx.request.student = student;
           }
-
-          ctx.request.loginId = login.id;
-          ctx.request.user = user;
 
           return next();
         } catch {

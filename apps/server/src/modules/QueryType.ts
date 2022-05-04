@@ -1,20 +1,18 @@
 import { GraphQLObjectType } from 'graphql';
 
 import type { IContext } from '~/interfaces';
-import { studentAuthField } from './auth/StudentAuthType';
-import { adminAuthField } from './auth/AdminAuthType';
 import { nodeField, nodesField } from './node/NodeType';
 import { systemField } from './system/SystemType';
-import { viewerField } from './user/UserType';
+import { adminField } from './admin/AdminType';
+import { studentField } from './student/StudentType';
 
 const QueryType = new GraphQLObjectType<any, IContext>({
   name: 'Query',
   fields: {
-    studentAuth: studentAuthField,
-    adminAuth: adminAuthField,
     node: nodeField,
     nodes: nodesField,
-    viewer: viewerField,
+    admin: adminField,
+    student: studentField,
     system: systemField,
   },
 });

@@ -15,7 +15,7 @@ type createStudentProps = {
 };
 
 const createStudent = async ({ RM, fullname, password, clientMutationId }: createStudentProps, context: IContext) => {
-  await isAdminOrThrowError(context);
+  isAdminOrThrowError(context);
 
   const studentEntity = StudentModel(usefazConnector);
 

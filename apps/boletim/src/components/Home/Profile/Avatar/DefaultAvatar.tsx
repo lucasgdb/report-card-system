@@ -5,7 +5,8 @@ import { DefaultAvatar_student$key } from './__generated__/DefaultAvatar_student
 
 const fragment = graphql`
   fragment DefaultAvatar_student on Student {
-    fullname
+    firstname
+    lastname
   }
 `;
 
@@ -28,9 +29,9 @@ const InitialName = styled.span`
   user-select: none;
 `;
 
-const getNameInitials = (name: string) => {
-  const firstnameInitialChar = name.charAt(0);
-  const lastnameInitialChar = name[name.lastIndexOf(' ') + 1].charAt(0);
+const getNameInitials = (firstname: string, lastname?: string) => {
+  const firstnameInitialChar = firstname.charAt(0);
+  const lastnameInitialChar = lastname?.charAt(0);
   return firstnameInitialChar + lastnameInitialChar;
 };
 
@@ -43,7 +44,7 @@ export default function DefaultAvatar({ student }: DefaultAvatarProps) {
 
   return (
     <OuterDefaultAvatar>
-      <InitialName>{getNameInitials(data.fullname)}</InitialName>
+      <InitialName>{getNameInitials(data.firstname, data.lastname)}</InitialName>
     </OuterDefaultAvatar>
   );
 }

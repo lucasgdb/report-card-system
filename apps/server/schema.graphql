@@ -1,7 +1,4 @@
 type Query {
-  studentAuth: StudentAuth!
-  adminAuth: AdminAuth!
-
   """Fetches an object given its ID"""
   node(
     """The ID of an object"""
@@ -13,16 +10,9 @@ type Query {
     """The IDs of objects"""
     ids: [ID!]!
   ): [Node]!
-  viewer: User!
+  admin: Admin
+  student: Student
   system: System
-}
-
-type StudentAuth {
-  isLogged: Boolean!
-}
-
-type AdminAuth {
-  isLogged: Boolean!
 }
 
 """An object with an ID"""
@@ -31,27 +21,22 @@ interface Node {
   id: ID!
 }
 
-type User implements Node {
+type Admin implements Node {
   """The ID of an object"""
   id: ID!
-  student: Student
-  admin: Admin
+  email: String!
 }
 
 type Student implements Node {
   """The ID of an object"""
   id: ID!
   RM: String!
-  firstName: String!
+  firstname: String!
+
+  """student's lastname (must not be equals firstname)"""
+  lastname: String
   fullname: String!
   avatarURL: String
-}
-
-type Admin implements Node {
-  """The ID of an object"""
-  id: ID!
-  email: String!
-  fullname: String!
 }
 
 type System {

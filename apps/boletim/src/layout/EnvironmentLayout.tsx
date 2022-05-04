@@ -8,8 +8,8 @@ import { EnvironmentLayoutQuery } from './__generated__/EnvironmentLayoutQuery.g
 
 const query = graphql`
   query EnvironmentLayoutQuery {
-    studentAuth {
-      isLogged
+    student {
+      id
     }
   }
 `;
@@ -23,7 +23,7 @@ export default function EnvironmentLayout() {
     return <PageLoader />;
   }
 
-  if (!data.studentAuth.isLogged) {
+  if (!data?.student) {
     const LoginPage = React.lazy(() => import('~/pages/Login/LoginPage'));
     return (
       <React.Suspense fallback={<PageLoader />}>
