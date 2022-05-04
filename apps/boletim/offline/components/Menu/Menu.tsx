@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 
 import DateInformation from './DateInformation';
+import OfflineBadge from './OfflineBadge';
 
 const OuterMenu = styled.div`
   padding: 16px 48px;
@@ -65,6 +66,8 @@ export default function Menu() {
     <OuterMenu>
       <LeftContentWrapper>
         <UsefazLogo src="/assets/images/usefaz_logo.svg" />
+
+        <OfflineBadge />
 
         <LeftDivider />
 

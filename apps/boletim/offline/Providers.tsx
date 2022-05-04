@@ -3,6 +3,9 @@ import 'dayjs/locale/pt-br';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import dayjs from 'dayjs';
 
+import CustomSnackbarProvider from './components/CustomSnackbarProvider';
+import OnlineIndicator from './components/OnlineIndicator';
+
 dayjs.locale('pt-br');
 
 const theme = createTheme({
@@ -52,5 +55,12 @@ type ProvidersProps = {
 };
 
 export default function Providers({ children }: ProvidersProps) {
-  return <ThemeProvider theme={theme}>{children}</ThemeProvider>;
+  return (
+    <ThemeProvider theme={theme}>
+      <CustomSnackbarProvider anchorOrigin={{ vertical: 'top', horizontal: 'right' }}>
+        <OnlineIndicator />
+        {children}
+      </CustomSnackbarProvider>
+    </ThemeProvider>
+  );
 }

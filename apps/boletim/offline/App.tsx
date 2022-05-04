@@ -2,7 +2,7 @@ import { ErrorBoundary } from '@usefaz/components';
 import CssBaseline from '@mui/material/CssBaseline';
 
 import Providers from './Providers';
-import Routes from './routes';
+import AppRoutes from './routes';
 
 export default function App() {
   return (
@@ -10,7 +10,7 @@ export default function App() {
       <CssBaseline />
 
       <ErrorBoundary onActionClick={() => window.location.reload()}>
-        <Routes />
+        <AppRoutes />
       </ErrorBoundary>
     </Providers>
   );

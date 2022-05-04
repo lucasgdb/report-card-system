@@ -10,6 +10,7 @@ import dayjs from 'dayjs';
 import { environment } from './utils/relay';
 import GlobalStyle from './GlobalStyle';
 import CustomSnackbarProvider from './components/CustomSnackbarProvider';
+import OfflineIndicator from './components/OfflineIndicator';
 
 dayjs.locale('pt-br');
 
@@ -66,6 +67,7 @@ export default function Providers({ children }: ProvidersProps) {
         <LocalizationProvider dateAdapter={AdapterDateFns} locale={ptBRLocale}>
           <CustomSnackbarProvider anchorOrigin={{ vertical: 'top', horizontal: 'right' }}>
             <GlobalStyle />
+            <OfflineIndicator />
             {children}
           </CustomSnackbarProvider>
         </LocalizationProvider>
