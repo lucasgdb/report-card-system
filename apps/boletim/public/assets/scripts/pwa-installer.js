@@ -23,6 +23,39 @@ const setUpServiceWorker = async () => {
     } catch (err) {
       console.log('ServiceWorker registration failed:', err);
     }
+
+    const makePromptEventGlobal = (event) => {
+      window.deferredPrompt = event;
+    };
+
+    const presentAddToHome = () => {
+      window.deferredPrompt.prompt();
+    };
+
+    window.addInstallButtonEventListener = () => {
+      const installButton = document.querySelector('#install-button');
+      installButton.onclick = presentAddToHome;
+    };
+
+    window.showInstallButton = () => {
+      const installButton = document.querySelector('#install-button');
+      installButton.style.display = 'block';
+    };
+
+    window.hideInstallButton = () => {
+      const installButton = document.querySelector('#install-button');
+      installButton.style.display = 'none';
+    };
+
+    window.addEventListener('beforeinstallprompt', (event) => {
+      event.preventDefault();
+
+      makePromptEventGlobal(event);
+    });
+
+    window.addEventListener('appinstalled', () => {
+      window.hideInstallButton();
+    });
   }
 };
 

@@ -4,6 +4,7 @@ import { graphql, useFragment } from 'relay-hooks';
 import { Menu_student$key } from './__generated__/Menu_student.graphql';
 import LogoutButton from './LogoutButton';
 import DateInformation from './DateInformation';
+import InstallButton from './InstallButton';
 
 const fragment = graphql`
   fragment Menu_student on Student {
@@ -86,6 +87,8 @@ export default function Menu({ student }: MenuProps) {
     <OuterMenu>
       <LeftContentWrapper>
         <UsefazLogo src="/assets/images/usefaz_logo.svg" />
+
+        <InstallButton />
 
         <LeftDivider />
 
