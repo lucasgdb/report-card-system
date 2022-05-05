@@ -72,7 +72,6 @@ export default function Form() {
         input: { RM, email },
       },
       onCompleted() {
-        enqueueSnackbar('Solicitação de recuperação de senha enviada com sucesso.', { variant: 'success' });
         navigate('/solicitacao-enviada');
       },
       onError() {
