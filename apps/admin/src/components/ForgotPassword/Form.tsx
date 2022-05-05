@@ -35,16 +35,22 @@ export default function Form() {
 
   const navigate = useNavigate();
 
-  const [loginMutation, { loading }] = useMutation<SendAdminRecoveryEmailMutationType>(SendAdminRecoveryEmailMutation, {
-    onError(errors) {
-      const { notFound } = errorConfig.student;
+  const [sendAdminRecoveryEmailMutation, { loading }] = useMutation<SendAdminRecoveryEmailMutationType>(
+    SendAdminRecoveryEmailMutation,
+    {
+      onError(errors) {
+        const { notFound } = errorConfig.admin;
 
-      const studentNotFoundError = getError(errors, notFound.code);
-      if (studentNotFoundError) {
-        enqueueSnackbar('Aluno não encontrado. Por favor, tente novamente.', { variant: 'error' });
-      }
-    },
-  });
+        const adminNotFoundError = getError(errors, notFound.code);
+        if (adminNotFoundError) {
+          enqueueSnackbar('E-mail fornecido não existe na base de dados.', { variant: 'error' });
+          return;
+        }
+
+        enqueueSnackbar('Falha ao enviar a solicitação de recuperação de senha.', { variant: 'error' });
+      },
+    }
+  );
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -57,16 +63,12 @@ export default function Form() {
       return;
     }
 
-    loginMutation({
+    sendAdminRecoveryEmailMutation({
       variables: {
         input: { email },
       },
       onCompleted() {
-        enqueueSnackbar('Solicitação de recuperação de senha enviada com sucesso.', { variant: 'success' });
         navigate('/solicitacao-enviada');
-      },
-      onError() {
-        enqueueSnackbar('Falha ao enviar a solicitação de recuperação de senha.', { variant: 'error' });
       },
     });
   };

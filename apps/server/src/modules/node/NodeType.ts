@@ -1,4 +1,4 @@
-import { GraphQLObjectType, GraphQLObjectTypeConfig } from 'graphql';
+import { GraphQLObjectType, GraphQLObjectTypeConfig, GraphQLInterfaceType } from 'graphql';
 import { fromGlobalId, globalIdField, nodeDefinitions } from 'graphql-relay';
 
 import usefazConnector from '~/database/usefazConnector';
@@ -10,55 +10,56 @@ const getters: {
   [key: string]: getterType | null;
 } = {};
 
-const registeredTypes: { [key: string]: any } = {};
+const registeredTypeNames: { [key: string]: any } = {};
 
-const getNode = async (table: string, id: string, context: IContext) => {
-  if (getters[table]) {
-    const data = await getters[table]!({ id }, context);
+const getNode = async (tableName: string, id: string, context: IContext) => {
+  if (getters[tableName]) {
+    const data = await getters[tableName]!({ id }, context);
     if (data) {
-      return { ...data, _type: table };
+      return { ...data, tableName };
     }
   }
 
-  const data = await usefazConnector.knexConnection(table).where('id', id).first();
-
+  const data = await usefazConnector.knexConnection(tableName).where('id', id).first();
   if (!data) {
-    return { _type: table };
+    return { tableName };
   }
 
-  return { ...data, _type: table };
+  return { ...data, tableName };
 };
 
 export const { nodeInterface, nodeField, nodesField } = nodeDefinitions<IContext>(
-  (globalId, context) => {
-    const { type, id } = fromGlobalId(globalId);
+  function (globalId, context) {
+    const { type: tableName, id } = fromGlobalId(globalId);
 
-    return getNode(type, id, context);
+    return getNode(tableName, id, context);
   },
 
-  (data) => registeredTypes[data._type]
+  function (data) {
+    return registeredTypeNames[data.tableName];
+  }
 );
 
-export const registerGraphQLNodeObjectType = <ObjectType>(table: string, getter: getterType | null = null) => {
-  return (config: GraphQLObjectTypeConfig<ObjectType, IContext>) => {
+export const registerGraphQLNodeObjectType = <T>(tableName: string, getter: getterType | null = null) => {
+  return (config: GraphQLObjectTypeConfig<T, IContext>) => {
     const ObjectType = new GraphQLObjectType({
       ...config,
 
-      fields: () => ({
-        id: globalIdField(table),
+      fields() {
+        return {
+          id: globalIdField(tableName),
+          ...(typeof config.fields === 'function' ? config.fields() : config.fields),
+        };
+      },
 
-        ...(typeof config.fields === 'function' ? config.fields() : config.fields),
-      }),
-
-      interfaces: () =>
-        config.interfaces
-          ? // @ts-expect-error config.interfaces is an array
-            [...config.interfaces, nodeInterface]
-          : [nodeInterface],
+      interfaces() {
+        const { interfaces } = config;
+        return (interfaces as GraphQLInterfaceType[])?.concat(nodeInterface) ?? [nodeInterface];
+      },
     });
 
-    registeredTypes[table] = ObjectType;
-    getters[table] = getter;
+    registeredTypeNames[tableName] = config.name;
+    getters[tableName] = getter;
 
     return ObjectType;
   };

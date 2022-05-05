@@ -1,6 +1,6 @@
 import { errorConfig } from '@usefaz/shared';
 import { GraphQLNonNull, GraphQLString } from 'graphql';
-import { mutationWithClientMutationId } from 'graphql-relay';
+import { mutationWithClientMutationId, toGlobalId } from 'graphql-relay';
 import { createTransport } from 'nodemailer';
 import crypto from 'crypto';
 import dayjs from 'dayjs';
@@ -19,7 +19,7 @@ const sendAdminRecoveryEmail = async ({ email: adminEmail, clientMutationId }: s
 
   const email = adminEmail.trim();
 
-  const admin = adminEntity.getAdminByEmail(email);
+  const admin = await adminEntity.getAdminByEmail(email);
   if (!admin) {
     throw new Error(errorConfig.admin.notFound.code);
   }
@@ -29,13 +29,18 @@ const sendAdminRecoveryEmail = async ({ email: adminEmail, clientMutationId }: s
   const token = crypto.randomUUID();
   const expiresAt = dayjs().add(3, 'day').format();
 
-  await adminPasswordRecoveryRequestEntity.createRequest({
+  const [newAdminPasswordRecoveryRequest] = await adminPasswordRecoveryRequestEntity.createRequest({
     email: email,
     token,
     expires_at: expiresAt,
   });
 
-  const passwordRecoveryURL = `${process.env.ADMIN_WEB_URL}/#/recuperar-senha/${token}`;
+  const newAdminPasswordRecoveryRequestGlobalId = toGlobalId(
+    'admin_password_recovery_request',
+    newAdminPasswordRecoveryRequest.id
+  );
+
+  const passwordRecoveryURL = `${process.env.ADMIN_WEB_URL}/#/recuperar-senha/${newAdminPasswordRecoveryRequestGlobalId}/${token}`;
 
   const transporter = createTransport({
     host: 'smtp.gmail.com',

@@ -6,7 +6,24 @@ import type { IAdminPasswordRecoveryRequest } from '~/interfaces';
 const AdminPasswordRecoveryRequest = (dbConnector: DBConnector) => {
   return {
     createRequest(request: RequiredExceptFor<IAdminPasswordRecoveryRequest, 'id' | 'created_at' | 'updated_at'>) {
-      return dbConnector.knexConnection('admin_password_recovery_request').insert(request);
+      return dbConnector
+        .knexConnection<IAdminPasswordRecoveryRequest>('admin_password_recovery_request')
+        .insert(request)
+        .returning('*');
+    },
+
+    getRequest(id: string) {
+      return dbConnector
+        .knexConnection<IAdminPasswordRecoveryRequest>('admin_password_recovery_request')
+        .where('id', id)
+        .first();
+    },
+
+    finalizeRequest(id: string, { adminId, newPassword }: { adminId: string; newPassword: string }) {
+      return dbConnector.knexConnection.transaction(async (trx) => {
+        await trx('admin_password_recovery_request').update('status', 'CHANGED').where('id', id);
+        await trx('admin').update('password', newPassword).where('id', adminId);
+      });
     },
   };
 };

@@ -46,6 +46,7 @@ type System {
 type Mutation {
   adminLogin(input: AdminLoginMutationInput!): AdminLoginMutationPayload
   createStudent(input: CreateStudentMutationInput!): CreateStudentMutationPayload
+  recoverAdminPassword(input: RecoverAdminPasswordMutationInput!): RecoverAdminPasswordMutationPayload
   sendAdminRecoveryEmail(input: SendAdminRecoveryEmailMutationInput!): SendAdminRecoveryEmailMutationPayload
 
   """The logOut mutation can be used to log out an existing user."""
@@ -77,6 +78,30 @@ input CreateStudentMutationInput {
   RM: String!
   fullname: String!
   password: String!
+  clientMutationId: String
+}
+
+type RecoverAdminPasswordMutationPayload {
+  adminPasswordRecoveryRequest: AdminPasswordRecoveryRequest
+  clientMutationId: String
+}
+
+type AdminPasswordRecoveryRequest implements Node {
+  """The ID of an object"""
+  id: ID!
+  status: AdminPasswordRecoveryRequestStatusEnum!
+}
+
+enum AdminPasswordRecoveryRequestStatusEnum {
+  PENDING
+  CHANGED
+}
+
+input RecoverAdminPasswordMutationInput {
+  adminPasswordRecoveryRequestId: ID!
+  passwordRecoveryToken: String!
+  password: String!
+  passwordConfirmation: String!
   clientMutationId: String
 }
 

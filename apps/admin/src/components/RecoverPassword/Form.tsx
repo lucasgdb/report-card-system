@@ -2,13 +2,12 @@ import { errorConfig, getError } from '@usefaz/shared';
 import { Notification } from '@usefaz/components';
 import styled from 'styled-components';
 import Button from '@mui/material/Button';
-import { useNavigate } from 'react-router';
+import { useNavigate, useParams } from 'react-router';
 import { useMutation } from 'relay-hooks';
 
-import SendStudentRecoveryEmailMutation from '~/modules/student/SendStudentRecoveryEmailMutation';
-import { SendStudentRecoveryEmailMutation as SendStudentRecoveryEmailMutationType } from '~/modules/student/__generated__/SendStudentRecoveryEmailMutation.graphql';
-import RMInput from './RMinput';
-import EmailInput from './EmailInput';
+import RecoverAdminPasswordMutation from '~/modules/admin/RecoverAdminPasswordMutation';
+import { RecoverAdminPasswordMutation as RecoverAdminPasswordMutationType } from '~/modules/admin/__generated__/RecoverAdminPasswordMutation.graphql';
+import PasswordInput from './PasswordInput';
 
 const OuterForm = styled.div`
   margin-top: 24px;
@@ -35,9 +34,10 @@ export default function Form() {
   const { enqueueSnackbar } = Notification.useSnackbar();
 
   const navigate = useNavigate();
+  const { requestId, token } = useParams<{ requestId: string; token: string }>();
 
-  const [sendStudentRecoveryEmailMutation, { loading }] = useMutation<SendStudentRecoveryEmailMutationType>(
-    SendStudentRecoveryEmailMutation,
+  const [recoverPasswordMutation, { loading }] = useMutation<RecoverAdminPasswordMutationType>(
+    RecoverAdminPasswordMutation,
     {
       onError(errors) {
         const { notFound } = errorConfig.student;
@@ -55,25 +55,34 @@ export default function Form() {
 
     const formData = new FormData(event.currentTarget);
 
-    const RM = formData.get('RM').toString();
-    if (!RM) {
-      enqueueSnackbar('RM obrigatório.', { variant: 'error' });
+    const password = formData.get('password').toString();
+    if (!password) {
+      enqueueSnackbar('Senha obrigatória.', { variant: 'error' });
       return;
     }
 
-    const email = formData.get('email').toString();
-    if (!email) {
-      enqueueSnackbar('E-mail obrigatório.', { variant: 'error' });
+    const passwordConfirmation = formData.get('passwordConfirmation').toString();
+    if (!passwordConfirmation) {
+      enqueueSnackbar('Senha obrigatória.', { variant: 'error' });
       return;
     }
 
-    sendStudentRecoveryEmailMutation({
+    if (password !== passwordConfirmation) {
+      enqueueSnackbar('Senha de confirmação deve ser igual a senha.', { variant: 'error' });
+      return;
+    }
+
+    recoverPasswordMutation({
       variables: {
-        input: { RM, email },
+        input: {
+          adminPasswordRecoveryRequestId: requestId,
+          passwordRecoveryToken: token,
+          password,
+          passwordConfirmation,
+        },
       },
       onCompleted() {
-        enqueueSnackbar('Solicitação de recuperação de senha enviada com sucesso.', { variant: 'success' });
-        navigate('/solicitacao-enviada');
+        navigate('/solicitacao-finalizada');
       },
       onError() {
         enqueueSnackbar('Falha ao enviar a solicitação de recuperação de senha.', { variant: 'error' });
@@ -85,12 +94,12 @@ export default function Form() {
     <OuterForm>
       <form onSubmit={handleSubmit}>
         <InputWrapper>
-          <RMInput />
-          <EmailInput />
+          <PasswordInput placeholder="Digite sua nova senha" name="password" />
+          <PasswordInput placeholder="Repita a nova senha" name="passwordConfirmation" />
         </InputWrapper>
 
         <LoginButton variant="contained" color="primary" type="submit" disabled={loading} fullWidth>
-          Enviar
+          Redefinir
         </LoginButton>
       </form>
     </OuterForm>

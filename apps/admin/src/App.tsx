@@ -2,7 +2,7 @@ import { ErrorBoundary } from '@usefaz/components';
 import CssBaseline from '@mui/material/CssBaseline';
 
 import Providers from './Providers';
-import AppRoutes from './routes/AppRoutes';
+import AppRoutes from './routes';
 
 export default function App() {
   return (
