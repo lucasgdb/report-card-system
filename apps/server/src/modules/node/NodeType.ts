@@ -12,7 +12,13 @@ const getters: {
 
 const registeredTypeNames: { [key: string]: any } = {};
 
-const getNode = async (tableName: string, id: string, context: IContext) => {
+type getNodeProps = {
+  tableName: string;
+  id: string;
+  context: IContext;
+};
+
+const getNode = async ({ tableName, id, context }: getNodeProps) => {
   if (getters[tableName]) {
     const data = await getters[tableName]!({ id }, context);
     if (data) {
@@ -30,9 +36,8 @@ const getNode = async (tableName: string, id: string, context: IContext) => {
 
 export const { nodeInterface, nodeField, nodesField } = nodeDefinitions<IContext>(
   function (globalId, context) {
-    const { type: tableName, id } = fromGlobalId(globalId);
-
-    return getNode(tableName, id, context);
+    const { type, id } = fromGlobalId(globalId);
+    return getNode({ tableName: type, id, context });
   },
 
   function (data) {
