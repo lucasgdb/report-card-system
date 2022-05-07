@@ -1,0 +1,21 @@
+{
+  "name": "@usefaz/relay",
+  "version": "1.0.0",
+  "description": "Relay package to share between web apps",
+  "main": "index.ts",
+  "author": "lucasgdb",
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "@usefaz/shared": "*",
+    "react-relay": "^13.2.0",
+    "relay-hooks": "^7.0.0",
+    "relay-runtime": "^13.2.0"
+  },
+  "devDependencies": {
+    "@types/react-relay": "^13.0.2",
+    "@types/relay-config": "^6.0.2",
+    "@types/relay-runtime": "^13.0.3",
+    "relay-compiler": "^13.2.0"
+  }
+}

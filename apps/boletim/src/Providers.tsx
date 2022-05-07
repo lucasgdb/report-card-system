@@ -1,5 +1,6 @@
 import 'dayjs/locale/pt-br';
 
+import { environment } from '@usefaz/relay';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { RelayEnvironmentProvider } from 'relay-hooks';
 import ptBRLocale from 'date-fns/locale/pt-BR';
@@ -7,7 +8,6 @@ import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import dayjs from 'dayjs';
 
-import { environment } from './utils/relay';
 import GlobalStyle from './GlobalStyle';
 import CustomSnackbarProvider from './components/CustomSnackbarProvider';
 import OfflineIndicator from './components/OfflineIndicator';

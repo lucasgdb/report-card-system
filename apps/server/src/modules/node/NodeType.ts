@@ -10,7 +10,7 @@ const getters: {
   [key: string]: getterType | null;
 } = {};
 
-const registeredTypeNames: { [key: string]: any } = {};
+const registeredTypeNames: { [key: string]: string } = {};
 
 type getNodeProps = {
   tableName: string;
