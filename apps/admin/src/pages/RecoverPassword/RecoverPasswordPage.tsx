@@ -96,6 +96,10 @@ export default function RecoverPasswordPage() {
   const shouldChangeBodyStyle = useMediaQuery('(max-width: 1279px)');
 
   useEffect(() => {
+    document.title = 'Recuperar senha | Usefaz Admin';
+  }, []);
+
+  useEffect(() => {
     if (isLoading) {
       return;
     }

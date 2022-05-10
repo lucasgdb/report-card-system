@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import styled from 'styled-components';
 
 import PasswordChanged from '~/components/PasswordChanged/PasswordChanged';
@@ -34,6 +35,10 @@ const ZLogoImage = styled.img`
 `;
 
 export default function PasswordChangedPage() {
+  useEffect(() => {
+    document.title = 'Sucesso | Usefaz Admin';
+  }, []);
+
   return (
     <OuterPasswordChangedPage>
       <DotsThingsImage src="/assets/images/dots.svg" />

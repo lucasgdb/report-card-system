@@ -1,6 +1,7 @@
 import styled, { createGlobalStyle } from 'styled-components';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { Link } from 'react-router-dom';
+import { useEffect } from 'react';
 
 import ForgotPassword from '~/components/ForgotPassword/ForgotPassword';
 
@@ -72,6 +73,10 @@ const PasswordRecoveryImage = styled.img`
 
 export default function ForgotPasswordPage() {
   const shouldChangeBodyStyle = useMediaQuery('(max-width: 1279px)');
+
+  useEffect(() => {
+    document.title = 'Recuperar senha | Usefaz Admin';
+  }, []);
 
   return (
     <>

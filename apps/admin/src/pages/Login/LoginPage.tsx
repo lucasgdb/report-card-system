@@ -2,6 +2,7 @@ import styled, { createGlobalStyle } from 'styled-components';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { GoogleReCaptchaProvider } from 'react-google-recaptcha-v3';
 import { Link } from 'react-router-dom';
+import { useEffect } from 'react';
 
 import Login from '~/components/Login/Login';
 
@@ -73,6 +74,10 @@ const ReadingBookImage = styled.img`
 
 export default function LoginPage() {
   const shouldChangeBodyStyle = useMediaQuery('(max-width: 1279px)');
+
+  useEffect(() => {
+    document.title = 'Login | Usefaz Admin';
+  }, []);
 
   return (
     <GoogleReCaptchaProvider reCaptchaKey={process.env.RECAPTCHA_V3_PUBLIC_TOKEN} language="pt-BR" useRecaptchaNet>

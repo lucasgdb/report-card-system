@@ -1,8 +1,13 @@
 import { DefaultErrorPage } from '@usefaz/components';
+import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 export default function ErrorPage() {
   const navigate = useNavigate();
+
+  useEffect(() => {
+    document.title = '404 | Usefaz Admin';
+  }, []);
 
   return (
     <DefaultErrorPage

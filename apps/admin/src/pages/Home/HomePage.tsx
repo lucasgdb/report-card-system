@@ -1,6 +1,7 @@
 import { PageLoader } from '@usefaz/components';
 import styled from 'styled-components';
 import { graphql, useQuery } from 'relay-hooks';
+import { useEffect } from 'react';
 
 import { HomePageQuery } from './__generated__/HomePageQuery.graphql';
 import LogoutButton from '~/components/Home/LogoutButton';
@@ -24,6 +25,10 @@ const AdminIDText = styled.p`
 
 export default function HomePage() {
   const { data, isLoading } = useQuery<HomePageQuery>(query);
+
+  useEffect(() => {
+    document.title = 'Página Principal | Usefaz';
+  }, []);
 
   if (isLoading) {
     return <PageLoader />;

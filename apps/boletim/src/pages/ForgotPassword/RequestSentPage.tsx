@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import styled from 'styled-components';
 
 import RequestSent from '~/components/RequestSent/RequestSent';
@@ -34,6 +35,10 @@ const ZLogoImage = styled.img`
 `;
 
 export default function RequestSentPage() {
+  useEffect(() => {
+    document.title = 'Solicitação enviada | Usefaz';
+  }, []);
+
   return (
     <OuterRequestSentPage>
       <DotsThingsImage src="/assets/images/dots.svg" />
