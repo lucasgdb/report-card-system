@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import IconButton from '@mui/material/IconButton';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
 import LightModeIcon from '@mui/icons-material/LightMode';
+import Tooltip from '@mui/material/Tooltip';
 
 import { useThemeContext } from '~/contexts/ThemeContext';
 
@@ -29,8 +30,10 @@ export default function SwitchThemeButton() {
   const { theme, switchTheme } = useThemeContext();
 
   return (
-    <StyledIconButton onClick={switchTheme}>
-      {theme === 'light' ? <StyledDarkModeIcon /> : <StyledLightModeIcon />}
-    </StyledIconButton>
+    <Tooltip title="Trocar tema" arrow>
+      <StyledIconButton onClick={switchTheme}>
+        {theme === 'light' ? <StyledDarkModeIcon /> : <StyledLightModeIcon />}
+      </StyledIconButton>
+    </Tooltip>
   );
 }
