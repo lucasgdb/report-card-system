@@ -25,8 +25,9 @@ const TableHeader = styled.th`
 
 const TableData = styled.td`
   font: normal normal 400 14px/17px Inter;
-  color: #808080;
+  color: ${(props) => props.theme.text.main};
 
+  transition: color 0.2s;
   border-top: 1px solid #e6e8eb;
   border-bottom: 1px solid #e6e8eb;
   padding: 12px;
@@ -37,7 +38,8 @@ const TableRow = styled.tr`
     position: sticky;
     left: 0;
     z-index: 1;
-    background-color: #fafafa;
+    background-color: ${(props) => props.theme.bg.main};
+    transition: background-color 0.2s;
   }
 `;
 

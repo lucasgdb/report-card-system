@@ -11,7 +11,9 @@ export const SimpleDialog = styled(Dialog)`
 `;
 
 export const DialogHeader = styled.div`
+  background-color: ${(props) => props.theme.bg.dialogHeader};
   padding: 24px 32px;
+
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -19,10 +21,11 @@ export const DialogHeader = styled.div`
 
 export const DialogTitle = styled.span`
   font: normal normal normal 24px/28px Lexend;
-  color: #333;
+  color: ${(props) => props.theme.text.dialogTitle};
 `;
 
 export const DialogContent = styled.div`
+  background-color: ${(props) => props.theme.bg.dialogContent};
   padding: 24px 32px;
 
   display: flex;
@@ -31,8 +34,9 @@ export const DialogContent = styled.div`
 `;
 
 export const DialogActions = styled.div`
-  background-color: #f5f5fb;
+  background-color: ${(props) => props.theme.bg.dialogActions};
   padding: 24px 32px;
+
   display: flex;
   justify-content: space-between;
   gap: 16px;

@@ -6,7 +6,7 @@ import RemoveAvatarButton from './RemoveAvatarButton';
 
 const Description = styled.p`
   font: normal normal normal 16px/19px Lexend;
-  color: #666;
+  color: ${(props) => props.theme.text.dialogDescription};
   margin: 0;
 `;
 

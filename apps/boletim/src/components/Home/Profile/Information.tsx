@@ -49,7 +49,8 @@ const Status = styled.div`
   padding: 11px 0;
   width: 250px;
 
-  background-color: #22e675;
+  transition: background-color 0.2s;
+  background-color: ${(props) => props.theme.bg.success};
   border-radius: 4px;
 `;
 

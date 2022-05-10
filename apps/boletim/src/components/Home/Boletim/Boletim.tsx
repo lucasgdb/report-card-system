@@ -12,8 +12,9 @@ const OuterBoletim = styled.div`
 
 const Title = styled.p`
   font: normal normal 600 24px/30px Lexend;
-  color: #494d4b;
+  color: ${(props) => props.theme.text.title};
 
+  transition: color 0.2s;
   margin: 0;
 `;
 

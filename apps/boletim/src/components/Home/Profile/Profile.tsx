@@ -13,8 +13,6 @@ const fragment = graphql`
 `;
 
 const OuterProfile = styled.div`
-  width: 100%;
-
   background: linear-gradient(92.84deg, #011461 -8.18%, #0020a2 47.5%, #00d4ff 106.78%);
 
   display: flex;
@@ -24,6 +22,8 @@ const OuterProfile = styled.div`
   position: relative;
 
   padding: 24px 0;
+  width: 100%;
+  overflow: hidden;
 
   @media (min-width: 864px) {
     height: 375px;

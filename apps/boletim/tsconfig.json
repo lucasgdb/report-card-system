@@ -5,12 +5,13 @@
     "target": "ESNext",
     "module": "CommonJS",
     "jsx": "react-jsx",
-    "lib": ["ESNext", "DOM"],
+    "lib": ["ESNext", "DOM", "DOM.Iterable"],
     "baseUrl": ".",
     "paths": {
       "~/*": ["src/*"]
     }
   },
   "extends": "../../tsconfig.base.json",
-  "include": ["src"]
+  "include": ["src", "@types"],
+  "exclude": ["node_modules/**/*"]
 }

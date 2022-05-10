@@ -4,7 +4,6 @@ import IconButton from '@mui/material/IconButton';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import InstallMobileIcon from '@mui/icons-material/InstallMobile';
 import { useEffect } from 'react';
-
 declare global {
   interface Window {
     deferredPrompt: Event;
@@ -27,8 +26,6 @@ const DesktopInstallButton = styled(Button)`
     display: none;
     border-radius: 8px;
     padding: 2px 10px;
-
-    color: #fff;
   }
 `;
 

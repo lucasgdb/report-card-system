@@ -11,16 +11,16 @@ const OuterTotalAbsencesBadge = styled.div<OuterBadgeProps>`
 
   padding: 2px 0;
 
-  background-color: ${({ number }) => {
+  background-color: ${({ number, theme }) => {
     if (number >= 18) {
       return '#EF233C';
     }
 
     if (number >= 11) {
-      return '#F9C74F';
+      return theme.bg.warning;
     }
 
-    return '#22E575';
+    return theme.bg.success;
   }};
 `;
 

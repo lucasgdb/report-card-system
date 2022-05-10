@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 
 const FirstRowColumn = styled.div`
   display: flex;
@@ -10,11 +10,21 @@ const SubjectIcon = styled.img`
   @media (max-width: 599px) {
     display: none;
   }
+
+  transition: filter 0.2s;
+
+  ${(props) =>
+    props.theme.palette.mode === 'dark' &&
+    css`
+      filter: invert(50%);
+    `};
 `;
 
 const SubjectName = styled.p`
   font: normal normal 600 16px/20px Lexend;
-  color: #494d4b;
+  color: ${(props) => props.theme.text.main};
+
+  transition: color 0.2s;
   margin: 0;
 `;
 

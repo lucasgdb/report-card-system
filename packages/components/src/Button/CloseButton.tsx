@@ -12,7 +12,7 @@ const OuterCloseButton = styled(IconButton)`
 
 const StyledCloseIcon = styled(CloseIcon)`
   && {
-    color: #333;
+    color: ${(props) => props.theme.text.closeButton};
   }
 `;
 

@@ -4,7 +4,9 @@ import styled from 'styled-components';
 
 const DateText = styled.p`
   font: normal normal 400 16px/19px Inter;
-  color: #808080;
+  color: ${(props) => props.theme.text.main};
+
+  transition: color 0.2s;
   margin: 0;
 
   @media (max-width: 599px) {

@@ -6,18 +6,17 @@ type OuterFinalAverageBadgeProps = {
 
 const OuterFinalAverageBadge = styled.div<OuterFinalAverageBadgeProps>`
   border-radius: 4px;
-
   width: 48px;
-
   padding: 2px 0;
 
-  background-color: ${({ number }) => {
+  transition: background-color 0.2s;
+  background-color: ${({ number, theme }) => {
     if (number >= 7) {
-      return '#22E575';
+      return theme.bg.success;
     }
 
     if (number >= 5) {
-      return '#F9C74F';
+      return theme.bg.warning;
     }
 
     return '#EF233C';
