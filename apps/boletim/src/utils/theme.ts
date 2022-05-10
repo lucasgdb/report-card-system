@@ -109,9 +109,9 @@ export const darkTheme = createTheme({
     main: '#2e2e2e',
     success: '#1aac58',
     warning: '#e0b347',
-    dialogHeader: '#555',
-    dialogContent: '#555',
-    dialogActions: '#444',
+    dialogHeader: '#2e2e2e',
+    dialogContent: '#2e2e2e',
+    dialogActions: '#2e2e2e',
   },
   text: {
     main: '#fafafa',
