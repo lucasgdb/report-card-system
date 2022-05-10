@@ -66,7 +66,7 @@ export const darkTheme = createTheme({
     MuiCssBaseline: {
       styleOverrides: {
         body: {
-          background: '#333 0 0 no-repeat padding-box',
+          background: '#2e2e2e 0 0 no-repeat padding-box',
           overflowX: 'hidden',
           transition: '0.2s all',
 
@@ -106,7 +106,7 @@ export const darkTheme = createTheme({
   },
 
   bg: {
-    main: '#333',
+    main: '#2e2e2e',
     success: '#1aac58',
     warning: '#e0b347',
     dialogHeader: '#555',
