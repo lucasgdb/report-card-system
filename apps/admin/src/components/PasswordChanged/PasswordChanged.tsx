@@ -13,11 +13,6 @@ const OuterPasswordChanged = styled.div`
 
 const RecoverySuccessImage = styled.img``;
 
-const PasswordChangedTextImage = styled.img`
-  margin-top: 32px;
-  max-width: 100%;
-`;
-
 const HelpText = styled.p`
   font: normal normal 400 16px/24px Lexend;
   color: #fafafa;
@@ -55,7 +50,6 @@ export default function PasswordChanged() {
   return (
     <OuterPasswordChanged>
       <RecoverySuccessImage src="/assets/images/recovery_success.svg" />
-      <PasswordChangedTextImage src="/assets/images/request_sent_text.svg" />
 
       <HelpText>Sua senha foi redefinida com sucesso. Clique no botão abaixo para acessar a página de login.</HelpText>
 
