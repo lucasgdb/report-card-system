@@ -23,7 +23,7 @@ export default function EnvironmentLayout() {
     return <PageLoader />;
   }
 
-  if (!data?.admin) {
+  if (!data?.admin?.id) {
     const LoginPage = React.lazy(() => import('~/pages/Login/LoginPage'));
     return (
       <React.Suspense fallback={<PageLoader />}>

@@ -1,6 +1,7 @@
 import { PageLoader } from '@usefaz/components';
 import { Route, Routes, HashRouter } from 'react-router-dom';
 import * as React from 'react';
+import NavbarLayout from './layout/Navbar/NavbarLayout';
 
 const EnvironmentLayout = React.lazy(() => import('~/layout/EnvironmentLayout'));
 const ErrorPage = React.lazy(() => import('~/pages/Error/ErrorPage'));
@@ -16,7 +17,9 @@ export default function AppRoutes() {
       <React.Suspense fallback={<PageLoader />}>
         <Routes>
           <Route path="/" element={<EnvironmentLayout />}>
-            <Route index element={<HomePage />} />
+            <Route element={<NavbarLayout />}>
+              <Route index element={<HomePage />} />
+            </Route>
           </Route>
 
           <Route path="/esqueci-minha-senha" element={<ForgotPasswordPage />} />
