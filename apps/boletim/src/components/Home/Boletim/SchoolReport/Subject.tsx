@@ -7,6 +7,8 @@ const FirstRowColumn = styled.div`
 `;
 
 const SubjectIcon = styled.img`
+  width: 24px;
+
   @media (max-width: 599px) {
     display: none;
   }
