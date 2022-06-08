@@ -1,6 +1,11 @@
+import { errorConfig } from '@usefaz/shared';
+import dayjs from 'dayjs';
+import crypto from 'crypto';
 import { GraphQLNonNull, GraphQLString } from 'graphql';
 import { mutationWithClientMutationId } from 'graphql-relay';
-import { createTransport } from 'nodemailer';
+
+import usefazConnector from '~/database/usefazConnector';
+import { StudentModel, StudentPasswordRecoveryRequestModel } from '~/entities';
 
 type sendStudentRecoveryEmailProps = {
   RM: string;
@@ -9,21 +14,23 @@ type sendStudentRecoveryEmailProps = {
 };
 
 const sendStudentRecoveryEmail = async ({ RM, email, clientMutationId }: sendStudentRecoveryEmailProps) => {
-  const transporter = createTransport({
-    host: 'smtp.gmail.com',
-    port: 587,
-    secure: false,
-    auth: {
-      user: process.env.USEFAZ_EMAIL,
-      pass: process.env.USEFAZ_EMAIL_PASSWORD,
-    },
-  });
+  const studentEntity = StudentModel(usefazConnector);
 
-  await transporter.sendMail({
-    from: `"Usefaz Escola" <${process.env.USEFAZ_EMAIL}>`,
-    to: process.env.USEFAZ_EMAIL,
-    subject: 'Recuperação de senha',
-    html: `<b>RM: ${RM}</b><br /><b>${email.trim()}</b>`,
+  const student = await studentEntity.getStudentByRM(RM);
+  if (!student) {
+    throw new Error(errorConfig.student.notFound.code);
+  }
+
+  const studentPasswordRecoveryRequestEntity = StudentPasswordRecoveryRequestModel(usefazConnector);
+
+  const token = crypto.randomUUID();
+  const expiresAt = dayjs().add(3, 'day').format();
+
+  await studentPasswordRecoveryRequestEntity.createRequest({
+    RM,
+    email,
+    token,
+    expires_at: expiresAt,
   });
 
   return { clientMutationId };

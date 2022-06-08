@@ -10,6 +10,9 @@ const ForgotPasswordPage = React.lazy(() => import('~/pages/ForgotPassword/Forgo
 const RequestSentPage = React.lazy(() => import('~/pages/ForgotPassword/RequestSentPage'));
 const RecoverPasswordPage = React.lazy(() => import('~/pages/RecoverPassword/RecoverPasswordPage'));
 const PasswordChangedPage = React.lazy(() => import('~/pages/PasswordChanged/PasswordChangedPage'));
+const StudentPasswordRecoveryListPage = React.lazy(
+  () => import('~/pages/StudentPasswordRecoveryList/StudentPasswordRecoveryListPage')
+);
 
 export default function AppRoutes() {
   return (
@@ -19,6 +22,7 @@ export default function AppRoutes() {
           <Route path="/" element={<EnvironmentLayout />}>
             <Route element={<NavbarLayout />}>
               <Route index element={<HomePage />} />
+              <Route path="/solicitacoes-de-recuperacao-de-senha" element={<StudentPasswordRecoveryListPage />} />
             </Route>
           </Route>
 

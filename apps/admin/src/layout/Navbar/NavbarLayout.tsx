@@ -29,7 +29,7 @@ const NavbarLayout = () => {
       <Navbar isMenuOpen={isMenuOpen} setIsMenuOpen={setIsMenuOpen} />
 
       <PageWrapper>
-        <MenuLayout isMenuOpen={isMenuOpen}>
+        <MenuLayout isMenuOpen={isMenuOpen} setIsMenuOpen={setIsMenuOpen}>
           <Outlet />
         </MenuLayout>
       </PageWrapper>

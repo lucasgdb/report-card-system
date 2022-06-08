@@ -6,8 +6,7 @@ import crypto from 'crypto';
 import dayjs from 'dayjs';
 
 import usefazConnector from '~/database/usefazConnector';
-import { AdminModel } from '~/entities';
-import AdminPasswordRecoveryRequestModel from '~/entities/Admin/AdminPasswordRecoveryRequestModel';
+import { AdminModel, AdminPasswordRecoveryRequestModel } from '~/entities';
 
 type sendAdminRecoveryEmailProps = {
   email: string;
@@ -29,7 +28,7 @@ const sendAdminRecoveryEmail = async ({ email: adminEmail, clientMutationId }: s
   const token = crypto.randomUUID();
   const expiresAt = dayjs().add(3, 'day').format();
 
-  const [newAdminPasswordRecoveryRequest] = await adminPasswordRecoveryRequestEntity.createRequest({
+  const newAdminPasswordRecoveryRequest = await adminPasswordRecoveryRequestEntity.createRequest({
     email: email,
     token,
     expires_at: expiresAt,

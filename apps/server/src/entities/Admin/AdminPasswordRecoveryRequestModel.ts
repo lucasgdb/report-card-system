@@ -3,13 +3,17 @@ import type { RequiredExceptFor } from '@usefaz/shared';
 import type { DBConnector } from '~/database/dbConnector';
 import type { IAdminPasswordRecoveryRequest } from '~/interfaces';
 
-const AdminPasswordRecoveryRequest = (dbConnector: DBConnector) => {
+const AdminPasswordRecoveryRequestModel = (dbConnector: DBConnector) => {
   return {
-    createRequest(request: RequiredExceptFor<IAdminPasswordRecoveryRequest, 'id' | 'created_at' | 'updated_at'>) {
-      return dbConnector
+    async createRequest(
+      request: RequiredExceptFor<IAdminPasswordRecoveryRequest, 'id' | 'status' | 'created_at' | 'updated_at'>
+    ) {
+      const [newRequest] = await dbConnector
         .knexConnection<IAdminPasswordRecoveryRequest>('admin_password_recovery_request')
         .insert(request)
         .returning('*');
+
+      return newRequest;
     },
 
     getRequest(id: string) {
@@ -28,4 +32,4 @@ const AdminPasswordRecoveryRequest = (dbConnector: DBConnector) => {
   };
 };
 
-export default AdminPasswordRecoveryRequest;
+export default AdminPasswordRecoveryRequestModel;

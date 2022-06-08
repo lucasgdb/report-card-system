@@ -13,8 +13,11 @@ export const up = async (knex: Knex) => {
 
     table.string('email').notNullable();
     table.string('token').unique().notNullable();
-    table.enum('status', statusEnum, { useNative: true, enumName: 'status' }).defaultTo('PENDING');
     table.timestamp('expires_at').notNullable();
+
+    table
+      .enum('status', statusEnum, { useNative: true, enumName: 'admin_password_recovery_request_status' })
+      .defaultTo('PENDING');
 
     table.timestamps(true, true);
   });
@@ -22,5 +25,5 @@ export const up = async (knex: Knex) => {
 
 export const down = async (knex: Knex) => {
   await knex.schema.dropTableIfExists('admin_password_recovery_request');
-  await knex.schema.raw('DROP TYPE status');
+  await knex.schema.raw('DROP TYPE admin_password_recovery_request_status');
 };

@@ -3,9 +3,8 @@ import { fromGlobalId, mutationWithClientMutationId } from 'graphql-relay';
 import dayjs from 'dayjs';
 
 import usefazConnector from '~/database/usefazConnector';
-import AdminPasswordRecoveryRequestModel from '~/entities/Admin/AdminPasswordRecoveryRequestModel';
+import { AdminModel, AdminPasswordRecoveryRequestModel } from '~/entities';
 import createPassword from '~/utils/createPassword';
-import { AdminModel } from '~/entities';
 import AdminPasswordRecoveryRequestType from '../AdminPasswordRecoveryRequestType';
 
 const isTokenExpired = (expiresAt: string) => dayjs(expiresAt).isBefore(dayjs());

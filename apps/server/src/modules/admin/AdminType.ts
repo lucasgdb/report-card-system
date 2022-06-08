@@ -1,8 +1,11 @@
 import { GraphQLNonNull, GraphQLString } from 'graphql';
-import { connectionDefinitions } from 'graphql-relay';
+import { connectionFromArray } from 'graphql-relay';
 
+import usefazConnector from '~/database/usefazConnector';
+import { StudentPasswordRecoveryRequestModel } from '~/entities';
 import type { IAdmin, IContext } from '~/interfaces';
 import { registerGraphQLNodeObjectType } from '../node/NodeType';
+import { StudentPasswordRecoveryRequestConnection } from '../student/StudentPasswordRecoveryRequestType';
 
 const AdminType = registerGraphQLNodeObjectType<IAdmin>('admin')({
   name: 'Admin',
@@ -11,13 +14,17 @@ const AdminType = registerGraphQLNodeObjectType<IAdmin>('admin')({
       email: {
         type: new GraphQLNonNull(GraphQLString),
       },
+      studentPasswordRecoveries: {
+        type: StudentPasswordRecoveryRequestConnection.connectionType,
+        resolve: async (_admin, args) => {
+          const studentPasswordRecoveryRequestEntity = StudentPasswordRecoveryRequestModel(usefazConnector);
+
+          const studentPasswordRecoveryList = await studentPasswordRecoveryRequestEntity.getAll();
+          return connectionFromArray(studentPasswordRecoveryList, args);
+        },
+      },
     };
   },
-});
-
-export const AdminConnection = connectionDefinitions({
-  name: 'Admin',
-  nodeType: AdminType,
 });
 
 export const adminField = {

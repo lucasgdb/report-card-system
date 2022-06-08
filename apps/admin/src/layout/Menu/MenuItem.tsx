@@ -8,6 +8,10 @@ const MenuItemText = styled.div`
   font: normal normal 700 16px/16px Lexend;
 
   user-select: none;
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `;
 
 const selectedCSS = css`
@@ -73,16 +77,19 @@ export type Item = {
 
 type MenuItemProps = {
   item: Item;
+  setIsMenuOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
-
-const MenuItem = ({ item }: MenuItemProps) => {
+const MenuItem = ({ item, setIsMenuOpen }: MenuItemProps) => {
   const { pathname } = useLocation();
+
+  const handleCloseMenu = () => setIsMenuOpen(false);
 
   return (
     <StyledLink to={item.link}>
-      <OuterMenuItem $selected={item.link === pathname}>
+      <OuterMenuItem $selected={item.link === pathname} onClick={handleCloseMenu}>
         <MenuItemIcon>{item.Icon}</MenuItemIcon>
-        <MenuItemText>{item.name}</MenuItemText>
+
+        <MenuItemText title={item.name}>{item.name}</MenuItemText>
       </OuterMenuItem>
     </StyledLink>
   );

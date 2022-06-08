@@ -47,7 +47,13 @@ const PageWrapper = styled.div`
   width: calc(100% - 72px);
 `;
 
-const MenuLayout = ({ isMenuOpen, children }) => {
+type MenuLayoutProps = {
+  isMenuOpen: boolean;
+  setIsMenuOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  children: React.ReactNode;
+};
+
+const MenuLayout = ({ isMenuOpen, setIsMenuOpen, children }: MenuLayoutProps) => {
   const isDesktop = useMediaQuery('(min-width: 1200px)');
 
   return (
@@ -55,12 +61,12 @@ const MenuLayout = ({ isMenuOpen, children }) => {
       <MenuContainer>
         {isDesktop ? (
           <MenuWrapper>
-            <Menu />
+            <Menu setIsMenuOpen={setIsMenuOpen} />
           </MenuWrapper>
         ) : (
           <Slide direction="right" in={isMenuOpen} mountOnEnter timeout={250}>
             <MenuWrapper>
-              <Menu />
+              <Menu setIsMenuOpen={setIsMenuOpen} />
             </MenuWrapper>
           </Slide>
         )}

@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 const OuterMenuItemIcon = styled.div`
-  width: 72px;
+  min-width: 72px;
   height: 56px;
 
   display: flex;

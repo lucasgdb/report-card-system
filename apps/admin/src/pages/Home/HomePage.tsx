@@ -27,7 +27,7 @@ export default function HomePage() {
   const { data, isLoading } = useQuery<HomePageQuery>(query);
 
   useEffect(() => {
-    document.title = 'Página Principal | Usefaz';
+    document.title = 'Página Principal | Usefaz Admin';
   }, []);
 
   if (isLoading) {

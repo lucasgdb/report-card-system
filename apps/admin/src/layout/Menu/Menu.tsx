@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import HomeIcon from '@mui/icons-material/Home';
+import LockResetIcon from '@mui/icons-material/LockReset';
 
 import MenuItem, { Item } from './MenuItem';
 
@@ -96,14 +97,24 @@ const menuItens: Item[] = [
     link: '/',
     Icon: <HomeIcon />,
   },
+  {
+    id: 2,
+    name: 'Solicitações de Recuperação de Senha',
+    link: '/solicitacoes-de-recuperacao-de-senha',
+    Icon: <LockResetIcon />,
+  },
 ];
 
-const Menu = () => {
+type MenuProps = {
+  setIsMenuOpen: React.Dispatch<React.SetStateAction<boolean>>;
+};
+
+const Menu = ({ setIsMenuOpen }: MenuProps) => {
   return (
     <OuterMenu>
       <MenuItemList>
         {menuItens.map((item) => {
-          return <MenuItem key={item.id} item={item} />;
+          return <MenuItem key={item.id} item={item} setIsMenuOpen={setIsMenuOpen} />;
         })}
       </MenuItemList>
     </OuterMenu>
