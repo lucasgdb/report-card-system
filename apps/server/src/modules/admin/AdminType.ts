@@ -1,5 +1,5 @@
 import { GraphQLNonNull, GraphQLString } from 'graphql';
-import { connectionFromArray } from 'graphql-relay';
+import { connectionArgs, connectionFromArray } from 'graphql-relay';
 
 import usefazConnector from '~/database/usefazConnector';
 import { StudentPasswordRecoveryRequestModel } from '~/entities';
@@ -14,11 +14,11 @@ const AdminType = registerGraphQLNodeObjectType<IAdmin>('admin')({
       email: {
         type: new GraphQLNonNull(GraphQLString),
       },
-      studentPasswordRecoveries: {
+      studentPasswordRecoveryRequests: {
         type: StudentPasswordRecoveryRequestConnection.connectionType,
+        args: { ...connectionArgs },
         resolve: async (_admin, args) => {
           const studentPasswordRecoveryRequestEntity = StudentPasswordRecoveryRequestModel(usefazConnector);
-
           const studentPasswordRecoveryList = await studentPasswordRecoveryRequestEntity.getAll();
           return connectionFromArray(studentPasswordRecoveryList, args);
         },

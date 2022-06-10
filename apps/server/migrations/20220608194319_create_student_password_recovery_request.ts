@@ -1,6 +1,6 @@
 import type { Knex } from 'knex';
 
-const statusEnum = ['PENDING', 'RESUFED', 'CHANGED'];
+const statusEnum = ['PENDING', 'REFUSED', 'CHANGED'];
 
 export const up = async (knex: Knex) => {
   const hasTable = await knex.schema.hasTable('student_password_recovery_request');
@@ -13,8 +13,6 @@ export const up = async (knex: Knex) => {
 
     table.string('RM').notNullable();
     table.string('email').notNullable();
-    table.string('token').unique().notNullable();
-    table.timestamp('expires_at').notNullable();
 
     table
       .enum('status', statusEnum, { useNative: true, enumName: 'student_password_recovery_request_status' })

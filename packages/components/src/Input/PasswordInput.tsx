@@ -13,7 +13,11 @@ const StyledTextField = styled(TextField)`
   }
 `;
 
-export default function PasswordInput() {
+type PasswordInputProps = {
+  placeholder?: string;
+};
+
+export default function PasswordInput({ placeholder = 'Senha' }: PasswordInputProps) {
   const [showPassword, setShowPassword] = useState(false);
 
   const handleClickShowPassword = () => setShowPassword((prevShowPassword) => !prevShowPassword);
@@ -22,10 +26,11 @@ export default function PasswordInput() {
 
   return (
     <StyledTextField
-      placeholder="Senha"
+      fullWidth
       name="password"
       type={showPassword ? 'text' : 'password'}
       variant="outlined"
+      placeholder={placeholder}
       InputProps={{
         startAdornment: (
           <InputAdornment position="start">

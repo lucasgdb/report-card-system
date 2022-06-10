@@ -45,15 +45,26 @@ const OuterMenu = styled.div`
     }
 
     :hover {
-      width: 230px;
+      width: 300px;
       overflow-y: auto;
     }
   }
 `;
 
-const MenuItemList = styled.div`
-  margin-top: 24px;
+const UsefazLogoWrapper = styled.div`
+  display: flex;
+  justify-content: center;
 
+  @media (max-width: 1199px) {
+    display: none;
+  }
+`;
+
+const UsefazLogo = styled.img`
+  width: 32px;
+`;
+
+const MenuItemList = styled.div`
   display: flex;
   flex-direction: column;
   align-items: flex-end;
@@ -81,7 +92,7 @@ const MenuItemList = styled.div`
   }
 
   @media (min-width: 1200px) {
-    margin-top: 0;
+    margin-top: 24px;
 
     overflow-y: unset;
     overscroll-behavior: unset;
@@ -112,6 +123,10 @@ type MenuProps = {
 const Menu = ({ setIsMenuOpen }: MenuProps) => {
   return (
     <OuterMenu>
+      <UsefazLogoWrapper>
+        <UsefazLogo src="/assets/icons/logo.png" />
+      </UsefazLogoWrapper>
+
       <MenuItemList>
         {menuItens.map((item) => {
           return <MenuItem key={item.id} item={item} setIsMenuOpen={setIsMenuOpen} />;

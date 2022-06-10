@@ -34,6 +34,11 @@ const RightDialogActions = styled.div`
   gap: 8px;
 `;
 
+const StyledDialogContent = styled(DialogContent)`
+  display: flex;
+  justify-content: center;
+`;
+
 const AvatarImageWrapper = styled.div`
   width: 224px;
   height: 224px;
@@ -82,7 +87,7 @@ export default function UploadAvatarModal({ open, onClose, student }: UploadAvat
         <CloseButton onClose={onClose} />
       </DialogHeader>
 
-      <DialogContent>
+      <StyledDialogContent>
         {avatarToEdit ? (
           <AvatarEditor onReady={handleReadyToEdit} src={avatarToEdit} ref={cropperRef} />
         ) : (
@@ -90,7 +95,7 @@ export default function UploadAvatarModal({ open, onClose, student }: UploadAvat
             <AvatarImage student={data} />
           </AvatarImageWrapper>
         )}
-      </DialogContent>
+      </StyledDialogContent>
 
       <DialogActions>
         <LeftDialogActions>

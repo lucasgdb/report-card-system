@@ -1,6 +1,4 @@
 import { errorConfig } from '@usefaz/shared';
-import dayjs from 'dayjs';
-import crypto from 'crypto';
 import { GraphQLNonNull, GraphQLString } from 'graphql';
 import { mutationWithClientMutationId } from 'graphql-relay';
 
@@ -23,14 +21,9 @@ const sendStudentRecoveryEmail = async ({ RM, email, clientMutationId }: sendStu
 
   const studentPasswordRecoveryRequestEntity = StudentPasswordRecoveryRequestModel(usefazConnector);
 
-  const token = crypto.randomUUID();
-  const expiresAt = dayjs().add(3, 'day').format();
-
   await studentPasswordRecoveryRequestEntity.createRequest({
     RM,
     email,
-    token,
-    expires_at: expiresAt,
   });
 
   return { clientMutationId };

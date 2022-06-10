@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import MenuItemIcon from './MenuItemIcon';
 
 const MenuItemText = styled.div`
-  font: normal normal 700 16px/16px Lexend;
+  font: normal normal 700 16px/19px Lexend;
 
   user-select: none;
 
@@ -38,6 +38,7 @@ const OuterMenuItem = styled.div<OuterMenuItemProps>`
   width: 100%;
   height: 56px;
   border-radius: 24px;
+  padding-right: 16px;
 
   ${MenuItemText} {
     color: #fff;
@@ -55,7 +56,7 @@ const OuterMenuItem = styled.div<OuterMenuItemProps>`
   }
 
   @media (min-width: 1200px) {
-    width: 230px;
+    width: 100%;
     border-radius: 0;
   }
 `;
@@ -88,7 +89,6 @@ const MenuItem = ({ item, setIsMenuOpen }: MenuItemProps) => {
     <StyledLink to={item.link}>
       <OuterMenuItem $selected={item.link === pathname} onClick={handleCloseMenu}>
         <MenuItemIcon>{item.Icon}</MenuItemIcon>
-
         <MenuItemText title={item.name}>{item.name}</MenuItemText>
       </OuterMenuItem>
     </StyledLink>

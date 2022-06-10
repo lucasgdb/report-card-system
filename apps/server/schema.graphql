@@ -25,7 +25,19 @@ type Admin implements Node {
   """The ID of an object"""
   id: ID!
   email: String!
-  studentPasswordRecoveries: StudentPasswordRecoveryRequestConnection
+  studentPasswordRecoveryRequests(
+    """Returns the items in the list that come after the specified cursor."""
+    after: String
+
+    """Returns the first n items from the list."""
+    first: Int
+
+    """Returns the items in the list that come before the specified cursor."""
+    before: String
+
+    """Returns the last n items from the list."""
+    last: Int
+  ): StudentPasswordRecoveryRequestConnection
 }
 
 """A connection to a list of items."""
@@ -64,7 +76,10 @@ type StudentPasswordRecoveryRequestEdge {
 type StudentPasswordRecoveryRequest implements Node {
   """The ID of an object"""
   id: ID!
+  RM: String!
+  email: String!
   status: StudentPasswordRecoveryRequestStatusEnum!
+  student: Student!
 }
 
 enum StudentPasswordRecoveryRequestStatusEnum {
@@ -91,8 +106,10 @@ type System {
 
 type Mutation {
   adminLogin(input: AdminLoginMutationInput!): AdminLoginMutationPayload
+  changeStudentPassword(input: ChangeStudentPasswordMutationInput!): ChangeStudentPasswordMutationPayload
   createStudent(input: CreateStudentMutationInput!): CreateStudentMutationPayload
   recoverAdminPassword(input: RecoverAdminPasswordMutationInput!): RecoverAdminPasswordMutationPayload
+  refuseStudentPasswordRecoveryRequest(input: RefuseStudentPasswordRecoveryRequestMutationInput!): RefuseStudentPasswordRecoveryRequestMutationPayload
   sendAdminRecoveryEmail(input: SendAdminRecoveryEmailMutationInput!): SendAdminRecoveryEmailMutationPayload
 
   """The logOut mutation can be used to log out an existing user."""
@@ -112,6 +129,17 @@ input AdminLoginMutationInput {
   email: String!
   password: String!
   token: String!
+  clientMutationId: String
+}
+
+type ChangeStudentPasswordMutationPayload {
+  studentPasswordRecoveryRequest: StudentPasswordRecoveryRequest
+  clientMutationId: String
+}
+
+input ChangeStudentPasswordMutationInput {
+  studentPasswordRecoveryRequestId: ID!
+  newPassword: String!
   clientMutationId: String
 }
 
@@ -148,6 +176,16 @@ input RecoverAdminPasswordMutationInput {
   passwordRecoveryToken: String!
   password: String!
   passwordConfirmation: String!
+  clientMutationId: String
+}
+
+type RefuseStudentPasswordRecoveryRequestMutationPayload {
+  studentPasswordRecoveryRequest: StudentPasswordRecoveryRequest
+  clientMutationId: String
+}
+
+input RefuseStudentPasswordRecoveryRequestMutationInput {
+  studentPasswordRecoveryRequestId: ID!
   clientMutationId: String
 }
 

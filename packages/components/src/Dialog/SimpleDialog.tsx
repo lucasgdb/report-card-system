@@ -29,7 +29,6 @@ export const DialogContent = styled.div`
   padding: 24px 32px;
 
   display: flex;
-  justify-content: center;
   gap: 16px;
 `;
 

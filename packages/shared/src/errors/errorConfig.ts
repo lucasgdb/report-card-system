@@ -23,6 +23,14 @@ const errorConfig = {
       message: 'Requested admin was not found on the system',
     },
   },
+  studentPasswordRecoveryRequest: {
+    code: 'STUDENT_PASSWORD_RECOVERY_REQUEST_DEFAULT_ERROR',
+    message: 'Unexpected error while trying to get the request',
+    notFound: {
+      code: 'STUDENT_PASSWORD_RECOVERY_REQUEST_NOT_FOUND',
+      message: 'Requested student password recovery not found on the system',
+    },
+  },
 };
 
 export default errorConfig;

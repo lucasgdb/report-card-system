@@ -1,5 +1,5 @@
 import { errorConfig, getError, jwtToken, __DEV__ } from '@usefaz/shared';
-import { Notification } from '@usefaz/components';
+import { Notification, PasswordInput } from '@usefaz/components';
 import styled from 'styled-components';
 
 import Button from '@mui/material/Button';
@@ -11,7 +11,6 @@ import { useGoogleReCaptcha } from 'react-google-recaptcha-v3';
 import StudentLoginMutation from '~/modules/student/StudentLoginMutation';
 import { StudentLoginMutation as StudentLoginMutationType } from '~/modules/student/__generated__/StudentLoginMutation.graphql';
 import RMInput from './RMInput';
-import PasswordInput from './PasswordInput';
 import RememberMeCheckbox from './RememberMeCheckbox';
 
 const OuterForm = styled.div`

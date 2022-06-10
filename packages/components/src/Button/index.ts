@@ -1,3 +1,4 @@
 import CloseButton from './CloseButton';
+import SimpleButton from './SimpleButton';
 
-export { CloseButton };
+export { CloseButton, SimpleButton };

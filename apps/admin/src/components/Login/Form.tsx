@@ -1,5 +1,5 @@
 import { errorConfig, getError, jwtToken, __DEV__ } from '@usefaz/shared';
-import { Notification } from '@usefaz/components';
+import { Notification, PasswordInput } from '@usefaz/components';
 import styled from 'styled-components';
 
 import Button from '@mui/material/Button';
@@ -11,7 +11,6 @@ import { useGoogleReCaptcha } from 'react-google-recaptcha-v3';
 import AdminLoginMutation from '~/modules/admin/AdminLoginMutation';
 import { AdminLoginMutation as AdminLoginMutationType } from '~/modules/admin/__generated__/AdminLoginMutation.graphql';
 import EmailInput from './EmailInput';
-import PasswordInput from './PasswordInput';
 import RememberMeCheckbox from './RememberMeCheckbox';
 
 const OuterForm = styled.div`

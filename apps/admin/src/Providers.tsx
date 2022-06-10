@@ -1,8 +1,9 @@
 import 'dayjs/locale/pt-br';
 
 import { environment } from '@usefaz/relay';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { createTheme, ThemeProvider as MUIThemeProvider } from '@mui/material/styles';
 import { RelayEnvironmentProvider } from 'relay-hooks';
+import { ThemeProvider } from 'styled-components';
 import ptBRLocale from 'date-fns/locale/pt-BR';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
@@ -55,6 +56,22 @@ const theme = createTheme({
       main: '#0020A2',
     },
   },
+
+  bg: {
+    main: '#fafafa',
+    success: '#22E575',
+    warning: '#f9c74f',
+    dialogHeader: '#fafafa',
+    dialogContent: '#fafafa',
+    dialogActions: '#f5f5fb',
+  },
+  text: {
+    main: '#808080',
+    title: '#494d4b',
+    dialogTitle: '#333',
+    closeButton: '#333',
+    dialogDescription: '#666',
+  },
 });
 
 type ProvidersProps = {
@@ -64,14 +81,16 @@ type ProvidersProps = {
 export default function Providers({ children }: ProvidersProps) {
   return (
     <RelayEnvironmentProvider environment={environment}>
-      <ThemeProvider theme={theme}>
-        <LocalizationProvider dateAdapter={AdapterDateFns} locale={ptBRLocale}>
-          <CustomSnackbarProvider anchorOrigin={{ vertical: 'top', horizontal: 'right' }}>
-            <GlobalStyle />
-            {children}
-          </CustomSnackbarProvider>
-        </LocalizationProvider>
-      </ThemeProvider>
+      <MUIThemeProvider theme={theme}>
+        <ThemeProvider theme={theme}>
+          <LocalizationProvider dateAdapter={AdapterDateFns} locale={ptBRLocale}>
+            <CustomSnackbarProvider anchorOrigin={{ vertical: 'top', horizontal: 'right' }}>
+              <GlobalStyle />
+              {children}
+            </CustomSnackbarProvider>
+          </LocalizationProvider>
+        </ThemeProvider>
+      </MUIThemeProvider>
     </RelayEnvironmentProvider>
   );
 }

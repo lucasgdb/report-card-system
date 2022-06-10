@@ -2,6 +2,7 @@ import type { RequiredExceptFor } from '@usefaz/shared';
 
 import type { DBConnector } from '~/database/dbConnector';
 import type { IStudentPasswordRecoveryRequest } from '~/interfaces';
+import createPassword from '~/utils/createPassword';
 
 const StudentPasswordRecoveryRequestModel = (dbConnector: DBConnector) => {
   return {
@@ -26,20 +27,29 @@ const StudentPasswordRecoveryRequestModel = (dbConnector: DBConnector) => {
     getAll() {
       return dbConnector
         .knexConnection<IStudentPasswordRecoveryRequest>('student_password_recovery_request')
-        .orderBy('created_at', 'ASC');
+        .orderByRaw("CASE WHEN status = 'PENDING' THEN 0 ELSE (CASE WHEN status = 'CHANGED' THEN 1 ELSE 2 END) END");
     },
 
-    canceRequest(id: string) {
-      return dbConnector
+    async cancelRequest(id: string) {
+      const [canceledRequest] = await dbConnector
         .knexConnection('student_password_recovery_request')
         .update('status', 'REFUSED')
+        .returning('*')
         .where('id', id);
+
+      return canceledRequest;
     },
 
     finalizeRequest(id: string, { studentId, newPassword }: { studentId: string; newPassword: string }) {
       return dbConnector.knexConnection.transaction(async (trx) => {
-        await trx('student_password_recovery_request').update('status', 'CHANGED').where('id', id);
-        await trx('student').update('password', newPassword).where('id', studentId);
+        await trx('student').update('password', createPassword(newPassword)).where('id', studentId);
+
+        const [updatedRequest] = await trx('student_password_recovery_request')
+          .update('status', 'CHANGED')
+          .where('id', id)
+          .returning('*');
+
+        return updatedRequest;
       });
     },
   };
