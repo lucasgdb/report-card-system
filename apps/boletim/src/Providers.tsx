@@ -6,7 +6,7 @@ import MUIThemeProvider from '@mui/material/styles/ThemeProvider';
 import { RelayEnvironmentProvider } from 'relay-hooks';
 import ptBRLocale from 'date-fns/locale/pt-BR';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
-import LocalizationProvider from '@mui/lab/LocalizationProvider';
+import { LocalizationProvider } from '@mui/x-date-pickers';
 import dayjs from 'dayjs';
 
 import GlobalStyle from './GlobalStyle';

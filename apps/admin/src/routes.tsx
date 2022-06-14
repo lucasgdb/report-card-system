@@ -13,6 +13,7 @@ const PasswordChangedPage = React.lazy(() => import('~/pages/PasswordChanged/Pas
 const StudentPasswordRecoveryRequestListPage = React.lazy(
   () => import('~/pages/StudentPasswordRecoveryRequestList/StudentPasswordRecoveryRequestListPage')
 );
+const StudentListPage = React.lazy(() => import('~/pages/StudentList/StudentListPage'));
 
 export default function AppRoutes() {
   return (
@@ -22,6 +23,9 @@ export default function AppRoutes() {
           <Route path="/" element={<EnvironmentLayout />}>
             <Route element={<NavbarLayout />}>
               <Route index element={<HomePage />} />
+
+              <Route path="/alunos" element={<StudentListPage />} />
+
               <Route
                 path="/solicitacoes-de-recuperacao-de-senha"
                 element={<StudentPasswordRecoveryRequestListPage />}

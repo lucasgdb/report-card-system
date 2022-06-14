@@ -29,6 +29,7 @@ export const DialogContent = styled.div`
   padding: 24px 32px;
 
   display: flex;
+  flex-direction: column;
   gap: 16px;
 `;
 

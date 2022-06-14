@@ -112,7 +112,7 @@ export default function Form() {
     <OuterForm>
       <form onSubmit={handleSubmit}>
         <InputWrapper>
-          <RMInput />
+          <RMInput defaultValue={localStorage.getItem('Usefaz-RM')} />
           <PasswordInput />
         </InputWrapper>
 

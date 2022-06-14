@@ -1,18 +1,23 @@
-import { ArrowPopper } from '@usefaz/components';
+import { ArrowPopper, ContextMenu, ContextMenuOption } from '@usefaz/components';
 import IconButton from '@mui/material/IconButton';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { useRef, useState } from 'react';
 import { GridRenderCellParams } from '@mui/x-data-grid';
+import { useMutation } from 'relay-hooks';
 
-import Menu from './Menu';
 import EditPasswordDialog from './EditPasswordDialog';
+import RefuseStudentPasswordRecoveryRequestMutation from '~/modules/admin/RefuseStudentPasswordRecoveryRequestMutation';
+import { RefuseStudentPasswordRecoveryRequestMutation as RefuseStudentPasswordRecoveryRequestMutationType } from '~/modules/admin/__generated__/RefuseStudentPasswordRecoveryRequestMutation.graphql';
 
 type MoreButtonProps = {
   params: GridRenderCellParams;
-  disabled: boolean;
+  disabled?: boolean;
 };
 
-export default function MoreButton({ params, disabled }: MoreButtonProps) {
+export default function MoreButton({ params, disabled = false }: MoreButtonProps) {
+  const [refuseStudentPasswordRecoveryRequest, { loading }] =
+    useMutation<RefuseStudentPasswordRecoveryRequestMutationType>(RefuseStudentPasswordRecoveryRequestMutation);
+
   const buttonRef = useRef(null);
 
   const [isArrowPopperOpen, setIsArrowPopperOpen] = useState(false);
@@ -24,7 +29,31 @@ export default function MoreButton({ params, disabled }: MoreButtonProps) {
   const handleOpenPasswordDialog = () => setIsEditPasswordDialogOpen(true);
   const handleClosePasswordDialog = () => setIsEditPasswordDialogOpen(false);
 
-  const studentPasswordRecoveryRequestId = params.id as string;
+  const studentPasswordRecoveryRequestId = params.row.id;
+
+  const options: ContextMenuOption[] = [
+    {
+      id: 1,
+      text: 'Editar senha',
+      onClick() {
+        handleCloseArrowPopper();
+        handleOpenPasswordDialog();
+      },
+    },
+    {
+      id: 2,
+      text: 'Recusar',
+      disabled: loading,
+      onClick() {
+        refuseStudentPasswordRecoveryRequest({
+          variables: { input: { studentPasswordRecoveryRequestId } },
+          onCompleted() {
+            handleCloseArrowPopper();
+          },
+        });
+      },
+    },
+  ];
 
   return (
     <>
@@ -34,11 +63,7 @@ export default function MoreButton({ params, disabled }: MoreButtonProps) {
 
       <ArrowPopper open={isArrowPopperOpen} onClose={handleCloseArrowPopper} anchorEl={buttonRef.current} timeout={0}>
         <div>
-          <Menu
-            onClose={handleCloseArrowPopper}
-            onPasswordDialogOpen={handleOpenPasswordDialog}
-            studentPasswordRecoveryRequestId={studentPasswordRecoveryRequestId}
-          />
+          <ContextMenu options={options} />
         </div>
       </ArrowPopper>
 

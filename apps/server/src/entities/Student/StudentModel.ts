@@ -8,6 +8,10 @@ import UserModel from '../User/UserModel';
 
 const StudentModel = (dbConnector: DBConnector) => {
   return {
+    getAll() {
+      return dbConnector.knexConnection('student').select('*');
+    },
+
     async insert(
       student: RequiredExceptFor<IStudent, 'id' | 'avatar_url' | 'created_at' | 'updated_at'>,
       trx?: Knex.Transaction
@@ -52,6 +56,16 @@ const StudentModel = (dbConnector: DBConnector) => {
         .update({ avatar_url: null })
         .where('id', id)
         .returning('*');
+    },
+
+    async update(id: string, student: RequireAtLeastOne<IStudent>) {
+      const [updatedStudent] = await dbConnector
+        .knexConnection('student')
+        .update(student)
+        .where('id', id)
+        .returning('*');
+
+      return updatedStudent;
     },
   };
 };

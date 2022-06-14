@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import HomeIcon from '@mui/icons-material/Home';
 import LockResetIcon from '@mui/icons-material/LockReset';
+import SchoolIcon from '@mui/icons-material/School';
 
 import MenuItem, { Item } from './MenuItem';
 
@@ -110,6 +111,12 @@ const menuItens: Item[] = [
   },
   {
     id: 2,
+    name: 'Alunos',
+    link: '/alunos',
+    Icon: <SchoolIcon />,
+  },
+  {
+    id: 3,
     name: 'Solicitações de Recuperação de Senha',
     link: '/solicitacoes-de-recuperacao-de-senha',
     Icon: <LockResetIcon />,

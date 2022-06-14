@@ -9,11 +9,11 @@ const StyledTextField = styled(TextField)`
   }
 `;
 
-export default function RMInput(props: TextFieldProps) {
+export default function NameInput(props: TextFieldProps) {
   return (
     <StyledTextField
-      name="RM"
-      placeholder="N° de matrícula"
+      name="fullname"
+      placeholder="Nome completo"
       type="text"
       variant="outlined"
       InputProps={{

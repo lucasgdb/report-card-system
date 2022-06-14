@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import TextField from '@mui/material/TextField';
+import TextField, { TextFieldProps } from '@mui/material/TextField';
 import InputAdornment from '@mui/material/InputAdornment';
 import IconButton from '@mui/material/IconButton';
 import Visibility from '@mui/icons-material/Visibility';
@@ -13,11 +13,7 @@ const StyledTextField = styled(TextField)`
   }
 `;
 
-type PasswordInputProps = {
-  placeholder?: string;
-};
-
-export default function PasswordInput({ placeholder = 'Senha' }: PasswordInputProps) {
+export default function PasswordInput({ placeholder = 'Senha', ...props }: TextFieldProps) {
   const [showPassword, setShowPassword] = useState(false);
 
   const handleClickShowPassword = () => setShowPassword((prevShowPassword) => !prevShowPassword);
@@ -45,6 +41,7 @@ export default function PasswordInput({ placeholder = 'Senha' }: PasswordInputPr
           </InputAdornment>
         ),
       }}
+      {...props}
     />
   );
 }

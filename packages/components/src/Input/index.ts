@@ -1,3 +1,4 @@
 import PasswordInput from './PasswordInput';
+import RMInput from './RMInput';
 
-export { PasswordInput };
+export { PasswordInput, RMInput };
