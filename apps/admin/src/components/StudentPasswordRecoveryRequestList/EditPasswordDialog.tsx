@@ -45,6 +45,7 @@ export default function EditPasswordDialog({
     const password = formData.get('password').toString();
     if (!password) {
       enqueueSnackbar('Digite a nova senha do aluno.', { variant: 'error' });
+      return;
     }
 
     changeStudentPassword({
