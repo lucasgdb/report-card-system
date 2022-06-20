@@ -30,6 +30,8 @@ const LeftOptionsWrapper = styled.div`
   display: flex;
   align-items: center;
   gap: 16px;
+
+  height: 100%;
 `;
 
 const UsefazLogoWrapper = styled.div`
@@ -40,7 +42,7 @@ const UsefazLogoWrapper = styled.div`
   align-items: center;
 
   @media (min-width: 1200px) {
-    background-color: #fff;
+    background-color: #ee7844;
     width: 72px;
   }
 `;
