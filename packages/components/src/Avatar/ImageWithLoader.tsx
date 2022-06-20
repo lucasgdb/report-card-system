@@ -8,7 +8,7 @@ declare global {
   }
 }
 
-export default function ImgWithLoader(props: React.ImgHTMLAttributes<HTMLImageElement>) {
+export default function ImageWithLoader(props: React.ImgHTMLAttributes<HTMLImageElement>) {
   const [hidden, setHidden] = useState(true);
 
   const imgRef = useRef<HTMLImageElement>(null);

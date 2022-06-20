@@ -1,8 +1,8 @@
 import { graphql, useFragment } from 'relay-hooks';
+import { ImageWithLoader } from '@usefaz/components';
 import styled from 'styled-components';
 
 import { AvatarImage_student$key } from './__generated__/AvatarImage_student.graphql';
-import ImgWithLoader from '~/components/ImgWithLoader';
 import DefaultAvatar from './DefaultAvatar';
 
 const fragment = graphql`
@@ -13,7 +13,7 @@ const fragment = graphql`
   }
 `;
 
-const StyledImgWithLoader = styled(ImgWithLoader)`
+const StyledImgWithLoader = styled(ImageWithLoader)`
   width: 100%;
   height: 100%;
   border-radius: 50%;
