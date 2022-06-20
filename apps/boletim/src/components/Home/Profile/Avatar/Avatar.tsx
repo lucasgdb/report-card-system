@@ -5,13 +5,6 @@ import { Avatar_student$key } from './__generated__/Avatar_student.graphql';
 import OpenUploadAvatarModalButton from './OpenUploadAvatarModalButton';
 import AvatarImage from './AvatarImage';
 
-const fragment = graphql`
-  fragment Avatar_student on Student {
-    ...AvatarImage_student
-    ...OpenUploadAvatarModalButton_student
-  }
-`;
-
 const OuterAvatar = styled.div`
   position: relative;
 
@@ -37,7 +30,15 @@ type AvatarProps = {
 };
 
 export default function Avatar({ student }: AvatarProps) {
-  const data = useFragment<Avatar_student$key>(fragment, student);
+  const data = useFragment<Avatar_student$key>(
+    graphql`
+      fragment Avatar_student on Student {
+        ...AvatarImage_student
+        ...OpenUploadAvatarModalButton_student
+      }
+    `,
+    student
+  );
 
   return (
     <OuterAvatar>

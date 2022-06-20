@@ -4,12 +4,6 @@ import { graphql, useFragment } from 'relay-hooks';
 import { AvatarBackground_student$key } from './__generated__/AvatarBackground_student.graphql';
 import Avatar from './Avatar/Avatar';
 
-const fragment = graphql`
-  fragment AvatarBackground_student on Student {
-    ...Avatar_student
-  }
-`;
-
 const OuterAvatarBackground = styled.div`
   display: flex;
   justify-content: center;
@@ -40,7 +34,14 @@ type AvatarBackgroundProps = {
 };
 
 export default function AvatarBackground({ student }: AvatarBackgroundProps) {
-  const data = useFragment<AvatarBackground_student$key>(fragment, student);
+  const data = useFragment<AvatarBackground_student$key>(
+    graphql`
+      fragment AvatarBackground_student on Student {
+        ...Avatar_student
+      }
+    `,
+    student
+  );
 
   return (
     <OuterAvatarBackground>

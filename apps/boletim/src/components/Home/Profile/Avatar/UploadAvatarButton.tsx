@@ -10,12 +10,6 @@ import type { ReactCropperElement } from 'react-cropper';
 
 import { UploadAvatarButton_student$key } from './__generated__/UploadAvatarButton_student.graphql';
 
-const fragment = graphql`
-  fragment UploadAvatarButton_student on Student {
-    id
-  }
-`;
-
 const SaveButton = styled(Button)`
   && {
     border-radius: 8px;
@@ -32,7 +26,14 @@ type UploadAvatarButtonProps = {
 
 const UploadAvatarButton = forwardRef<HTMLButtonElement, UploadAvatarButtonProps>(
   ({ student, cropperRef, onClose }, ref) => {
-    const data = useFragment<UploadAvatarButton_student$key>(fragment, student);
+    const data = useFragment<UploadAvatarButton_student$key>(
+      graphql`
+        fragment UploadAvatarButton_student on Student {
+          id
+        }
+      `,
+      student
+    );
 
     const { enqueueSnackbar } = Notification.useSnackbar();
 

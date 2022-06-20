@@ -3,13 +3,6 @@ import { graphql, useFragment } from 'relay-hooks';
 
 import { Information_student$key } from './__generated__/Information_student.graphql';
 
-const fragment = graphql`
-  fragment Information_student on Student {
-    RM
-    fullname
-  }
-`;
-
 const OuterProfileInformation = styled.div`
   display: flex;
   flex-direction: column;
@@ -68,7 +61,15 @@ type InformationProps = {
 };
 
 export default function Information({ student }: InformationProps) {
-  const data = useFragment<Information_student$key>(fragment, student);
+  const data = useFragment<Information_student$key>(
+    graphql`
+      fragment Information_student on Student {
+        RM
+        fullname
+      }
+    `,
+    student
+  );
 
   return (
     <OuterProfileInformation>

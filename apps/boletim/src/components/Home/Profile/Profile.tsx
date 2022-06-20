@@ -5,13 +5,6 @@ import { Profile_student$key } from './__generated__/Profile_student.graphql';
 import Information from './Information';
 import AvatarBackground from './AvatarBackground';
 
-const fragment = graphql`
-  fragment Profile_student on Student {
-    ...Information_student
-    ...AvatarBackground_student
-  }
-`;
-
 const OuterProfile = styled.div`
   background: linear-gradient(92.84deg, #011461 -8.18%, #0020a2 47.5%, #00d4ff 106.78%);
 
@@ -52,7 +45,15 @@ type ProfileProps = {
 };
 
 export default function Profile({ student }: ProfileProps) {
-  const data = useFragment<Profile_student$key>(fragment, student);
+  const data = useFragment<Profile_student$key>(
+    graphql`
+      fragment Profile_student on Student {
+        ...Information_student
+        ...AvatarBackground_student
+      }
+    `,
+    student
+  );
 
   return (
     <OuterProfile>

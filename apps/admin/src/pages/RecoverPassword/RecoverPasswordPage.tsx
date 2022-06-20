@@ -9,16 +9,6 @@ import { RecoverPasswordPageQuery } from './__generated__/RecoverPasswordPageQue
 import RecoverPassword from '~/components/RecoverPassword/RecoverPassword';
 import { useEffect } from 'react';
 
-const query = graphql`
-  query RecoverPasswordPageQuery($requestId: ID!) {
-    adminPasswordRecoveryRequest: node(id: $requestId) {
-      ... on AdminPasswordRecoveryRequest {
-        status
-      }
-    }
-  }
-`;
-
 const GlobalStyle = createGlobalStyle`
   body {
     @media (max-width: 1279px) {
@@ -91,7 +81,18 @@ export default function RecoverPasswordPage() {
   const navigate = useNavigate();
   const { requestId } = useParams<{ requestId: string }>();
 
-  const { data, isLoading } = useQuery<RecoverPasswordPageQuery>(query, { requestId });
+  const { data, isLoading } = useQuery<RecoverPasswordPageQuery>(
+    graphql`
+      query RecoverPasswordPageQuery($requestId: ID!) {
+        adminPasswordRecoveryRequest: node(id: $requestId) {
+          ... on AdminPasswordRecoveryRequest {
+            status
+          }
+        }
+      }
+    `,
+    { requestId }
+  );
 
   const shouldChangeBodyStyle = useMediaQuery('(max-width: 1279px)');
 

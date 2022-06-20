@@ -7,12 +7,6 @@ import { useState } from 'react';
 import { OpenUploadAvatarModalButton_student$key } from './__generated__/OpenUploadAvatarModalButton_student.graphql';
 import UploadAvatarModal from './UploadAvatarModal';
 
-const fragment = graphql`
-  fragment OpenUploadAvatarModalButton_student on Student {
-    ...UploadAvatarModal_student
-  }
-`;
-
 const UploadButton = styled(IconButton)`
   && {
     position: absolute;
@@ -41,7 +35,14 @@ type OpenUploadAvatarModalButtonProps = {
 };
 
 export default function OpenUploadAvatarModalButton({ student }: OpenUploadAvatarModalButtonProps) {
-  const data = useFragment<OpenUploadAvatarModalButton_student$key>(fragment, student);
+  const data = useFragment<OpenUploadAvatarModalButton_student$key>(
+    graphql`
+      fragment OpenUploadAvatarModalButton_student on Student {
+        ...UploadAvatarModal_student
+      }
+    `,
+    student
+  );
 
   const [isOpen, setIsOpen] = useState(false);
 

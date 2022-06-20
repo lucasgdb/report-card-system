@@ -9,12 +9,6 @@ import DateInformation from './DateInformation';
 import InstallButton from './InstallButton';
 import SwitchThemeButton from './SwitchThemeButton';
 
-const fragment = graphql`
-  fragment Menu_student on Student {
-    firstname
-  }
-`;
-
 type OuterMenuProps = {
   $hasMenuBehavior: boolean;
 };
@@ -112,7 +106,14 @@ type MenuProps = {
 };
 
 export default function Menu({ student }: MenuProps) {
-  const data = useFragment<Menu_student$key>(fragment, student);
+  const data = useFragment<Menu_student$key>(
+    graphql`
+      fragment Menu_student on Student {
+        firstname
+      }
+    `,
+    student
+  );
 
   const isDesktop = useMediaQuery('(min-width: 1076px)');
 

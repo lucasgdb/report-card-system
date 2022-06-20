@@ -6,18 +6,16 @@ import * as React from 'react';
 
 import { EnvironmentLayoutQuery } from './__generated__/EnvironmentLayoutQuery.graphql';
 
-const query = graphql`
-  query EnvironmentLayoutQuery {
-    admin {
-      id
-    }
-  }
-`;
-
 const OuterEnvironmentLayout = styled.div``;
 
 export default function EnvironmentLayout() {
-  const { data, isLoading } = useQuery<EnvironmentLayoutQuery>(query);
+  const { data, isLoading } = useQuery<EnvironmentLayoutQuery>(graphql`
+    query EnvironmentLayoutQuery {
+      admin {
+        id
+      }
+    }
+  `);
 
   if (isLoading) {
     return <PageLoader />;
