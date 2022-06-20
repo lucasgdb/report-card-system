@@ -33,6 +33,10 @@ const StyledDialogContent = styled(DialogContent)`
 const AvatarImageWrapper = styled.div`
   width: 224px;
   height: 224px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;
 
 const CancelButton = styled(Button)`

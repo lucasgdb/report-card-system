@@ -17,10 +17,10 @@ const uploadAvatarMiddleware = koaBody({
     keepExtensions: true,
     multiples: false,
     onFileBegin: function (_name, file) {
-      const newFilename = changeFilenameToRandomUUID(file.name);
+      const newFilename = changeFilenameToRandomUUID(file.newFilename);
 
-      file.name = newFilename;
-      file.path = `${this.uploadDir}/${newFilename}`;
+      file.newFilename = newFilename;
+      file.filepath = `${this.uploadDir}/${newFilename}`;
     },
   },
 });

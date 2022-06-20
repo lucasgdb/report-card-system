@@ -1,4 +1,5 @@
 import type { Context } from 'koa';
+import type { File } from 'formidable';
 
 import usefazConnector from '~/database/usefazConnector';
 import { StudentModel } from '~/entities';
@@ -15,7 +16,7 @@ export const saveAvatarURL = async (ctx: Context) => {
 
     const { avatar } = <FilesType>(ctx.request.files as unknown);
 
-    const avatarURL = `${process.env.BASE_URL}/public/${avatar.name}`;
+    const avatarURL = `${process.env.BASE_URL}/public/${avatar.newFilename}`;
 
     await studentEntity.insertAvatarURL(student!.id, avatarURL);
 
