@@ -27,10 +27,6 @@ export const DialogTitle = styled.span`
 export const DialogContent = styled.div`
   background-color: ${(props) => props.theme.bg.dialogContent};
   padding: 24px 32px;
-
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
 `;
 
 export const DialogActions = styled.div`

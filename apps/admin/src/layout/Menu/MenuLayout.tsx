@@ -10,7 +10,7 @@ const OuterMenuLayout = styled.div`
   min-height: calc(100vh - 56px);
 
   @media (min-width: 1200px) {
-    min-height: 100vh;
+    min-height: calc(100vh - 78px);
   }
 `;
 
@@ -35,8 +35,7 @@ const MenuWrapper = styled.div`
   }
 
   @media (min-width: 1200px) {
-    top: 0;
-    bottom: 0;
+    top: 78px;
   }
 `;
 
@@ -49,8 +48,8 @@ const PageWrapper = styled.div`
 
 type MenuLayoutProps = {
   isMenuOpen: boolean;
-  setIsMenuOpen: React.Dispatch<React.SetStateAction<boolean>>;
   children: React.ReactNode;
+  setIsMenuOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 const MenuLayout = ({ isMenuOpen, setIsMenuOpen, children }: MenuLayoutProps) => {

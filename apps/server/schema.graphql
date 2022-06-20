@@ -24,7 +24,13 @@ interface Node {
 type Admin implements Node {
   """The ID of an object"""
   id: ID!
+  firstname: String!
+
+  """admin's lastname (must not be equals firstname)"""
+  lastname: String
   email: String!
+  fullname: String!
+  avatarURL: String
   students(
     """Returns the items in the list that come after the specified cursor."""
     after: String

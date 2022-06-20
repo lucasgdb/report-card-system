@@ -1,5 +1,8 @@
 import styled from 'styled-components';
+import { graphql, useFragment } from 'relay-hooks';
 
+import { Navbar_admin$key } from './__generated__/Navbar_admin.graphql';
+import AvatarMenu from './AvatarMenu/AvatarMenu';
 import OpenMenuButton from './OpenMenuButton';
 
 const OuterNavbar = styled.div`
@@ -15,27 +18,66 @@ const OuterNavbar = styled.div`
 
   display: flex;
   align-items: center;
-  gap: 16px;
+  justify-content: space-between;
 
   @media (min-width: 1200px) {
-    display: none;
+    background-color: #fff;
+    height: 78px;
+  }
+`;
+
+const LeftOptionsWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 16px;
+`;
+
+const UsefazLogoWrapper = styled.div`
+  height: 100%;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  @media (min-width: 1200px) {
+    background-color: #fff;
+    width: 72px;
   }
 `;
 
 const UsefazLogo = styled.img`
   width: 32px;
+  background-color: #0020a2;
+  border-radius: 50%;
 `;
 
 type NavbarProps = {
+  admin: Navbar_admin$key;
   isMenuOpen: boolean;
   setIsMenuOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-const Navbar = ({ isMenuOpen, setIsMenuOpen }: NavbarProps) => {
+const Navbar = ({ admin, isMenuOpen, setIsMenuOpen }: NavbarProps) => {
+  const data = useFragment<Navbar_admin$key>(
+    graphql`
+      fragment Navbar_admin on Admin {
+        ...AvatarMenu_admin
+      }
+    `,
+    admin
+  );
+
   return (
     <OuterNavbar>
-      <OpenMenuButton isMenuOpen={isMenuOpen} setIsMenuOpen={setIsMenuOpen} />
-      <UsefazLogo src="/assets/icons/logo.png" />
+      <LeftOptionsWrapper>
+        <OpenMenuButton isMenuOpen={isMenuOpen} setIsMenuOpen={setIsMenuOpen} />
+
+        <UsefazLogoWrapper>
+          <UsefazLogo src="/assets/icons/logo.png" />
+        </UsefazLogoWrapper>
+      </LeftOptionsWrapper>
+
+      <AvatarMenu admin={data} />
     </OuterNavbar>
   );
 };

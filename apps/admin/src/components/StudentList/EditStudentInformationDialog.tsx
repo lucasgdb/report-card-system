@@ -23,6 +23,14 @@ const OuterEditStudentInformationDialog = styled(SimpleDialog)`
   }
 `;
 
+const StyledDialogContent = styled(DialogContent)`
+  && {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+`;
+
 type EditStudentInformationDialogProps = {
   open: boolean;
   studentId: string;
@@ -73,11 +81,11 @@ export default function EditStudentInformationDialog({
           <CloseButton onClose={onClose} />
         </DialogHeader>
 
-        <DialogContent>
+        <StyledDialogContent>
           <RMInput defaultValue={RM} />
           <NameInput defaultValue={fullname} />
           <PasswordInput />
-        </DialogContent>
+        </StyledDialogContent>
 
         <DialogActions>
           <SimpleButton color="error" onClick={onClose}>

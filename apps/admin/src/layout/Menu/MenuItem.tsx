@@ -80,6 +80,7 @@ type MenuItemProps = {
   item: Item;
   setIsMenuOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
+
 const MenuItem = ({ item, setIsMenuOpen }: MenuItemProps) => {
   const { pathname } = useLocation();
 

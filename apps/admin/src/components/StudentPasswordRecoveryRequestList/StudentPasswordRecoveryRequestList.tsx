@@ -7,32 +7,8 @@ import styled from 'styled-components';
 import MoreButton from './MoreButton';
 import { StudentPasswordRecoveryRequestList_admin$key } from './__generated__/StudentPasswordRecoveryRequestList_admin.graphql';
 
-const fragment = graphql`
-  fragment StudentPasswordRecoveryRequestList_admin on Admin {
-    studentPasswordRecoveryRequests(first: 100)
-      @connection(key: "StudentPasswordRecoveryRequestList_studentPasswordRecoveryRequests") {
-      edges {
-        node {
-          id
-          RM
-          email
-          status
-
-          student {
-            fullname
-          }
-        }
-      }
-    }
-  }
-`;
-
-const OuterStudentPasswordRecoveryRequestList = styled.div``;
-
-const Title = styled.h1`
-  font: normal normal 700 22px/25px Lexend;
-  margin: 0 0 24px;
-  color: #333;
+const OuterStudentPasswordRecoveryRequestList = styled.div`
+  height: calc(100% - 48px);
 `;
 
 const STATUS = {
@@ -52,7 +28,28 @@ type StudentPasswordRecoveryRequestListProps = {
 };
 
 export default function StudentPasswordRecoveryRequestList({ admin }: StudentPasswordRecoveryRequestListProps) {
-  const data = useFragment<StudentPasswordRecoveryRequestList_admin$key>(fragment, admin);
+  const data = useFragment<StudentPasswordRecoveryRequestList_admin$key>(
+    graphql`
+      fragment StudentPasswordRecoveryRequestList_admin on Admin {
+        studentPasswordRecoveryRequests(first: 100)
+          @connection(key: "StudentPasswordRecoveryRequestList_studentPasswordRecoveryRequests") {
+          edges {
+            node {
+              id
+              RM
+              email
+              status
+
+              student {
+                fullname
+              }
+            }
+          }
+        }
+      }
+    `,
+    admin
+  );
 
   const isDesktop = useMediaQuery('(min-width: 1200px)');
 
@@ -90,7 +87,7 @@ export default function StudentPasswordRecoveryRequestList({ admin }: StudentPas
       hideable: false,
       disableColumnMenu: true,
       renderCell(params) {
-        return <MoreButton params={params} disabled={params.row.status !== 'PENDING'} />;
+        return <MoreButton params={params} disabled={params.row.status === 'CHANGED'} />;
       },
     },
   ];
@@ -107,9 +104,7 @@ export default function StudentPasswordRecoveryRequestList({ admin }: StudentPas
 
   return (
     <OuterStudentPasswordRecoveryRequestList>
-      <Title>Solicitações de recuperação de senha</Title>
-
-      <SimpleTable rows={rows} columns={columns} />
+      <SimpleTable rows={rows} columns={columns} autoHeight={false} />
     </OuterStudentPasswordRecoveryRequestList>
   );
 }

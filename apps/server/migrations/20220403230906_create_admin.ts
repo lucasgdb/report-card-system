@@ -12,9 +12,10 @@ export const up = async (knex: Knex) => {
     table.integer('user_id').unsigned().notNullable();
     table.foreign('user_id').references('user.id');
 
+    table.string('fullname').notNullable();
     table.string('email').unique().notNullable();
-
     table.string('password').notNullable();
+    table.string('avatar_url').unique().nullable();
 
     table.timestamps(true, true);
   });

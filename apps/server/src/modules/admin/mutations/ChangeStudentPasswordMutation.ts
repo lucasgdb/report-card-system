@@ -62,7 +62,7 @@ const changeStudentPassword = async (
     from: `"Recuperação de senha" <${process.env.USEFAZ_EMAIL}>`,
     to: studentPasswordRecoveryRequest.email,
     subject: 'Recuperação de senha',
-    html: `<b>Sua senha foi alterada pelo administrador Usefaz. Sua nova senha: ${newPassword}</b>`,
+    html: `Sua senha foi alterada por um Administrador Usefaz. <br />RM: ${student.RM}<br />Sua nova senha é <b>${newPassword}</b>`,
   });
 
   return {

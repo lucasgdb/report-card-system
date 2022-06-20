@@ -7,22 +7,8 @@ import styled from 'styled-components';
 import MoreButton from './MoreButton';
 import { StudentList_admin$key } from './__generated__/StudentList_admin.graphql';
 
-const fragment = graphql`
-  fragment StudentList_admin on Admin {
-    students(first: 100) @connection(key: "StudentList_students") {
-      edges {
-        node {
-          id
-          RM
-          fullname
-        }
-      }
-    }
-  }
-`;
-
 const OuterStudentList = styled.div`
-  margin-top: 24px;
+  height: calc(100% - 48px);
 `;
 
 type StudentListProps = {
@@ -30,9 +16,24 @@ type StudentListProps = {
 };
 
 export default function StudentList({ admin }: StudentListProps) {
-  const isDesktop = useMediaQuery('(min-width: 1200px)');
+  const data = useFragment<StudentList_admin$key>(
+    graphql`
+      fragment StudentList_admin on Admin {
+        students(first: 100) @connection(key: "StudentList_students") {
+          edges {
+            node {
+              id
+              RM
+              fullname
+            }
+          }
+        }
+      }
+    `,
+    admin
+  );
 
-  const data = useFragment<StudentList_admin$key>(fragment, admin);
+  const isDesktop = useMediaQuery('(min-width: 1200px)');
 
   const columns: GridColDef[] = [
     { field: 'RM', headerName: 'RM', width: 100 },
@@ -72,7 +73,7 @@ export default function StudentList({ admin }: StudentListProps) {
 
   return (
     <OuterStudentList>
-      <SimpleTable rows={rows} columns={columns} />
+      <SimpleTable rows={rows} columns={columns} autoHeight={false} />
     </OuterStudentList>
   );
 }

@@ -1,7 +1,8 @@
-import { PageLoader } from '@usefaz/components';
 import { Route, Routes, HashRouter } from 'react-router-dom';
 import * as React from 'react';
+
 import NavbarLayout from './layout/Navbar/NavbarLayout';
+import SuspenseRouter from './components/SuspenseRouter';
 
 const EnvironmentLayout = React.lazy(() => import('~/layout/EnvironmentLayout'));
 const ErrorPage = React.lazy(() => import('~/pages/Error/ErrorPage'));
@@ -18,10 +19,10 @@ const StudentListPage = React.lazy(() => import('~/pages/StudentList/StudentList
 export default function AppRoutes() {
   return (
     <HashRouter>
-      <React.Suspense fallback={<PageLoader />}>
-        <Routes>
-          <Route path="/" element={<EnvironmentLayout />}>
-            <Route element={<NavbarLayout />}>
+      <Routes>
+        <Route path="/" element={<EnvironmentLayout />}>
+          <Route element={<NavbarLayout />}>
+            <Route element={<SuspenseRouter />}>
               <Route index element={<HomePage />} />
 
               <Route path="/alunos" element={<StudentListPage />} />
@@ -32,15 +33,17 @@ export default function AppRoutes() {
               />
             </Route>
           </Route>
+        </Route>
 
+        <Route element={<SuspenseRouter />}>
           <Route path="/esqueci-minha-senha" element={<ForgotPasswordPage />} />
           <Route path="/solicitacao-enviada" element={<RequestSentPage />} />
           <Route path="/recuperar-senha/:requestId/:token" element={<RecoverPasswordPage />} />
           <Route path="/solicitacao-finalizada" element={<PasswordChangedPage />} />
 
           <Route path="*" element={<ErrorPage />} />
-        </Routes>
-      </React.Suspense>
+        </Route>
+      </Routes>
     </HashRouter>
   );
 }

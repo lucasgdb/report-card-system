@@ -12,15 +12,6 @@ import UploadAvatarButton from './UploadAvatarButton';
 import AvatarImage from './AvatarImage';
 import OpenRemoveAvatarModalButton from './OpenRemoveAvatarModalButton';
 
-const fragment = graphql`
-  fragment UploadAvatarModal_student on Student {
-    avatarURL
-
-    ...AvatarImage_student
-    ...UploadAvatarButton_student
-  }
-`;
-
 const LeftDialogActions = styled.div`
   display: flex;
   flex: 1;
@@ -59,7 +50,17 @@ type UploadAvatarModalProps = {
 };
 
 export default function UploadAvatarModal({ open, onClose, student }: UploadAvatarModalProps) {
-  const data = useFragment<UploadAvatarModal_student$key>(fragment, student);
+  const data = useFragment<UploadAvatarModal_student$key>(
+    graphql`
+      fragment UploadAvatarModal_student on Student {
+        avatarURL
+
+        ...AvatarImage_student
+        ...UploadAvatarButton_student
+      }
+    `,
+    student
+  );
 
   const cropperRef = useRef<ReactCropperElement>(null);
 

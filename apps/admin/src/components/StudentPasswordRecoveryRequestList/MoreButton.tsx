@@ -43,7 +43,7 @@ export default function MoreButton({ params, disabled = false }: MoreButtonProps
     {
       id: 2,
       text: 'Recusar',
-      disabled: loading,
+      disabled: loading || params.row.status === 'REFUSED',
       onClick() {
         refuseStudentPasswordRecoveryRequest({
           variables: { input: { studentPasswordRecoveryRequestId } },

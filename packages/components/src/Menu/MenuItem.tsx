@@ -13,6 +13,7 @@ const OuterMenuItem = styled.div<OuterMenuItemProps>`
     $disabled &&
     css`
       opacity: 30%;
+      pointer-events: none;
     `}
 
   :hover {

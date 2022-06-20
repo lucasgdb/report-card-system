@@ -12,8 +12,31 @@ const AdminType = registerGraphQLNodeObjectType<IAdmin>('admin')({
   name: 'Admin',
   fields() {
     return {
+      firstname: {
+        type: new GraphQLNonNull(GraphQLString),
+        resolve: (admin) => admin.fullname.split(' ')[0],
+      },
+      lastname: {
+        type: GraphQLString,
+        description: "admin's lastname (must not be equals firstname)",
+        resolve: (admin) => {
+          const splittedAdminName = admin.fullname.split(' ');
+          if (splittedAdminName.length === 1) {
+            return null;
+          }
+
+          return splittedAdminName[splittedAdminName.length - 1];
+        },
+      },
       email: {
         type: new GraphQLNonNull(GraphQLString),
+      },
+      fullname: {
+        type: new GraphQLNonNull(GraphQLString),
+      },
+      avatarURL: {
+        type: GraphQLString,
+        resolve: (admin) => admin.avatar_url,
       },
       students: {
         type: StudentConnection.connectionType,
