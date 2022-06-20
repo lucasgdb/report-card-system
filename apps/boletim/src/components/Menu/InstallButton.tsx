@@ -15,6 +15,8 @@ declare global {
 
 const MobileInstallButton = styled(IconButton)`
   && {
+    display: none;
+
     width: 24px;
     height: 24px;
     padding: 0;
@@ -24,6 +26,7 @@ const MobileInstallButton = styled(IconButton)`
 const DesktopInstallButton = styled(Button)`
   && {
     display: none;
+
     border-radius: 8px;
     padding: 2px 10px;
   }
