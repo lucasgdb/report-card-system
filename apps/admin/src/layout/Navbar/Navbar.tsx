@@ -46,7 +46,7 @@ const UsefazLogoWrapper = styled.div`
 `;
 
 const UsefazLogo = styled.img`
-  width: 32px;
+  width: 40px;
   background-color: #0020a2;
   border-radius: 50%;
 `;
