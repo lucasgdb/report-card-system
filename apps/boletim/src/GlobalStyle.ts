@@ -7,10 +7,6 @@ const GlobalStyle = createGlobalStyle`
   input:-webkit-autofill:active {
     box-shadow: 0 0 0 30px #F7F5FA inset !important;
   }
-
-  body {
-    padding-right: 0 !important;
-  }
 `;
 
 export default GlobalStyle;

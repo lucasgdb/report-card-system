@@ -7,7 +7,7 @@ export const lightTheme = createTheme({
         body: {
           background: '#fafafa 0 0 no-repeat padding-box',
           overflowX: 'hidden',
-          transition: '0.2s all',
+          transition: 'background-color 0.2s',
 
           '&::-webkit-scrollbar-thumb': {
             borderRadius: '8px',

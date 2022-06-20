@@ -2,9 +2,10 @@ import { GraphQLNonNull, GraphQLString } from 'graphql';
 import { connectionArgs, connectionFromArray } from 'graphql-relay';
 
 import usefazConnector from '~/database/usefazConnector';
-import { StudentModel, StudentPasswordRecoveryRequestModel } from '~/entities';
+import { NotificationModel, StudentModel, StudentPasswordRecoveryRequestModel } from '~/entities';
 import type { IAdmin, IContext } from '~/interfaces';
 import { registerGraphQLNodeObjectType } from '../node/NodeType';
+import { NotificationConnection } from '../notification/NotificationType';
 import { StudentPasswordRecoveryRequestConnection } from '../student/StudentPasswordRecoveryRequestType';
 import { StudentConnection } from '../student/StudentType';
 
@@ -54,6 +55,16 @@ const AdminType = registerGraphQLNodeObjectType<IAdmin>('admin')({
           const studentPasswordRecoveryRequestEntity = StudentPasswordRecoveryRequestModel(usefazConnector);
           const studentPasswordRecoveryList = await studentPasswordRecoveryRequestEntity.getAll();
           return connectionFromArray(studentPasswordRecoveryList, args);
+        },
+      },
+      notifications: {
+        type: NotificationConnection.connectionType,
+        args: { ...connectionArgs },
+        async resolve(_admin, args) {
+          const notificationEntity = NotificationModel(usefazConnector);
+          const notificationList = await notificationEntity.getAll();
+          const notificationListConnection = connectionFromArray(notificationList, args);
+          return { ...notificationListConnection, count: notificationListConnection.edges.length };
         },
       },
     };

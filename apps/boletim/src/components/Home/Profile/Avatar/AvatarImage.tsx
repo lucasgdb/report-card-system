@@ -27,8 +27,6 @@ export default function AvatarImage({ student }: AvatarImageProps) {
         avatarURL
         firstname
         lastname
-
-        ...DefaultAvatar_student
       }
     `,
     student

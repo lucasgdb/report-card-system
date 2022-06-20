@@ -5,6 +5,7 @@ import type IAdmin from './IAdmin';
 import type IAdminPasswordRecoveryRequest from './IAdminPasswordRecoveryRequest';
 import type IStudentPasswordRecoveryRequest from './IStudentPasswordRecoveryRequest';
 import type IContext from './IContext';
+import type INotification from './INotification';
 
 export type {
   ILogin,
@@ -14,4 +15,5 @@ export type {
   IAdminPasswordRecoveryRequest,
   IStudentPasswordRecoveryRequest,
   IContext,
+  INotification,
 };

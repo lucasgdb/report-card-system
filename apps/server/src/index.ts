@@ -3,6 +3,7 @@ import 'regenerator-runtime/runtime';
 import 'dayjs/locale/pt-br';
 
 import localeData from 'dayjs/plugin/localeData';
+import relativeTime from 'dayjs/plugin/relativeTime';
 import dayjs from 'dayjs';
 import Koa from 'koa';
 import mount from 'koa-mount';
@@ -10,6 +11,7 @@ import koaCompress from 'koa-compress';
 
 dayjs.locale('pt-br');
 dayjs.extend(localeData);
+dayjs.extend(relativeTime);
 
 import server from './server';
 import graphQLServer from './graphQLServer';

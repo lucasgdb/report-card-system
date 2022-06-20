@@ -4,6 +4,7 @@ import { graphql, useFragment } from 'relay-hooks';
 import { Navbar_admin$key } from './__generated__/Navbar_admin.graphql';
 import AvatarMenu from './AvatarMenu/AvatarMenu';
 import OpenMenuButton from './OpenMenuButton';
+import NotificationIcon from './NotificationIcon/NotificationIcon';
 
 const OuterNavbar = styled.div`
   position: sticky;
@@ -27,6 +28,14 @@ const OuterNavbar = styled.div`
 `;
 
 const LeftOptionsWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 16px;
+
+  height: 100%;
+`;
+
+const RightOptionsWrapper = styled.div`
   display: flex;
   align-items: center;
   gap: 16px;
@@ -62,8 +71,10 @@ type NavbarProps = {
 const Navbar = ({ admin, isMenuOpen, setIsMenuOpen }: NavbarProps) => {
   const data = useFragment<Navbar_admin$key>(
     graphql`
-      fragment Navbar_admin on Admin {
+      fragment Navbar_admin on Admin
+      @argumentDefinitions(count: { type: "Int", defaultValue: 5 }, after: { type: "String" }) {
         ...AvatarMenu_admin
+        ...NotificationIcon_admin @arguments(count: $count, after: $after)
       }
     `,
     admin
@@ -79,7 +90,10 @@ const Navbar = ({ admin, isMenuOpen, setIsMenuOpen }: NavbarProps) => {
         </UsefazLogoWrapper>
       </LeftOptionsWrapper>
 
-      <AvatarMenu admin={data} />
+      <RightOptionsWrapper>
+        <NotificationIcon admin={data} />
+        <AvatarMenu admin={data} />
+      </RightOptionsWrapper>
     </OuterNavbar>
   );
 };

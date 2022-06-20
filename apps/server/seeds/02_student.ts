@@ -1,5 +1,6 @@
-import * as bcrypt from 'bcryptjs';
 import type { Knex } from 'knex';
+
+import createPassword from '../src/utils/createPassword';
 
 export const seed = async (knex: Knex) => {
   await knex('boletim_discipline').del();
@@ -14,7 +15,7 @@ export const seed = async (knex: Knex) => {
     {
       RM: '12345',
       fullname: 'Lucas Bittencourt',
-      password: bcrypt.hashSync('123', bcrypt.genSaltSync()),
+      password: createPassword('123'),
       user_id: user.id,
     },
   ]);

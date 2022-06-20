@@ -4,6 +4,7 @@ import AuthModel from './Auth/AuthModel';
 import StudentModel from './Student/StudentModel';
 import StudentPasswordRecoveryRequestModel from './Student/StudentPasswordRecoveryRequestModel';
 import UserModel from './User/UserModel';
+import NotificationModel from './Notification/NotificationModel';
 
 export {
   AdminModel,
@@ -12,4 +13,5 @@ export {
   StudentModel,
   StudentPasswordRecoveryRequestModel,
   UserModel,
+  NotificationModel,
 };

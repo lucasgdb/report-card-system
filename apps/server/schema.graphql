@@ -57,6 +57,19 @@ type Admin implements Node {
     """Returns the last n items from the list."""
     last: Int
   ): StudentPasswordRecoveryRequestConnection
+  notifications(
+    """Returns the items in the list that come after the specified cursor."""
+    after: String
+
+    """Returns the first n items from the list."""
+    first: Int
+
+    """Returns the items in the list that come before the specified cursor."""
+    before: String
+
+    """Returns the last n items from the list."""
+    last: Int
+  ): NotificationConnection
 }
 
 """A connection to a list of items."""
@@ -137,6 +150,34 @@ enum StudentPasswordRecoveryRequestStatusEnum {
   CHANGED
 }
 
+"""A connection to a list of items."""
+type NotificationConnection {
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """A list of edges."""
+  edges: [NotificationEdge]
+  count: Int!
+}
+
+"""An edge in a connection."""
+type NotificationEdge {
+  """The item at the end of the edge"""
+  node: Notification
+
+  """A cursor for use in pagination"""
+  cursor: String!
+}
+
+type Notification implements Node {
+  """The ID of an object"""
+  id: ID!
+  title: String!
+  message: String!
+  viewed: Boolean!
+  sentAt: String!
+}
+
 type System {
   test: Int
 }
@@ -152,8 +193,9 @@ type Mutation {
 
   """The logOut mutation can be used to log out an existing user."""
   logout(input: LogoutMutationInput!): LogoutMutationPayload
+  setNotificationsAsViewed(input: SetNotificationsAsViewedMutationInput!): SetNotificationsAsViewedMutationPayload
   removeAvatar(input: RemoveAvatarMutationInput!): RemoveAvatarMutationPayload
-  sendStudentRecoveryEmail(input: SendStudentRecoveryEmailMutationInput!): SendStudentRecoveryEmailMutationPayload
+  sendStudentPasswordRecoveryRequest(input: SendStudentPasswordRecoveryRequestMutationInput!): SendStudentPasswordRecoveryRequestMutationPayload
   studentLogin(input: StudentLoginMutationInput!): StudentLoginMutationPayload
 }
 
@@ -257,6 +299,16 @@ input LogoutMutationInput {
   clientMutationId: String
 }
 
+type SetNotificationsAsViewedMutationPayload {
+  notifications: NotificationConnection
+  clientMutationId: String
+}
+
+input SetNotificationsAsViewedMutationInput {
+  notificationIds: [ID!]
+  clientMutationId: String
+}
+
 type RemoveAvatarMutationPayload {
   student: Student!
   clientMutationId: String
@@ -266,11 +318,11 @@ input RemoveAvatarMutationInput {
   clientMutationId: String
 }
 
-type SendStudentRecoveryEmailMutationPayload {
+type SendStudentPasswordRecoveryRequestMutationPayload {
   clientMutationId: String
 }
 
-input SendStudentRecoveryEmailMutationInput {
+input SendStudentPasswordRecoveryRequestMutationInput {
   RM: String!
   email: String!
   clientMutationId: String

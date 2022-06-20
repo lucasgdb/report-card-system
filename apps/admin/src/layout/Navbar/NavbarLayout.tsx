@@ -25,13 +25,16 @@ export const PageWrapper = styled.div`
 `;
 
 const NavbarLayout = () => {
-  const { data, isLoading } = useQuery<NavbarLayoutQuery>(graphql`
-    query NavbarLayoutQuery {
-      admin {
-        ...Navbar_admin
+  const { data, isLoading } = useQuery<NavbarLayoutQuery>(
+    graphql`
+      query NavbarLayoutQuery($count: Int!, $after: String) {
+        admin {
+          ...Navbar_admin @arguments(count: $count, after: $after)
+        }
       }
-    }
-  `);
+    `,
+    { count: 5 }
+  );
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 

@@ -8,11 +8,13 @@ import ptBRLocale from 'date-fns/locale/pt-BR';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import dayjs from 'dayjs';
+import relativeTime from 'dayjs/plugin/relativeTime';
 
 import GlobalStyle from './GlobalStyle';
 import CustomSnackbarProvider from './components/CustomSnackbarProvider';
 
 dayjs.locale('pt-br');
+dayjs.extend(relativeTime);
 
 const theme = createTheme({
   components: {

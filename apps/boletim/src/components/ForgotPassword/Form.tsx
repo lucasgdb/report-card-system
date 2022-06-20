@@ -5,8 +5,8 @@ import Button from '@mui/material/Button';
 import { useNavigate } from 'react-router';
 import { useMutation } from 'relay-hooks';
 
-import SendStudentRecoveryEmailMutation from '~/modules/student/SendStudentRecoveryEmailMutation';
-import { SendStudentRecoveryEmailMutation as SendStudentRecoveryEmailMutationType } from '~/modules/student/__generated__/SendStudentRecoveryEmailMutation.graphql';
+import SendStudentPasswordRecoveryRequestMutation from '~/modules/student/SendStudentPasswordRecoveryRequestMutation';
+import { SendStudentPasswordRecoveryRequestMutation as SendStudentPasswordRecoveryRequestMutationType } from '~/modules/student/__generated__/SendStudentPasswordRecoveryRequestMutation.graphql';
 import RMInput from './RMinput';
 import EmailInput from './EmailInput';
 
@@ -36,9 +36,8 @@ export default function Form() {
 
   const navigate = useNavigate();
 
-  const [sendStudentRecoveryEmailMutation, { loading }] = useMutation<SendStudentRecoveryEmailMutationType>(
-    SendStudentRecoveryEmailMutation,
-    {
+  const [sendStudentPasswordRecoveryRequestMutation, { loading }] =
+    useMutation<SendStudentPasswordRecoveryRequestMutationType>(SendStudentPasswordRecoveryRequestMutation, {
       onError(errors) {
         const { notFound } = errorConfig.student;
 
@@ -47,8 +46,7 @@ export default function Form() {
           enqueueSnackbar('Aluno não encontrado. Por favor, tente novamente.', { variant: 'error' });
         }
       },
-    }
-  );
+    });
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -67,7 +65,7 @@ export default function Form() {
       return;
     }
 
-    sendStudentRecoveryEmailMutation({
+    sendStudentPasswordRecoveryRequestMutation({
       variables: {
         input: { RM, email },
       },
