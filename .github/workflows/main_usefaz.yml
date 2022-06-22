@@ -51,4 +51,4 @@ jobs:
           app-name: 'usefaz'
           slot-name: 'Production'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_7BBAD6EBF6304B5A805AF1182E2476AA }}
-          package: apps/server
+          package: .
