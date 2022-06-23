@@ -55,6 +55,13 @@ const LeftContentWrapper = styled.div`
 
 const UsefazLogo = styled.img`
   width: 137px;
+  transition: filter 0.2s;
+
+  ${({ theme }) =>
+    theme.palette.mode === 'dark' &&
+    css`
+      filter: drop-shadow(0 0 2px #e6e8eb);
+    `}
 `;
 
 const Divider = styled.div`
