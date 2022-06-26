@@ -5,7 +5,7 @@ type OuterMenuItemProps = {
 };
 
 const OuterMenuItem = styled.div<OuterMenuItemProps>`
-  padding: 12px 24px;
+  padding: 8px 24px;
   cursor: pointer;
   transition: background-color 0.2s;
 

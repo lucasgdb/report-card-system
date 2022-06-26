@@ -6,7 +6,7 @@ import { useEffect } from 'react';
 import { HomePageQuery } from './__generated__/HomePageQuery.graphql';
 import Menu from '~/components/Menu/Menu';
 import Profile from '~/components/Home/Profile/Profile';
-import Boletim from '~/components/Home/Boletim/Boletim';
+import SchoolReport from '~/components/Home/SchoolReport/SchoolReport';
 
 const OuterHomePage = styled.div``;
 
@@ -16,6 +16,10 @@ export default function HomePage() {
       student {
         ...Menu_student
         ...Profile_student
+
+        schoolReport {
+          ...SchoolReport_schoolReport
+        }
       }
     }
   `);
@@ -32,7 +36,7 @@ export default function HomePage() {
     <OuterHomePage>
       <Menu student={data.student} />
       <Profile student={data.student} />
-      <Boletim />
+      <SchoolReport schoolReport={data.student.schoolReport} />
     </OuterHomePage>
   );
 }

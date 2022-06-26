@@ -5,6 +5,7 @@ import StudentModel from './Student/StudentModel';
 import StudentPasswordRecoveryRequestModel from './Student/StudentPasswordRecoveryRequestModel';
 import UserModel from './User/UserModel';
 import NotificationModel from './Notification/NotificationModel';
+import SchoolReportModel from './SchoolReport/SchoolReportModel';
 
 export {
   AdminModel,
@@ -14,4 +15,5 @@ export {
   StudentPasswordRecoveryRequestModel,
   UserModel,
   NotificationModel,
+  SchoolReportModel,
 };

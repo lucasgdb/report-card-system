@@ -13,19 +13,6 @@ export const up = async (knex: Knex) => {
 
     table.timestamps(true, true);
   });
-
-  await knex('discipline').insert([
-    { name: 'Língua Portuguesa' },
-    { name: 'Matemática' },
-    { name: 'Ciências' },
-    { name: 'História' },
-    { name: 'Geografia' },
-    { name: 'Artes' },
-    { name: 'Educação Física' },
-    { name: 'Inglês' },
-    { name: 'Informática' },
-    { name: 'Filosofia e Ética' },
-  ]);
 };
 
 export const down = async (knex: Knex) => {

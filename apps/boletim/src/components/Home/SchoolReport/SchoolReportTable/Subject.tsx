@@ -1,6 +1,6 @@
 import styled, { css } from 'styled-components';
 
-const FirstRowColumn = styled.div`
+const OuterSubject = styled.div`
   display: flex;
   align-items: center;
   gap: 8px;
@@ -37,9 +37,9 @@ type SubjectProps = {
 
 export default function Subject({ icon, name }: SubjectProps) {
   return (
-    <FirstRowColumn>
+    <OuterSubject>
       <SubjectIcon src={`/assets/icons/${icon}.svg`} />
       <SubjectName>{name}</SubjectName>
-    </FirstRowColumn>
+    </OuterSubject>
   );
 }

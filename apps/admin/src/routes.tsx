@@ -22,16 +22,11 @@ export default function AppRoutes() {
       <Routes>
         <Route path="/" element={<EnvironmentLayout />}>
           <Route element={<NavbarLayout />}>
-            <Route element={<SuspenseRouter />}>
-              <Route index element={<HomePage />} />
+            <Route index element={<HomePage />} />
 
-              <Route path="/alunos" element={<StudentListPage />} />
+            <Route path="/alunos" element={<StudentListPage />} />
 
-              <Route
-                path="/solicitacoes-de-recuperacao-de-senha"
-                element={<StudentPasswordRecoveryRequestListPage />}
-              />
-            </Route>
+            <Route path="/solicitacoes-de-recuperacao-de-senha" element={<StudentPasswordRecoveryRequestListPage />} />
           </Route>
         </Route>
 

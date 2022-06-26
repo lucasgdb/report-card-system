@@ -115,6 +115,62 @@ type Student implements Node {
   lastname: String
   fullname: String!
   avatarURL: String
+  schoolReport: SchoolReport
+}
+
+type SchoolReport implements Node {
+  """The ID of an object"""
+  id: ID!
+  year: Int!
+  schoolReportRows(
+    """Returns the items in the list that come after the specified cursor."""
+    after: String
+
+    """Returns the first n items from the list."""
+    first: Int
+
+    """Returns the items in the list that come before the specified cursor."""
+    before: String
+
+    """Returns the last n items from the list."""
+    last: Int
+  ): SchoolReportRowConnection
+}
+
+"""A connection to a list of items."""
+type SchoolReportRowConnection {
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """A list of edges."""
+  edges: [SchoolReportRowEdge]
+  count: Int!
+}
+
+"""An edge in a connection."""
+type SchoolReportRowEdge {
+  """The item at the end of the edge"""
+  node: SchoolReportRowType
+
+  """A cursor for use in pagination"""
+  cursor: String!
+}
+
+type SchoolReportRowType {
+  id: ID!
+  disciplineName: String!
+  firstBimesterGrade: Float!
+  firstBimesterRecGrade: Float
+  firstBimesterAbsences: Int!
+  secondBimesterGrade: Float!
+  secondBimesterRecGrade: Float
+  secondBimesterAbsences: Int!
+  thirdBimesterGrade: Float!
+  thirdBimesterRecGrade: Float
+  thirdBimesterAbsences: Int!
+  fourthBimesterGrade: Float!
+  fourthBimesterRecGrade: Float
+  fourthBimesterAbsences: Int!
 }
 
 """A connection to a list of items."""

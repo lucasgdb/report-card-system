@@ -1,8 +1,11 @@
 import { GraphQLNonNull, GraphQLString } from 'graphql';
 import { connectionDefinitions } from 'graphql-relay';
+import usefazConnector from '~/database/usefazConnector';
+import { SchoolReportModel } from '~/entities';
 
 import type { IContext, IStudent } from '~/interfaces';
 import { registerGraphQLNodeObjectType } from '../node/NodeType';
+import SchoolReportType from '../schoolReport/SchoolReportType';
 
 const StudentType = registerGraphQLNodeObjectType<IStudent>('student')({
   name: 'Student',
@@ -33,6 +36,13 @@ const StudentType = registerGraphQLNodeObjectType<IStudent>('student')({
       avatarURL: {
         type: GraphQLString,
         resolve: (student) => student.avatar_url,
+      },
+      schoolReport: {
+        type: SchoolReportType,
+        resolve(student) {
+          const schoolReportEntity = SchoolReportModel(usefazConnector);
+          return schoolReportEntity.getOneByStudentId(student.id);
+        },
       },
     };
   },

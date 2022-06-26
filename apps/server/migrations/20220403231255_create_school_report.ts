@@ -1,12 +1,12 @@
 import type { Knex } from 'knex';
 
 export const up = async (knex: Knex) => {
-  const hasTable = await knex.schema.hasTable('boletim');
+  const hasTable = await knex.schema.hasTable('school_report');
   if (hasTable) {
     return;
   }
 
-  await knex.schema.createTable('boletim', (table) => {
+  await knex.schema.createTable('school_report', (table) => {
     table.increments('id').unsigned().primary();
 
     table.tinyint('year').notNullable();
@@ -19,5 +19,5 @@ export const up = async (knex: Knex) => {
 };
 
 export const down = async (knex: Knex) => {
-  await knex.schema.dropTableIfExists('boletim');
+  await knex.schema.dropTableIfExists('school_report');
 };

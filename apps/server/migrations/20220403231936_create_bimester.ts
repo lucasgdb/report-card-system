@@ -9,14 +9,16 @@ export const up = async (knex: Knex) => {
   await knex.schema.createTable('bimester', (table) => {
     table.increments('id').unsigned().primary();
 
-    table.integer('bimester_identifier_id').unsigned().notNullable();
-    table.foreign('bimester_identifier_id').references('bimester_identifier.id');
+    table.integer('school_report_discipline_id').unsigned().notNullable();
+    table.foreign('school_report_discipline_id').references('school_report_discipline.id');
+
+    table.enum('identifier', [1, 2, 3, 4]).notNullable();
 
     table.tinyint('grade').notNullable();
 
     table.tinyint('rec_grade').nullable();
 
-    table.tinyint('absences').nullable();
+    table.tinyint('absences').notNullable().defaultTo(0);
 
     table.timestamps(true, true);
   });

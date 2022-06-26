@@ -1,8 +1,9 @@
 import type { Knex } from 'knex';
 
 export const seed = async (knex: Knex) => {
-  await knex('boletim_discipline').del();
-  await knex('boletim').del();
+  await knex('bimester').del();
+  await knex('school_report_discipline').del();
+  await knex('school_report').del();
   await knex('discipline').del();
 
   await knex('student').del();

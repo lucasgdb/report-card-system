@@ -24,7 +24,7 @@ const OuterMenu = styled.div<OuterMenuProps>`
 
   position: sticky;
   top: 0;
-  z-index: 1;
+  z-index: 2;
 
   box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.125), 0px -1px 2px rgba(0, 0, 0, 0.1);
   padding: 16px 24px;
