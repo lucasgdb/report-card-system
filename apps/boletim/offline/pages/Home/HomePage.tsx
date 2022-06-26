@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 import Menu from '../../components/Menu/Menu';
 import Profile from '../../components/Home/Profile/Profile';
-import Boletim from '../../components/Home/Boletim/Boletim';
+import SchoolReport from '../../components/Home/SchoolReport/SchoolReport';
 
 const OuterHomePage = styled.div``;
 
@@ -11,7 +11,7 @@ export default function HomePage() {
     <OuterHomePage>
       <Menu />
       <Profile />
-      <Boletim />
+      <SchoolReport />
     </OuterHomePage>
   );
 }

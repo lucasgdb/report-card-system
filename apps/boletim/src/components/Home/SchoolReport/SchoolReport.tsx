@@ -52,7 +52,7 @@ export default function SchoolReport({ schoolReport }: SchoolReportProps) {
   if (data.schoolReportRows.count === 0) {
     return (
       <OuterSchoolReport>
-        <Title>Não há um boletim registrado.</Title>
+        <Title>Não há boletim registrado.</Title>
       </OuterSchoolReport>
     );
   }

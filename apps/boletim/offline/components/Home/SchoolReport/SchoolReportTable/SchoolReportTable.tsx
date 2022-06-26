@@ -1,14 +1,12 @@
 import { useTable, Column } from 'react-table';
-import { useEffect, useMemo } from 'react';
+import { useMemo } from 'react';
 import styled from 'styled-components';
-import { graphql, useFragment } from 'relay-hooks';
 
-import { SchoolReportTable_schoolReport$key } from './__generated__/SchoolReportTable_schoolReport.graphql';
 import FinalAverageBadge from './FinalAverageBadge';
 import TotalAbsencesBadge from './TotalAbsencesBadge';
 import Subject from './Subject';
 import Grades from './Grades';
-import saveSchoolReport from '~/utils/saveSchoolReport';
+import getSchoolReport from '../../../../utils/getSchoolReport';
 
 const Table = styled.table`
   border-collapse: collapse;
@@ -28,9 +26,8 @@ const TableHeader = styled.th`
 
 const TableData = styled.td`
   font: normal normal 400 14px/17px Inter;
-  color: ${(props) => props.theme.text.main};
+  color: #808080;
 
-  transition: color 0.2s;
   border-top: 1px solid #e6e8eb;
   border-bottom: 1px solid #e6e8eb;
   padding: 12px;
@@ -41,8 +38,7 @@ const TableRow = styled.tr`
     position: sticky;
     left: 0;
     z-index: 1;
-    background-color: ${(props) => props.theme.bg.main};
-    transition: background-color 0.2s;
+    background-color: #fafafa;
   }
 `;
 
@@ -107,83 +103,48 @@ const ICONS_SUBJECT = {
   'Filosofia e Ética': 'philosophy_and_ethics',
 };
 
-type SchoolReportTableProps = {
-  schoolReport: SchoolReportTable_schoolReport$key;
-};
-
-export default function SchoolReportTable({ schoolReport }: SchoolReportTableProps) {
-  const schoolReportData = useFragment(
-    graphql`
-      fragment SchoolReportTable_schoolReport on SchoolReport {
-        schoolReportRows {
-          edges {
-            node {
-              disciplineName
-              firstBimesterGrade
-              firstBimesterRecGrade
-              firstBimesterAbsences
-              secondBimesterAbsences
-              secondBimesterGrade
-              secondBimesterRecGrade
-              thirdBimesterAbsences
-              thirdBimesterGrade
-              thirdBimesterRecGrade
-              fourthBimesterGrade
-              fourthBimesterRecGrade
-              fourthBimesterAbsences
-            }
-          }
-        }
-      }
-    `,
-    schoolReport
-  );
-
+export default function SchoolReportTable() {
   const columns: Column[] = useMemo(() => COLUMNS, []);
 
-  const data = useMemo(
-    () =>
-      schoolReportData.schoolReportRows.edges.map(({ node: schoolReportRow }) => {
-        const {
-          disciplineName,
-          firstBimesterGrade,
-          secondBimesterGrade,
-          thirdBimesterGrade,
-          fourthBimesterGrade,
-          firstBimesterAbsences,
-          secondBimesterAbsences,
-          thirdBimesterAbsences,
-          fourthBimesterAbsences,
-        } = schoolReportRow;
+  const data = useMemo(() => {
+    const schoolReport = getSchoolReport();
 
-        const finalAverage: number =
-          (firstBimesterGrade + secondBimesterGrade + thirdBimesterGrade + fourthBimesterGrade) / 4;
+    return schoolReport.map((schoolReportRow) => {
+      const {
+        disciplineName,
+        firstBimesterGrade,
+        secondBimesterGrade,
+        thirdBimesterGrade,
+        fourthBimesterGrade,
+        firstBimesterAbsences,
+        secondBimesterAbsences,
+        thirdBimesterAbsences,
+        fourthBimesterAbsences,
+      } = schoolReportRow;
 
-        const totalAbsences: number =
-          firstBimesterAbsences + secondBimesterAbsences + thirdBimesterAbsences + fourthBimesterAbsences;
+      const finalAverage: number =
+        (firstBimesterGrade + secondBimesterGrade + thirdBimesterGrade + fourthBimesterGrade) / 4;
 
-        return {
-          subject: <Subject icon={ICONS_SUBJECT[disciplineName]} name={disciplineName} />,
-          firstBimester: <Grades grade={firstBimesterGrade} />,
-          firstBimesterAbsences,
-          secondBimester: <Grades grade={secondBimesterGrade} />,
-          secondBimesterAbsences,
-          thirdBimester: <Grades grade={thirdBimesterGrade} />,
-          thirdBimesterAbsences,
-          fourthBimester: <Grades grade={fourthBimesterGrade} />,
-          fourthBimesterAbsences,
-          finalAverage: <FinalAverageBadge number={finalAverage} />,
-          totalAbsences: <TotalAbsencesBadge number={totalAbsences} />,
-        };
-      }),
-    [schoolReportData.schoolReportRows.edges]
-  );
+      const totalAbsences: number =
+        firstBimesterAbsences + secondBimesterAbsences + thirdBimesterAbsences + fourthBimesterAbsences;
+
+      return {
+        subject: <Subject icon={ICONS_SUBJECT[disciplineName]} name={disciplineName} />,
+        firstBimester: <Grades grade={firstBimesterGrade} />,
+        firstBimesterAbsences,
+        secondBimester: <Grades grade={secondBimesterGrade} />,
+        secondBimesterAbsences,
+        thirdBimester: <Grades grade={thirdBimesterGrade} />,
+        thirdBimesterAbsences,
+        fourthBimester: <Grades grade={fourthBimesterGrade} />,
+        fourthBimesterAbsences,
+        finalAverage: <FinalAverageBadge number={finalAverage} />,
+        totalAbsences: <TotalAbsencesBadge number={totalAbsences} />,
+      };
+    });
+  }, []);
 
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable({ columns, data });
-
-  useEffect(() => {
-    saveSchoolReport(schoolReportData);
-  }, [schoolReportData]);
 
   return (
     <Table {...getTableProps()}>
