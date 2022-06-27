@@ -1,5 +1,9 @@
+import { RequiredExceptFor } from '@usefaz/shared';
+import type { Knex } from 'knex';
+
 import type { DBConnector } from '~/database/dbConnector';
 import type { ISchoolReport } from '~/interfaces';
+import callTrxOrKnexConnection from '~/utils/callTrxOrKnexConnection';
 
 type SchoolReportBimester = {
   discipline_id: number;
@@ -86,6 +90,17 @@ const SchoolReportModel = (dbConnector: DBConnector) => {
   };
 
   return {
+    async insert(
+      schoolReport: RequiredExceptFor<ISchoolReport, 'id' | 'created_at' | 'updated_at'>,
+      trx: Knex.Transaction
+    ) {
+      const newSchoolReport = await callTrxOrKnexConnection('school_report', dbConnector, trx)
+        .insert(schoolReport)
+        .returning('*');
+
+      return newSchoolReport;
+    },
+
     getOneByStudentId(studentId: string) {
       return dbConnector
         .knexConnection<ISchoolReport>('school_report')

@@ -4,17 +4,17 @@ import type { File } from 'formidable';
 import usefazConnector from '~/database/usefazConnector';
 import { StudentModel } from '~/entities';
 
-type FilesType = {
+type RequestFiles = {
   avatar: File;
 };
 
-export const saveAvatarURL = async (ctx: Context) => {
+export async function saveAvatarURL(ctx: Context) {
   try {
     const studentEntity = StudentModel(usefazConnector);
 
     const student = await studentEntity.getStudentBy({ user_id: ctx.request.user!.id }).select('id');
 
-    const { avatar } = <FilesType>(ctx.request.files as unknown);
+    const { avatar } = <RequestFiles>ctx.request.files;
 
     const avatarURL = `${process.env.BASE_URL}/public/${avatar.newFilename}`;
 
@@ -26,4 +26,4 @@ export const saveAvatarURL = async (ctx: Context) => {
     console.error(err);
     ctx.status = 503;
   }
-};
+}

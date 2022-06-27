@@ -51,12 +51,10 @@ const auth = () => {
       passport.initialize();
       return next();
     },
-    authenticate:
-      ({ requireAuth = false }: authenticateProps = DEFAULT_PARAMS) =>
-      async (ctx: Context, next: Next) => {
+    studentAuthenticator({ requireAuth = false }: authenticateProps = DEFAULT_PARAMS) {
+      return async function (ctx: Context, next: Next) {
         try {
           const payload = await getPayload(ctx);
-
           if (requireAuth && !payload) {
             throw new Error(errorConfig.user.unauthenticated.code);
           } else if (!payload) {
@@ -66,7 +64,6 @@ const auth = () => {
           const authEntity = AuthModel(usefazConnector);
 
           const login = await authEntity.getLoginBy({ id: payload.id });
-
           if (requireAuth && !login?.active) {
             throw new Error(errorConfig.user.unauthenticated.code);
           } else if (!login?.active) {
@@ -78,14 +75,9 @@ const auth = () => {
 
           ctx.request.loginId = login.id;
           ctx.request.user = user ?? null;
-          ctx.request.admin = null;
           ctx.request.student = null;
 
-          if (payload.email) {
-            const adminEntity = AdminModel(usefazConnector);
-            const admin = await adminEntity.getAdminByEmail(payload.email);
-            ctx.request.admin = admin;
-          } else if (payload.RM) {
+          if (payload.RM) {
             const studentEntity = StudentModel(usefazConnector);
             const student = await studentEntity.getStudentByRM(payload.RM);
             ctx.request.student = student;
@@ -98,7 +90,49 @@ const auth = () => {
             message: errorConfig.user.unauthenticated.code,
           };
         }
-      },
+      };
+    },
+    adminAuthenticator({ requireAuth = false }: authenticateProps = DEFAULT_PARAMS) {
+      return async function (ctx: Context, next: Next) {
+        try {
+          const payload = await getPayload(ctx);
+          if (requireAuth && !payload) {
+            throw new Error(errorConfig.user.unauthenticated.code);
+          } else if (!payload) {
+            return next();
+          }
+
+          const authEntity = AuthModel(usefazConnector);
+
+          const login = await authEntity.getLoginBy({ id: payload.id });
+          if (requireAuth && !login?.active) {
+            throw new Error(errorConfig.user.unauthenticated.code);
+          } else if (!login?.active) {
+            return next();
+          }
+
+          const userEntity = UserModel(usefazConnector);
+          const user = await userEntity.getUserById(login.user_id!);
+
+          ctx.request.loginId = login.id;
+          ctx.request.user = user ?? null;
+          ctx.request.admin = null;
+
+          if (payload.email) {
+            const adminEntity = AdminModel(usefazConnector);
+            const admin = await adminEntity.getAdminByEmail(payload.email);
+            ctx.request.admin = admin;
+          }
+
+          return next();
+        } catch {
+          ctx.status = 401;
+          ctx.body = {
+            message: errorConfig.user.unauthenticated.code,
+          };
+        }
+      };
+    },
   };
 };
 

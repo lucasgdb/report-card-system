@@ -28,7 +28,7 @@ const uploadAvatarMiddleware = koaBody({
 router.post(
   '/avatar/upload',
   authMiddleware.initialize,
-  authMiddleware.authenticate({ requireAuth: true }),
+  authMiddleware.studentAuthenticator({ requireAuth: true }),
   uploadAvatarMiddleware,
   saveAvatarURL
 );

@@ -2,7 +2,7 @@ import type { Context } from 'koa';
 
 import usefazConnector from '~/database/usefazConnector';
 
-export const checkHealth = async (ctx: Context) => {
+export async function checkHealth(ctx: Context) {
   const hasConnection = await usefazConnector.checkConnection();
   if (hasConnection) {
     ctx.status = 200;
@@ -13,4 +13,4 @@ export const checkHealth = async (ctx: Context) => {
 
   ctx.status = 503;
   ctx.body = 'DB out of service!';
-};
+}

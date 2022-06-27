@@ -24,6 +24,7 @@
     "@usefaz/shared": "*",
     "bcryptjs": "^2.4.3",
     "core-js": "^3.23.1",
+    "csv-parse": "^5.2.0",
     "dayjs": "^1.11.3",
     "glob": "^8.0.3",
     "graphql": "^16.5.0",

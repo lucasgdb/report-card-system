@@ -37,7 +37,12 @@ const authMiddleware = auth();
 
 const router = new Router();
 
-router.use(authMiddleware.initialize, authMiddleware.authenticate(), addRequestStartedAt);
+router.use(
+  authMiddleware.initialize,
+  authMiddleware.studentAuthenticator(),
+  authMiddleware.adminAuthenticator(),
+  addRequestStartedAt
+);
 
 router.post(
   '/',
