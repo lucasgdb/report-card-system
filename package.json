@@ -20,7 +20,7 @@
     "prepare": "husky install"
   },
   "engines": {
-    "node": ">=16.x"
+    "node": ">=12.x"
   },
   "lint-staged": {
     "*.{ts,tsx,js,jsx}": [
