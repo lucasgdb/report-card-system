@@ -6,7 +6,6 @@ const jwtToken = {
   set(token: string) {
     return cookie.set(process.env.AUTHORIZATION_HEADER!, `Bearer ${token}`, {
       path: '/',
-      domain: process.env.DOMAIN,
     });
   },
 
@@ -17,7 +16,6 @@ const jwtToken = {
   destroy() {
     return cookie.remove(process.env.AUTHORIZATION_HEADER!, {
       path: '/',
-      domain: process.env.DOMAIN,
     });
   },
 };
