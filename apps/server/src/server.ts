@@ -15,13 +15,11 @@ server.use(cors({ allowMethods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'] }));
 
 server.use(mount('/public', koaStatic(path.resolve(__dirname, '../public'))));
 
-server.use(koaBody());
+server.use(avatarRouter.routes()).use(avatarRouter.allowedMethods());
+
+server.use(koaBody({ multipart: true }));
 
 server.use(healthCheckerRouter.routes()).use(healthCheckerRouter.allowedMethods());
-server.use(avatarRouter.routes()).use(avatarRouter.allowedMethods());
-server
-  .use(koaBody({ multipart: true }))
-  .use(adminRouter.routes())
-  .use(adminRouter.allowedMethods());
+server.use(adminRouter.routes()).use(adminRouter.allowedMethods());
 
 export default server;
