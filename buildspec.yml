@@ -1,0 +1,28 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      nodejs: 16
+  pre_build:
+    commands:
+      - yarn --frozen-lockfile --ignore-scripts --non-interactive
+  build:
+    commands:
+      - echo Entered the build phase...
+      - yarn workspace @usefaz/server build
+  post_build:
+    commands:
+      - echo Entered the post_build phase...
+      - cp .ci/docker-compose.yml docker-compose.yml
+      - echo Finished!
+
+artifacts:
+  files:
+    - apps/server/**/*
+    - packages/shared/**/*
+    - docker-compose.yml
+    - tsconfig.base.json
+    - package.json
+    - yarn.lock
+  base-directory: ./

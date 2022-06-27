@@ -1,0 +1,19 @@
+version: '3.9'
+
+services:
+  server:
+    image: node:lts-alpine3.14
+    container_name: server
+    working_dir: /src/apps/server
+    volumes:
+      - .:/src
+    env_file:
+      - .env
+    entrypoint: bash -c "yarn --frozen-lockfile --non-interactive --ignore-scripts && yarn start"
+    ports:
+      - 8080:8080
+    healthcheck:
+      test: 'wget -nv -t1 --spider http://localhost:8080/hc || exit 1'
+      interval: 3s
+      timeout: 3s
+      start_period: 60s

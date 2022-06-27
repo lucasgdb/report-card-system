@@ -8,7 +8,7 @@ module.exports = {
         root: ['.'],
         alias: {
           '~': './src',
-          '@usefaz/shared': '../shared/build',
+          '@usefaz/shared': '../../packages/shared/build',
         },
       },
     ],
