@@ -1,5 +1,9 @@
 import useMediaQuery from '@mui/material/useMediaQuery';
+import { PageLoader } from '@usefaz/components';
 import { createContext, useCallback, useContext, useEffect, useState } from 'react';
+import { graphql, useQuery } from 'relay-hooks';
+
+import { ThemeContextQuery } from './__generated__/ThemeContextQuery.graphql';
 
 type Themes = 'light' | 'dark';
 
@@ -11,6 +15,14 @@ type ThemeContextProps = {
 const ThemeContext = createContext({} as ThemeContextProps);
 
 export const ThemeProvider: React.FC = ({ children }) => {
+  const { data, isLoading } = useQuery<ThemeContextQuery>(graphql`
+    query ThemeContextQuery {
+      student {
+        id
+      }
+    }
+  `);
+
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
 
   const [theme, setTheme] = useState<Themes>(prefersDarkMode ? 'dark' : 'light');
@@ -18,29 +30,17 @@ export const ThemeProvider: React.FC = ({ children }) => {
   const switchTheme = useCallback(() => setTheme((prevTheme) => (prevTheme === 'light' ? 'dark' : 'light')), []);
 
   useEffect(() => {
-    const switchToLight = (event: MediaQueryListEvent) => {
-      if (event.matches) {
-        setTheme('light');
-      }
-    };
+    if (data?.student?.id) {
+      setTheme(prefersDarkMode ? 'dark' : 'light');
+      return;
+    }
 
-    const switchToDark = (event: MediaQueryListEvent) => {
-      if (event.matches) {
-        setTheme('dark');
-      }
-    };
+    setTheme('light');
+  }, [data, prefersDarkMode]);
 
-    const mqlLight = window.matchMedia('(prefers-color-scheme: light)');
-    const mqlDark = window.matchMedia('(prefers-color-scheme: dark)');
-
-    mqlLight.addEventListener('change', switchToLight);
-    mqlDark.addEventListener('change', switchToDark);
-
-    return () => {
-      mqlLight.removeEventListener('change', switchToLight);
-      mqlDark.removeEventListener('change', switchToDark);
-    };
-  }, [switchTheme]);
+  if (isLoading) {
+    return <PageLoader />;
+  }
 
   return <ThemeContext.Provider value={{ theme, switchTheme }}>{children}</ThemeContext.Provider>;
 };

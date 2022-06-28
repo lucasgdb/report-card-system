@@ -1,8 +1,6 @@
 import 'dayjs/locale/pt-br';
 
 import { environment } from '@usefaz/relay';
-import { ThemeProvider } from 'styled-components';
-import MUIThemeProvider from '@mui/material/styles/ThemeProvider';
 import { RelayEnvironmentProvider } from 'relay-hooks';
 import ptBRLocale from 'date-fns/locale/pt-BR';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
@@ -12,8 +10,8 @@ import dayjs from 'dayjs';
 import GlobalStyle from './GlobalStyle';
 import CustomSnackbarProvider from './components/CustomSnackbarProvider';
 import OfflineIndicator from './components/OfflineIndicator';
-import { useThemeContext } from './contexts/ThemeContext';
-import { darkTheme, lightTheme } from './utils/theme';
+import ThemeProvider from './components/ThemeProvider';
+import { ThemeProvider as ThemeProviderContext } from './contexts/ThemeContext';
 
 dayjs.locale('pt-br');
 
@@ -22,12 +20,10 @@ type ProvidersProps = {
 };
 
 export default function Providers({ children }: ProvidersProps) {
-  const { theme } = useThemeContext();
-
   return (
     <RelayEnvironmentProvider environment={environment}>
-      <MUIThemeProvider theme={theme === 'light' ? lightTheme : darkTheme}>
-        <ThemeProvider theme={theme === 'light' ? lightTheme : darkTheme}>
+      <ThemeProviderContext>
+        <ThemeProvider>
           <LocalizationProvider dateAdapter={AdapterDateFns} locale={ptBRLocale}>
             <CustomSnackbarProvider anchorOrigin={{ vertical: 'top', horizontal: 'right' }}>
               <GlobalStyle />
@@ -36,7 +32,7 @@ export default function Providers({ children }: ProvidersProps) {
             </CustomSnackbarProvider>
           </LocalizationProvider>
         </ThemeProvider>
-      </MUIThemeProvider>
+      </ThemeProviderContext>
     </RelayEnvironmentProvider>
   );
 }
