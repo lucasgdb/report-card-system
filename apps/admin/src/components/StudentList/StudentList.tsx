@@ -35,7 +35,7 @@ export default function StudentList({ admin }: StudentListProps) {
     admin
   );
 
-  const isDesktop = useMediaQuery('(min-width: 1200px)');
+  const isTablet = useMediaQuery('(min-width: 768px)');
 
   const columns: GridColDef[] = [
     { field: 'RM', headerName: 'RM', width: 100 },
@@ -49,7 +49,7 @@ export default function StudentList({ admin }: StudentListProps) {
       editable: false,
       hideable: false,
       flex: 1,
-      hide: !isDesktop,
+      hide: !isTablet,
     },
     {
       field: 'actions',

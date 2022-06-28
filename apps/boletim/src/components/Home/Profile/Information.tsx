@@ -56,6 +56,12 @@ const StatusText = styled.p`
   text-transform: uppercase;
 `;
 
+const Year = styled.p`
+  font: normal normal normal 16px/19px Lexend;
+  color: #e6e8eb;
+  margin: 0;
+`;
+
 type InformationProps = {
   student: Information_student$key;
 };
@@ -66,6 +72,19 @@ export default function Information({ student }: InformationProps) {
       fragment Information_student on Student {
         RM
         fullname
+
+        schoolReport {
+          year
+
+          schoolReportRows {
+            count
+            edges {
+              node {
+                id
+              }
+            }
+          }
+        }
       }
     `,
     student
@@ -76,9 +95,13 @@ export default function Information({ student }: InformationProps) {
       <RMText>RM: {data.RM}</RMText>
       <FullnameText>NOME: {data.fullname}</FullnameText>
 
-      <Status>
-        <StatusText>APROVADO</StatusText>
-      </Status>
+      {data.schoolReport?.year && <Year>Ano: {data.schoolReport.year}</Year>}
+
+      {data.schoolReport?.schoolReportRows?.count > 0 && (
+        <Status>
+          <StatusText>APROVADO</StatusText>
+        </Status>
+      )}
     </OuterProfileInformation>
   );
 }

@@ -27,7 +27,7 @@ export default function UploadButton({ admin }: UploadButtonProps) {
   return (
     <>
       <SimpleButton variant="contained" color="primary" onClick={handleOpenUploadDialog}>
-        Upload
+        Carregar notas
       </SimpleButton>
 
       <UploadDialog open={isUploadDialogOpen} onClose={handleCloseUploadDialog} admin={data} />

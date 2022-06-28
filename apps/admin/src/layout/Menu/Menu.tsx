@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import HomeIcon from '@mui/icons-material/Home';
 import LockResetIcon from '@mui/icons-material/LockReset';
 import SchoolIcon from '@mui/icons-material/School';
 
@@ -90,18 +89,12 @@ const MenuItemList = styled.div`
 const menuItens: Item[] = [
   {
     id: 1,
-    name: 'Página Inicial',
-    link: '/',
-    Icon: <HomeIcon />,
-  },
-  {
-    id: 2,
     name: 'Alunos',
-    link: '/alunos',
+    link: '/',
     Icon: <SchoolIcon />,
   },
   {
-    id: 3,
+    id: 2,
     name: 'Solicitações de Recuperação de Senha',
     link: '/solicitacoes-de-recuperacao-de-senha',
     Icon: <LockResetIcon />,

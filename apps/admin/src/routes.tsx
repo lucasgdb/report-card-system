@@ -6,7 +6,6 @@ import SuspenseRouter from './components/SuspenseRouter';
 
 const EnvironmentLayout = React.lazy(() => import('~/layout/EnvironmentLayout'));
 const ErrorPage = React.lazy(() => import('~/pages/Error/ErrorPage'));
-const HomePage = React.lazy(() => import('~/pages/Home/HomePage'));
 const ForgotPasswordPage = React.lazy(() => import('~/pages/ForgotPassword/ForgotPasswordPage'));
 const RequestSentPage = React.lazy(() => import('~/pages/ForgotPassword/RequestSentPage'));
 const RecoverPasswordPage = React.lazy(() => import('~/pages/RecoverPassword/RecoverPasswordPage'));
@@ -22,9 +21,7 @@ export default function AppRoutes() {
       <Routes>
         <Route path="/" element={<EnvironmentLayout />}>
           <Route element={<NavbarLayout />}>
-            <Route index element={<HomePage />} />
-
-            <Route path="/alunos" element={<StudentListPage />} />
+            <Route index element={<StudentListPage />} />
 
             <Route path="/solicitacoes-de-recuperacao-de-senha" element={<StudentPasswordRecoveryRequestListPage />} />
           </Route>

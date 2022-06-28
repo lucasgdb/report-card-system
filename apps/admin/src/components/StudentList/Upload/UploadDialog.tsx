@@ -109,7 +109,7 @@ export default function UploadDialog({ open, onClose, admin }: UploadDialogProps
     <OuterUploadDialog open={open} onClose={onClose} TransitionProps={{ onExit: () => setFilename('') }} fullWidth>
       <form onSubmit={handleSubmit}>
         <DialogHeader>
-          <DialogTitle>Upload de notas</DialogTitle>
+          <DialogTitle>Carregar notas</DialogTitle>
           <CloseButton onClose={onClose} />
         </DialogHeader>
 
