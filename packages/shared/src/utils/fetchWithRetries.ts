@@ -10,7 +10,7 @@ export type fetchWithRetriesConfig = {
 };
 
 const DEFAULT_RETRIES_CONFIG = {
-  fetchTimeout: 15000,
+  fetchTimeout: 180000,
   retries: 3,
 };
 
