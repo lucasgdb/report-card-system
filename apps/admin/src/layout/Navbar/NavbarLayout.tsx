@@ -2,11 +2,11 @@ import styled from 'styled-components';
 import { Outlet } from 'react-router';
 import { useState, Suspense } from 'react';
 import { graphql, useQuery } from 'relay-hooks';
+import { PageLoader } from '@usefaz/components';
 
 import { NavbarLayoutQuery } from './__generated__/NavbarLayoutQuery.graphql';
 import Navbar from './Navbar';
 import MenuLayout from '../Menu/MenuLayout';
-import PageLoader from '~/components/PageLoader';
 
 const OuterNavbarLayout = styled.div`
   display: flex;
