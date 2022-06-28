@@ -24,10 +24,19 @@ const OuterUploadDialog = styled(SimpleDialog)`
   }
 `;
 
+const StyledDialogContent = styled(DialogContent)`
+  && {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+`;
+
 const Description = styled.p`
   font: normal normal normal 16px/19px Lexend;
-  color: #333;
-  margin-bottom: 0;
+  color: #666;
+  margin: 0;
 `;
 
 type UploadDialogProps = {
@@ -99,28 +108,33 @@ export default function UploadDialog({ open, onClose, admin }: UploadDialogProps
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newFile = event.target.files.item(0);
-
     if (newFile) {
       setFilename(newFile.name);
     }
   };
 
   return (
-    <OuterUploadDialog open={open} onClose={onClose} TransitionProps={{ onExit: () => setFilename('') }} fullWidth>
+    <OuterUploadDialog open={open} onClose={onClose} TransitionProps={{ onExited: () => setFilename('') }} fullWidth>
       <form onSubmit={handleSubmit}>
         <DialogHeader>
           <DialogTitle>Carregar notas</DialogTitle>
           <CloseButton onClose={onClose} />
         </DialogHeader>
 
-        <DialogContent>
+        <StyledDialogContent>
+          <Description>Clique abaixo para selecionar o arquivo contendo as notas.</Description>
+
           <Button variant="contained" component="label" htmlFor="csv">
             Selecionar arquivo
             <input type="file" id="csv" name="csv" accept=".csv" hidden onChange={handleInputChange} />
           </Button>
 
-          {filename && <Description>{filename} selecionado.</Description>}
-        </DialogContent>
+          {filename && (
+            <Description>
+              <b>{filename}</b> selecionado.
+            </Description>
+          )}
+        </StyledDialogContent>
 
         <DialogActions>
           <SimpleButton color="secondary" onClick={onClose}>
@@ -128,7 +142,7 @@ export default function UploadDialog({ open, onClose, admin }: UploadDialogProps
           </SimpleButton>
 
           <SimpleButton color="secondary" variant="contained" type="submit" disabled={!filename || loading}>
-            Upload
+            Enviar
           </SimpleButton>
         </DialogActions>
       </form>
