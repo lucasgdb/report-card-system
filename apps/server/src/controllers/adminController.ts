@@ -159,7 +159,9 @@ export async function uploadStudents(ctx: Context) {
 
     ctx.body = {
       students: {
-        edges: students.map((student) => ({ node: { ...student, id: toGlobalId('student', student.id) } })),
+        edges: students.map((student) => ({
+          node: { RM: student.RM, fullname: student.fullname, id: toGlobalId('student', student.id) },
+        })),
       },
     };
     ctx.status = 200;

@@ -9,7 +9,7 @@ import UserModel from '../User/UserModel';
 const StudentModel = (dbConnector: DBConnector) => {
   return {
     getAll() {
-      return dbConnector.knexConnection('student').select('*');
+      return dbConnector.knexConnection<IStudent>('student').select('*');
     },
 
     async insert(

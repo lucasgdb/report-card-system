@@ -73,16 +73,18 @@ export default function UploadDialog({ open, onClose, admin }: UploadDialogProps
 
         const students = ConnectionHandler.getConnection(admin, 'StudentList_students');
 
-        const edges = response.data.students.edges.map(({ node: student }, index) => {
-          const newLinkedRecord = students.getOrCreateLinkedRecord(`edges:${index}`, 'StudentEdge');
-          newLinkedRecord.setValue(student.id, 'id');
-          newLinkedRecord.setValue(student.RM, 'RM');
-          newLinkedRecord.setValue(student.fullname, 'fullname');
+        for (const { node: student } of response.data.students.edges) {
+          const linkedRecord = store.get(student.id);
+          if (!linkedRecord) {
+            const newLinkedRecord = store.create(student.id, 'Student');
+            newLinkedRecord.setValue(student.id, 'id');
+            newLinkedRecord.setValue(student.RM, 'RM');
+            newLinkedRecord.setValue(student.fullname, 'fullname');
+            const newEdge = ConnectionHandler.createEdge(store, students, newLinkedRecord, 'StudentEdge');
 
-          return newLinkedRecord;
-        });
-
-        students.setLinkedRecords(edges, 'edges');
+            ConnectionHandler.insertEdgeAfter(students, newEdge);
+          }
+        }
       });
 
       enqueueSnackbar('Upload feito com sucesso.', { variant: 'success' });
