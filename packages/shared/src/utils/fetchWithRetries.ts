@@ -48,11 +48,11 @@ export default async function fetchWithRetries(
 
     return response;
   } catch (err: any) {
-    if (err.response.status === 401) {
+    if (err.response?.status === 401) {
       window.location.reload();
     }
 
-    if (err.response.status >= 500) {
+    if (err.response?.status >= 500) {
       const error = new ApplicationError();
       error.response = err.response;
 

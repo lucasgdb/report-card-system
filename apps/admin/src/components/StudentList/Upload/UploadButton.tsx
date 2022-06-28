@@ -1,8 +1,24 @@
 import { SimpleButton } from '@usefaz/components';
 import { useState } from 'react';
-import UploadDialog from './UploadDialog';
+import { graphql, useFragment } from 'react-relay';
 
-export default function UploadButton() {
+import UploadDialog from './UploadDialog';
+import { UploadButton_admin$key } from './__generated__/UploadButton_admin.graphql';
+
+type UploadButtonProps = {
+  admin: UploadButton_admin$key;
+};
+
+export default function UploadButton({ admin }: UploadButtonProps) {
+  const data = useFragment<UploadButton_admin$key>(
+    graphql`
+      fragment UploadButton_admin on Admin {
+        ...UploadDialog_admin
+      }
+    `,
+    admin
+  );
+
   const [isUploadDialogOpen, setIsUploadDialogOpen] = useState(false);
 
   const handleOpenUploadDialog = () => setIsUploadDialogOpen(true);
@@ -14,7 +30,7 @@ export default function UploadButton() {
         Upload
       </SimpleButton>
 
-      <UploadDialog open={isUploadDialogOpen} onClose={handleCloseUploadDialog} />
+      <UploadDialog open={isUploadDialogOpen} onClose={handleCloseUploadDialog} admin={data} />
     </>
   );
 }

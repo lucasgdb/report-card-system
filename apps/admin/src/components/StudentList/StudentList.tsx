@@ -19,6 +19,8 @@ export default function StudentList({ admin }: StudentListProps) {
   const data = useFragment<StudentList_admin$key>(
     graphql`
       fragment StudentList_admin on Admin {
+        ...MoreButton_admin
+
         students(first: 100) @connection(key: "StudentList_students") {
           edges {
             node {
@@ -60,7 +62,7 @@ export default function StudentList({ admin }: StudentListProps) {
       hideable: false,
       disableColumnMenu: true,
       renderCell(params) {
-        return <MoreButton params={params} />;
+        return <MoreButton params={params} admin={data} />;
       },
     },
   ];

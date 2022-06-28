@@ -11,7 +11,7 @@ const StudentPasswordRecoveryRequestModel = (dbConnector: DBConnector) => {
   return {
     async createRequest(
       request: RequiredExceptFor<IStudentPasswordRecoveryRequest, 'id' | 'status' | 'created_at' | 'updated_at'>,
-      trx: Knex.Transaction
+      trx?: Knex.Transaction
     ) {
       const [newRequest] = await callTrxOrKnexConnection<IStudentPasswordRecoveryRequest>(
         'student_password_recovery_request',

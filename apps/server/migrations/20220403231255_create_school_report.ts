@@ -12,7 +12,7 @@ export const up = async (knex: Knex) => {
     table.tinyint('year').notNullable();
 
     table.integer('student_id').unsigned().notNullable();
-    table.foreign('student_id').references('student.id');
+    table.foreign('student_id').references('student.id').onDelete('CASCADE');
 
     table.timestamps(true, true);
   });

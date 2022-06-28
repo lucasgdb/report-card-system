@@ -10,10 +10,12 @@ export const up = async (knex: Knex) => {
     table.increments('id').unsigned().primary();
 
     table.integer('school_report_id').unsigned().notNullable();
-    table.foreign('school_report_id').references('school_report.id');
+    table.foreign('school_report_id').references('school_report.id').onDelete('CASCADE');
 
     table.integer('discipline_id').unsigned().notNullable();
     table.foreign('discipline_id').references('discipline.id');
+
+    table.unique(['school_report_id', 'discipline_id']);
 
     table.timestamps(true, true);
   });

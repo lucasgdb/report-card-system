@@ -10,15 +10,17 @@ export const up = async (knex: Knex) => {
     table.increments('id').unsigned().primary();
 
     table.integer('school_report_discipline_id').unsigned().notNullable();
-    table.foreign('school_report_discipline_id').references('school_report_discipline.id');
+    table.foreign('school_report_discipline_id').references('school_report_discipline.id').onDelete('CASCADE');
 
     table.enum('identifier', [1, 2, 3, 4]).notNullable();
 
-    table.tinyint('grade').notNullable();
+    table.decimal('grade', 3, 1).notNullable();
 
-    table.tinyint('rec_grade').nullable();
+    table.decimal('rec_grade', 3, 1).nullable();
 
     table.tinyint('absences').notNullable().defaultTo(0);
+
+    table.unique(['school_report_discipline_id', 'identifier']);
 
     table.timestamps(true, true);
   });

@@ -1,13 +1,3 @@
-export interface IBimester {
-  id: string;
-  identifier: number;
-  grade: number;
-  rec_grade?: number | null;
-  absences: number;
-  created_at: string;
-  updated_at: string;
-}
-
 interface ISchoolReport {
   id: string;
   year: number;
@@ -25,16 +15,19 @@ export interface IDiscipline {
 
 export interface ISchoolReportDiscipline {
   id: string;
-  boletim_id: ISchoolReport['id'];
+  school_report_id: ISchoolReport['id'];
   discipline_id: IDiscipline['id'];
   created_at: string;
   updated_at: string;
 }
 
-export interface ISchoolReportDisciplineBimester {
+export interface IBimester {
   id: string;
-  boletim_discipline_id: ISchoolReportDiscipline['id'];
-  bimester_id: IBimester['id'];
+  school_report_discipline_id: ISchoolReportDiscipline['id'];
+  identifier: number;
+  grade: number;
+  rec_grade?: number | null;
+  absences: number;
   created_at: string;
   updated_at: string;
 }

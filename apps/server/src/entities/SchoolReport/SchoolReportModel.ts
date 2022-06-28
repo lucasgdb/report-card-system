@@ -2,7 +2,7 @@ import { RequiredExceptFor } from '@usefaz/shared';
 import type { Knex } from 'knex';
 
 import type { DBConnector } from '~/database/dbConnector';
-import type { ISchoolReport } from '~/interfaces';
+import { IBimester, ISchoolReport, ISchoolReportDiscipline } from '~/interfaces';
 import callTrxOrKnexConnection from '~/utils/callTrxOrKnexConnection';
 
 type SchoolReportBimester = {
@@ -92,7 +92,7 @@ const SchoolReportModel = (dbConnector: DBConnector) => {
   return {
     async insert(
       schoolReport: RequiredExceptFor<ISchoolReport, 'id' | 'created_at' | 'updated_at'>,
-      trx: Knex.Transaction
+      trx?: Knex.Transaction
     ) {
       const newSchoolReport = await callTrxOrKnexConnection('school_report', dbConnector, trx)
         .insert(schoolReport)
@@ -126,6 +126,51 @@ const SchoolReportModel = (dbConnector: DBConnector) => {
         .where('school_report.id', id);
 
       return filterSchoolReportBimesters(schoolReportBimesters);
+    },
+
+    async getOrInsertSchoolReport({ year, studentId }: { year: number; studentId: string }, trx?: Knex.Transaction) {
+      const oldSchoolReport = await callTrxOrKnexConnection<ISchoolReport>('school_report', dbConnector, trx)
+        .where('year', year)
+        .where('student_id', studentId)
+        .first();
+
+      if (oldSchoolReport) {
+        return oldSchoolReport;
+      }
+
+      const [newSchoolReport] = await callTrxOrKnexConnection<ISchoolReport>('school_report', dbConnector, trx)
+        .insert({ year, student_id: studentId })
+        .returning('*');
+
+      return newSchoolReport;
+    },
+
+    async upsertStudentSchoolReportDiscipline(
+      schoolReportDiscipline: RequiredExceptFor<ISchoolReportDiscipline, 'id' | 'created_at' | 'updated_at'>,
+      trx?: Knex.Transaction
+    ) {
+      const [newSchoolReportDiscipline] = await callTrxOrKnexConnection<ISchoolReportDiscipline>(
+        'school_report_discipline',
+        dbConnector,
+        trx
+      )
+        .insert(schoolReportDiscipline)
+        .onConflict(['school_report_id', 'discipline_id'])
+        .merge()
+        .returning('*');
+
+      return newSchoolReportDiscipline;
+    },
+
+    upsertStudentSchoolReportDisciplineBimester(
+      schoolReportDisciplineBimesters: RequiredExceptFor<IBimester, 'id' | 'created_at' | 'updated_at'>[],
+      trx?: Knex.Transaction
+    ) {
+      return callTrxOrKnexConnection<ISchoolReportDiscipline>('bimester', dbConnector, trx)
+        .insert(schoolReportDisciplineBimesters)
+        .onConflict(['school_report_discipline_id', 'identifier'])
+        .merge()
+        .returning('*');
     },
   };
 };

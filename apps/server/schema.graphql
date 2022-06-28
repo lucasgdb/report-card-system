@@ -242,9 +242,9 @@ type Mutation {
   adminLogin(input: AdminLoginMutationInput!): AdminLoginMutationPayload
   changeStudentInformation(input: ChangeStudentInformationMutationInput!): ChangeStudentInformationMutationPayload
   changeStudentPassword(input: ChangeStudentPasswordMutationInput!): ChangeStudentPasswordMutationPayload
-  createStudent(input: CreateStudentMutationInput!): CreateStudentMutationPayload
   recoverAdminPassword(input: RecoverAdminPasswordMutationInput!): RecoverAdminPasswordMutationPayload
   refuseStudentPasswordRecoveryRequest(input: RefuseStudentPasswordRecoveryRequestMutationInput!): RefuseStudentPasswordRecoveryRequestMutationPayload
+  removeStudent(input: RemoveStudentMutationInput!): RemoveStudentMutationPayload
   sendAdminRecoveryEmail(input: SendAdminRecoveryEmailMutationInput!): SendAdminRecoveryEmailMutationPayload
 
   """The logOut mutation can be used to log out an existing user."""
@@ -292,18 +292,6 @@ input ChangeStudentPasswordMutationInput {
   clientMutationId: String
 }
 
-type CreateStudentMutationPayload {
-  jwtToken: String
-  clientMutationId: String
-}
-
-input CreateStudentMutationInput {
-  RM: String!
-  fullname: String!
-  password: String!
-  clientMutationId: String
-}
-
 type RecoverAdminPasswordMutationPayload {
   adminPasswordRecoveryRequest: AdminPasswordRecoveryRequest
   clientMutationId: String
@@ -335,6 +323,16 @@ type RefuseStudentPasswordRecoveryRequestMutationPayload {
 
 input RefuseStudentPasswordRecoveryRequestMutationInput {
   studentPasswordRecoveryRequestId: ID!
+  clientMutationId: String
+}
+
+type RemoveStudentMutationPayload {
+  student: Student
+  clientMutationId: String
+}
+
+input RemoveStudentMutationInput {
+  studentId: ID!
   clientMutationId: String
 }
 

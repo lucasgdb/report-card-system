@@ -33,6 +33,7 @@ export default function StudentListPage() {
   const { data, isLoading } = useQuery<StudentListPageQuery>(graphql`
     query StudentListPageQuery {
       admin {
+        ...UploadButton_admin
         ...StudentList_admin
       }
     }
@@ -50,7 +51,7 @@ export default function StudentListPage() {
     <OuterStudentListPage>
       <Header>
         <Title>Alunos</Title>
-        <UploadButton />
+        <UploadButton admin={data.admin} />
       </Header>
 
       <StudentList admin={data.admin} />

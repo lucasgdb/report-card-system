@@ -2,7 +2,7 @@ import type { RequiredExceptFor, RequireAtLeastOne } from '@usefaz/shared';
 import type { Knex } from 'knex';
 
 import type { DBConnector } from '~/database/dbConnector';
-import type { IStudent } from '~/interfaces';
+import { IStudent, IUser } from '~/interfaces';
 import callTrxOrKnexConnection from '~/utils/callTrxOrKnexConnection';
 import UserModel from '../User/UserModel';
 
@@ -34,12 +34,43 @@ const StudentModel = (dbConnector: DBConnector) => {
       });
     },
 
+    async removeStudent(studentId: string) {
+      const [removedStudent] = await dbConnector
+        .knexConnection<IStudent>('student')
+        .where('id', studentId)
+        .delete()
+        .returning('*');
+
+      return removedStudent;
+    },
+
     getStudentBy(student: RequireAtLeastOne<IStudent>) {
       return dbConnector.knexConnection<IStudent>('student').where(student).first();
     },
 
     getStudentByRM(RM: string) {
       return dbConnector.knexConnection<IStudent>('student').where('RM', RM).first();
+    },
+
+    async getStudentByRMOrInsertOne(
+      student: RequiredExceptFor<IStudent, 'id' | 'user_id' | 'avatar_url' | 'created_at' | 'updated_at'>,
+      trx?: Knex.Transaction
+    ) {
+      const oldStudent = await callTrxOrKnexConnection<IStudent>('student', dbConnector, trx)
+        .where('RM', student.RM)
+        .first();
+
+      if (oldStudent) {
+        return oldStudent;
+      }
+
+      const [newUser] = await callTrxOrKnexConnection<IUser>('user', dbConnector, trx).insert({}).returning('id');
+
+      const [newStudent] = await callTrxOrKnexConnection<IStudent>('student', dbConnector, trx)
+        .insert({ ...student, user_id: newUser.id })
+        .returning('*');
+
+      return newStudent;
     },
 
     insertAvatarURL(id: string, avatarURL: string) {

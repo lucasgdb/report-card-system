@@ -9,7 +9,7 @@ const NotificationModel = (dbConnector: DBConnector) => {
   return {
     async createNotification(
       notification: RequiredExceptFor<INotification, 'id' | 'viewed' | 'created_at' | 'updated_at'>,
-      trx: Knex.Transaction
+      trx?: Knex.Transaction
     ) {
       const [newNotification] = await callTrxOrKnexConnection<INotification>('notification', usefazConnector, trx)
         .insert(notification)
