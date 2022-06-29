@@ -1,6 +1,6 @@
 # Boletim Usefaz
 
-## Recomendações
+## Requisitos
 
 - Docker
 - Node >= 16.x
