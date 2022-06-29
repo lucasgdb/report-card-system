@@ -150,6 +150,10 @@ export default function SchoolReportTable({ schoolReport }: SchoolReportTablePro
           secondBimesterGrade,
           thirdBimesterGrade,
           fourthBimesterGrade,
+          firstBimesterRecGrade,
+          secondBimesterRecGrade,
+          thirdBimesterRecGrade,
+          fourthBimesterRecGrade,
           firstBimesterAbsences,
           secondBimesterAbsences,
           thirdBimesterAbsences,
@@ -157,20 +161,24 @@ export default function SchoolReportTable({ schoolReport }: SchoolReportTablePro
         } = schoolReportRow;
 
         const finalAverage: number =
-          (firstBimesterGrade + secondBimesterGrade + thirdBimesterGrade + fourthBimesterGrade) / 4;
+          ((firstBimesterRecGrade || firstBimesterGrade) +
+            (secondBimesterRecGrade || secondBimesterGrade) +
+            (thirdBimesterRecGrade || thirdBimesterGrade) +
+            (fourthBimesterRecGrade || fourthBimesterGrade)) /
+          4;
 
         const totalAbsences: number =
           firstBimesterAbsences + secondBimesterAbsences + thirdBimesterAbsences + fourthBimesterAbsences;
 
         return {
           subject: <Subject icon={ICONS_SUBJECT[disciplineName]} name={disciplineName} />,
-          firstBimester: <Grades grade={firstBimesterGrade} />,
+          firstBimester: <Grades grade={firstBimesterGrade} rec={firstBimesterRecGrade} />,
           firstBimesterAbsences,
-          secondBimester: <Grades grade={secondBimesterGrade} />,
+          secondBimester: <Grades grade={secondBimesterGrade} rec={secondBimesterRecGrade} />,
           secondBimesterAbsences,
-          thirdBimester: <Grades grade={thirdBimesterGrade} />,
+          thirdBimester: <Grades grade={thirdBimesterGrade} rec={thirdBimesterRecGrade} />,
           thirdBimesterAbsences,
-          fourthBimester: <Grades grade={fourthBimesterGrade} />,
+          fourthBimester: <Grades grade={fourthBimesterGrade} rec={fourthBimesterRecGrade} />,
           fourthBimesterAbsences,
           finalAverage: <FinalAverageBadge number={finalAverage} />,
           totalAbsences: <TotalAbsencesBadge number={totalAbsences} />,
