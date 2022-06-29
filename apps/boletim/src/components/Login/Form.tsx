@@ -1,9 +1,8 @@
 import { errorConfig, getError, jwtToken, __DEV__ } from '@usefaz/shared';
 import { Notification, PasswordInput } from '@usefaz/components';
 import styled from 'styled-components';
-
+import { useState } from 'react';
 import Button from '@mui/material/Button';
-
 import { useMutation } from 'relay-hooks';
 import { Link } from 'react-router-dom';
 import { useGoogleReCaptcha } from 'react-google-recaptcha-v3';
@@ -56,6 +55,8 @@ export default function Form() {
 
   const { enqueueSnackbar } = Notification.useSnackbar();
 
+  const [loadingRecaptcha, setLoadingRecaptcha] = useState(false);
+
   const [loginMutation, { loading }] = useMutation<StudentLoginMutationType>(StudentLoginMutation, {
     onError(errors) {
       const { notFound } = errorConfig.student;
@@ -70,42 +71,51 @@ export default function Form() {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    const formData = new FormData(event.currentTarget);
+    try {
+      const formData = new FormData(event.currentTarget);
 
-    const RM = formData.get('RM').toString();
-    if (!RM) {
-      enqueueSnackbar('RM obrigatório.', { variant: 'error' });
-      return;
-    }
+      const RM = formData.get('RM').toString();
+      if (!RM) {
+        enqueueSnackbar('RM obrigatório.', { variant: 'error' });
+        return;
+      }
 
-    const password = formData.get('password').toString();
-    if (!password) {
-      enqueueSnackbar('Senha obrigatória.', { variant: 'error' });
-      return;
-    }
+      const password = formData.get('password').toString();
+      if (!password) {
+        enqueueSnackbar('Senha obrigatória.', { variant: 'error' });
+        return;
+      }
 
-    const rememberMe = Boolean(formData.get('rememberMe')?.toString());
+      const rememberMe = Boolean(formData.get('rememberMe')?.toString());
 
-    const token = __DEV__ ? '' : await executeRecaptcha('login');
+      setLoadingRecaptcha(true);
 
-    loginMutation({
-      variables: {
-        input: { RM, password, token },
-      },
-      onCompleted: ({ studentLogin }) => {
-        if (studentLogin.jwtToken) {
-          if (rememberMe) {
-            localStorage.setItem('Usefaz-RM', RM);
-          } else {
-            localStorage.removeItem('Usefaz-RM');
+      const token = __DEV__ ? '' : await executeRecaptcha('login');
+
+      loginMutation({
+        variables: {
+          input: { RM, password, token },
+        },
+        onCompleted: ({ studentLogin }) => {
+          if (studentLogin.jwtToken) {
+            if (rememberMe) {
+              localStorage.setItem('Usefaz-RM', RM);
+            } else {
+              localStorage.removeItem('Usefaz-RM');
+            }
+
+            jwtToken.set(studentLogin.jwtToken);
+
+            window.location.reload();
           }
-
-          jwtToken.set(studentLogin.jwtToken);
-
-          window.location.reload();
-        }
-      },
-    });
+        },
+        onError() {
+          setLoadingRecaptcha(false);
+        },
+      });
+    } catch {
+      setLoadingRecaptcha(false);
+    }
   };
 
   return (
@@ -121,7 +131,7 @@ export default function Form() {
           <Hyperlink to="/esqueci-minha-senha">Esqueci minha senha</Hyperlink>
         </OptionsWrapper>
 
-        <LoginButton variant="contained" color="primary" type="submit" disabled={loading} fullWidth>
+        <LoginButton variant="contained" color="primary" type="submit" disabled={loading || loadingRecaptcha} fullWidth>
           Entrar
         </LoginButton>
       </form>
