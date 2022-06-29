@@ -1,29 +1,24 @@
-# Monorepo - Relay and GraphQL
+# Boletim Usefaz
 
-## Recommendations
+## Recomendações
 
 - Docker
 - Node >= 16.x
 - Yarn
 
-## Getting started
+## Iniciando
 
-### Development mode with Docker
+### Desenvolvimento (com Docker)
 
-- `yarn`: Installs workspace dependencies
-- Don't forget to copy/paste the `.env.example` files to `.env`
-- `yarn start`: Starts the project using Docker
-- Open the web app at `http://localhost:8080`
-- Type `yarn stop` to stop the project
-
-### Development mode without Docker
-
-- `yarn`: Installs workspace dependencies
-- Don't forget to copy/paste the `.env.example` files to `.env`
-- `yarn start:server`: Starts the server
-  - An active postgres database is required
-  - Alternatively, you can type `yarn start database` to start it using Docker
-- `yarn start:web`: Starts the web
+- `yarn`: Instala as dependências do projeto
+- Copie o arquivo `.env.example` do `apps/server` para `.env`
+- `yarn start`: Inicia os containers do projeto
+- `yarn seed`: Alimenta o banco com dados de teste
+  - Executar dentro do container do servidor
+  - `docker container exec -it server sh` ou `docker container exec -it server bash`
+- Abra o Sistema de Boletim em `http://localhost:8080`
+- Abra o Sistema do Administrador em `http://localhost:8081`
+- `yarn stop`: Desliga o projeto.
 
 ## Author
 
