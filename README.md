@@ -20,6 +20,31 @@
 - Abra o Sistema do Administrador em `http://localhost:8081`
 - `yarn stop`: Desliga o projeto.
 
+## Telas do Sistema de Boletim
+
+![](./assets/student_screens/1.png)
+![](./assets/student_screens/2.png)
+![](./assets/student_screens/3.png)
+![](./assets/student_screens/4.png)
+![](./assets/student_screens/5.png)
+![](./assets/student_screens/6.png)
+![](./assets/student_screens/7.png)
+![](./assets/student_screens/8.png)
+
+## Telas do Sistema do Administrador
+
+![](./assets/admin_screens/1.png)
+![](./assets/admin_screens/2.png)
+![](./assets/admin_screens/3.png)
+![](./assets/admin_screens/4.png)
+![](./assets/admin_screens/5.png)
+![](./assets/admin_screens/6.png)
+![](./assets/admin_screens/7.png)
+![](./assets/admin_screens/8.png)
+![](./assets/admin_screens/9.png)
+![](./assets/admin_screens/10.png)
+![](./assets/admin_screens/11.png)
+
 ## Autor
 
 | [<img src="https://avatars3.githubusercontent.com/u/13838273?v=3&s=115"><br><sub>@lucasgdb</sub>](https://github.com/lucasgdb) |
