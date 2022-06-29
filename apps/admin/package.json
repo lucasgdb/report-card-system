@@ -1,6 +1,6 @@
 {
   "name": "@usefaz/admin",
-  "description": "Boletim Usefaz",
+  "description": "Sistema do Administrador do Boletim Usefaz",
   "private": true,
   "version": "1.0.0",
   "license": "ISC",

@@ -1,9 +1,9 @@
 {
   "name": "usefaz",
-  "description": "Sistema de Boletim e Site Institucional da Usefaz Guaratinguetá.",
+  "description": "Sistema de Boletim do P.I. da Fatec Guaratinguetá",
   "private": true,
   "version": "1.0.0",
-  "license": "UNLICENSED",
+  "license": "ISC",
   "scripts": {
     "delete:node_modules": "find . -name \"node_modules\" -exec rm -rf '{}' +",
     "delete:build": "find . -name \"build\" -exec rm -rf '{}' +",

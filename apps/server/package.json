@@ -1,6 +1,6 @@
 {
   "name": "@usefaz/server",
-  "description": "GraphQL Server template",
+  "description": "API GraphQL do Sistema de Boletim e Administrador Usefaz",
   "private": true,
   "version": "1.0.0",
   "license": "ISC",
