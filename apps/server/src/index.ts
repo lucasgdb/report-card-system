@@ -23,6 +23,6 @@ const app = new Koa();
 app.use(koaCompress());
 
 app.use(mount('/', server));
-app.use(mount('/graphql', graphQLServer));
+app.use(mount('/', graphQLServer));
 
 app.listen(PORT).on('listening', () => console.info(`Server is now running on ${BASE_URL}`));

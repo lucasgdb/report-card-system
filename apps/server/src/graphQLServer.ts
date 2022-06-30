@@ -45,7 +45,7 @@ router.use(
 );
 
 router.post(
-  '/',
+  '/graphql',
   graphqlHTTP((request) => {
     return {
       schema,
