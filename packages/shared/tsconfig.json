@@ -8,7 +8,7 @@
     "resolveJsonModule": true,
     "strict": true
   },
-  "extends": "../../tsconfig.base.json",
+  "extends": "../../tsconfig.json",
   "include": ["src"],
   "exclude": ["**/__tests__"]
 }

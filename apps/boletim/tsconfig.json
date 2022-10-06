@@ -11,7 +11,7 @@
       "~/*": ["src/*"]
     }
   },
-  "extends": "../../tsconfig.base.json",
+  "extends": "../../tsconfig.json",
   "include": ["src", "@types"],
   "exclude": ["node_modules/**/*"]
 }
