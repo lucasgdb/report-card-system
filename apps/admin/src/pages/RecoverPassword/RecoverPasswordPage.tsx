@@ -6,7 +6,7 @@ import { graphql, useQuery } from 'relay-hooks';
 import { useNavigate, useParams } from 'react-router';
 
 import { RecoverPasswordPageQuery } from './__generated__/RecoverPasswordPageQuery.graphql';
-import RecoverPassword from '~/components/RecoverPassword/RecoverPassword';
+import RecoverPassword from './components/RecoverPassword';
 import { useEffect } from 'react';
 
 const GlobalStyle = createGlobalStyle`

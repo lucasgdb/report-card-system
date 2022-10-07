@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import styled from 'styled-components';
 
-import PasswordChanged from '~/components/PasswordChanged/PasswordChanged';
+import PasswordChanged from './components/PasswordChanged';
 
 const OuterPasswordChangedPage = styled.div`
   display: grid;

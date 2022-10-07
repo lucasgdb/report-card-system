@@ -3,8 +3,8 @@ import { graphql, useQuery } from 'relay-hooks';
 import { useEffect } from 'react';
 
 import { StudentListPageQuery } from './__generated__/StudentListPageQuery.graphql';
-import StudentList from '~/components/StudentList/StudentList';
-import UploadButton from '~/components/StudentList/Upload/UploadButton';
+import StudentList from './components/StudentList';
+import UploadButton from './components/Upload/UploadButton';
 import PageLoader from '~/components/PageLoader';
 
 const OuterStudentListPage = styled.div`

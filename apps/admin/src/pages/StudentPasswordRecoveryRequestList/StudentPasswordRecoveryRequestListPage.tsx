@@ -3,7 +3,7 @@ import { graphql, useQuery } from 'relay-hooks';
 import { useEffect } from 'react';
 
 import { StudentPasswordRecoveryRequestListPageQuery } from './__generated__/StudentPasswordRecoveryRequestListPageQuery.graphql';
-import StudentPasswordRecoveryRequestList from '~/components/StudentPasswordRecoveryRequestList/StudentPasswordRecoveryRequestList';
+import StudentPasswordRecoveryRequestList from './components/StudentPasswordRecoveryRequestList';
 import PageLoader from '~/components/PageLoader';
 
 const Title = styled.h1`

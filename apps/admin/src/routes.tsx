@@ -7,7 +7,7 @@ import SuspenseRouter from './components/SuspenseRouter';
 const EnvironmentLayout = React.lazy(() => import('~/layout/EnvironmentLayout'));
 const ErrorPage = React.lazy(() => import('~/pages/Error/ErrorPage'));
 const ForgotPasswordPage = React.lazy(() => import('~/pages/ForgotPassword/ForgotPasswordPage'));
-const RequestSentPage = React.lazy(() => import('~/pages/ForgotPassword/RequestSentPage'));
+const RequestSentPage = React.lazy(() => import('~/pages/RequestSent/RequestSentPage'));
 const RecoverPasswordPage = React.lazy(() => import('~/pages/RecoverPassword/RecoverPasswordPage'));
 const PasswordChangedPage = React.lazy(() => import('~/pages/PasswordChanged/PasswordChangedPage'));
 const StudentPasswordRecoveryRequestListPage = React.lazy(

@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import styled from 'styled-components';
 
-import RequestSent from '~/components/RequestSent/RequestSent';
+import RequestSent from './components/RequestSent';
 
 const OuterRequestSentPage = styled.div`
   display: grid;

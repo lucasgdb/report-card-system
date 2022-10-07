@@ -4,7 +4,7 @@ import { GoogleReCaptchaProvider } from 'react-google-recaptcha-v3';
 import { Link } from 'react-router-dom';
 import { useEffect } from 'react';
 
-import Login from '~/components/Login/Login';
+import Login from './components/Login';
 
 const GlobalStyle = createGlobalStyle`
   body {
