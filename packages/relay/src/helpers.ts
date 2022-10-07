@@ -1,4 +1,4 @@
-import { CacheConfig, RequestParameters } from 'relay-runtime';
+import type { CacheConfig, RequestParameters } from 'relay-runtime';
 
 export const isMutation = (request: RequestParameters) => request.operationKind === 'mutation';
 

@@ -54,7 +54,6 @@
     "@types/webpack": "^5.28.0",
     "@types/webpack-env": "^1.16.4",
     "babel-loader": "^8.2.5",
-    "babel-plugin-relay": "^14.0.0",
     "before-build-webpack": "^0.2.12",
     "copy-webpack-plugin": "^11.0.0",
     "css-loader": "^6.7.1",
