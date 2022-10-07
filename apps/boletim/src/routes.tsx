@@ -6,7 +6,7 @@ const EnvironmentLayout = React.lazy(() => import('~/layout/EnvironmentLayout'))
 const ErrorPage = React.lazy(() => import('~/pages/Error/ErrorPage'));
 const HomePage = React.lazy(() => import('~/pages/Home/HomePage'));
 const ForgotPasswordPage = React.lazy(() => import('~/pages/ForgotPassword/ForgotPasswordPage'));
-const RequestSentPage = React.lazy(() => import('~/pages/ForgotPassword/RequestSentPage'));
+const RequestSentPage = React.lazy(() => import('~/pages/RequestSent/RequestSentPage'));
 
 export default function AppRoutes() {
   return (

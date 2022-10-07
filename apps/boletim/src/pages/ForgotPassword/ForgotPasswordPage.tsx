@@ -3,7 +3,7 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import { Link } from 'react-router-dom';
 import { useEffect } from 'react';
 
-import ForgotPassword from '~/components/ForgotPassword/ForgotPassword';
+import ForgotPassword from './components/ForgotPassword';
 
 const GlobalStyle = createGlobalStyle`
   body {

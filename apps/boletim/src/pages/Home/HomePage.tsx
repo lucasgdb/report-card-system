@@ -5,8 +5,8 @@ import { useEffect } from 'react';
 
 import { HomePageQuery } from './__generated__/HomePageQuery.graphql';
 import Menu from '~/components/Menu/Menu';
-import Profile from '~/components/Home/Profile/Profile';
-import SchoolReport from '~/components/Home/SchoolReport/SchoolReport';
+import Profile from './components/Profile/Profile';
+import SchoolReport from './components/SchoolReport/SchoolReport';
 
 const OuterHomePage = styled.div``;
 
