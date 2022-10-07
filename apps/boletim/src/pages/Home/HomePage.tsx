@@ -4,7 +4,7 @@ import { graphql, useQuery } from 'relay-hooks';
 import { useEffect } from 'react';
 
 import { HomePageQuery } from './__generated__/HomePageQuery.graphql';
-import Menu from '~/components/Menu/Menu';
+import Menu from './components/Menu/Menu';
 import Profile from './components/Profile/Profile';
 import SchoolReport from './components/SchoolReport/SchoolReport';
 

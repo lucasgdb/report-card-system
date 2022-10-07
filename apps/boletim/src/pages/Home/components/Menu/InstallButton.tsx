@@ -4,6 +4,7 @@ import IconButton from '@mui/material/IconButton';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import InstallMobileIcon from '@mui/icons-material/InstallMobile';
 import { useEffect } from 'react';
+
 declare global {
   interface Window {
     deferredPrompt: Event;

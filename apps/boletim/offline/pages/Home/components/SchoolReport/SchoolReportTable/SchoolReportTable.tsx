@@ -6,7 +6,7 @@ import FinalAverageBadge from './FinalAverageBadge';
 import TotalAbsencesBadge from './TotalAbsencesBadge';
 import Subject from './Subject';
 import Grades from './Grades';
-import getSchoolReport from '../../../../utils/getSchoolReport';
+import getSchoolReport from '../../../../../utils/getSchoolReport';
 
 const Table = styled.table`
   border-collapse: collapse;

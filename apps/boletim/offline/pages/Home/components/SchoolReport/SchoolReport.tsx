@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-import getSchoolReport from '../../../utils/getSchoolReport';
+import getSchoolReport from '../../../../utils/getSchoolReport';
 import SchoolReportTable from './SchoolReportTable/SchoolReportTable';
 
 const OuterSchoolReport = styled.div`

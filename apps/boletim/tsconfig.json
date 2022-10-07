@@ -12,6 +12,6 @@
     }
   },
   "extends": "../../tsconfig.json",
-  "include": ["src", "@types"],
+  "include": ["src", "offline", "@types"],
   "exclude": ["node_modules/**/*"]
 }

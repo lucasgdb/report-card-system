@@ -1,4 +1,4 @@
-import { SchoolReportTable_schoolReport$data } from '~/components/Home/SchoolReport/SchoolReportTable/__generated__/SchoolReportTable_schoolReport.graphql';
+import { SchoolReportTable_schoolReport$data } from '~/pages/Home/components/SchoolReport/SchoolReportTable/__generated__/SchoolReportTable_schoolReport.graphql';
 
 export default function saveSchoolReport(schoolReportData: SchoolReportTable_schoolReport$data) {
   const schoolReport = schoolReportData.schoolReportRows.edges.map(({ node: schoolReportRow }) => {
