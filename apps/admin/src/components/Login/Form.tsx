@@ -57,16 +57,7 @@ export default function Form() {
 
   const [loadingRecaptcha, setLoadingRecaptcha] = useState(false);
 
-  const [loginMutation, { loading }] = useMutation<AdminLoginMutationType>(AdminLoginMutation, {
-    onError(errors) {
-      const { notFound } = errorConfig.student;
-
-      const studentNotFoundError = getError(errors, notFound.code);
-      if (studentNotFoundError) {
-        enqueueSnackbar('Administrador não encontrado. Por favor, tente novamente.', { variant: 'error' });
-      }
-    },
-  });
+  const [loginMutation, { loading }] = useMutation<AdminLoginMutationType>(AdminLoginMutation);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -109,7 +100,14 @@ export default function Form() {
             window.location.reload();
           }
         },
-        onError() {
+        onError(errors) {
+          const { notFound } = errorConfig.student;
+
+          const studentNotFoundError = getError(errors, notFound.code);
+          if (studentNotFoundError) {
+            enqueueSnackbar('Administrador não encontrado. Por favor, tente novamente.', { variant: 'error' });
+          }
+
           setLoadingRecaptcha(false);
         },
       });
