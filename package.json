@@ -10,6 +10,7 @@
     "delete:__generated__": "find . -name \"__generated__\" -exec rm -rf '{}' +",
     "clear": "yarn delete:node_modules && yarn delete:build && yarn delete:__generated__",
     "typesync": "npx typesync --ignoredeps=dev",
+    "dev": "docker-compose up -d",
     "start": "docker-compose up -d",
     "stop": "docker-compose down",
     "start:server": "yarn workspace @usefaz/server start:dev",
