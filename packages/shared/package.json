@@ -10,7 +10,7 @@
     "test": "jest --verbose --detectOpenHandles --forceExit"
   },
   "dependencies": {
-    "axios": "^0.27.2",
+    "axios": "^1.1.0",
     "axios-retry": "^3.3.0",
     "universal-cookie": "^4.0.4"
   },
