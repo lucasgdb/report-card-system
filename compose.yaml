@@ -12,6 +12,8 @@ x-node: &node
     # node_modules is installed from the host, against the host's pnpm store, so pnpm must
     # not try to reinstall it from inside the container.
     pnpm_config_verify_deps_before_run: "false"
+    # Where the browser reaches the API; follows SERVER_PORT (the apps' Vite config reads it).
+    SERVER_BASE_URL: http://localhost:${SERVER_PORT:-3000}
   entrypoint: ["pnpm"]
   command: ["dev"]
 
@@ -39,7 +41,8 @@ services:
     working_dir: /src/apps/server
     env_file: apps/server/.env
     ports:
-      - 3000:3000
+      # Set SERVER_PORT when 3000 is taken on the host (e.g. `SERVER_PORT=3010 pnpm dev`).
+      - ${SERVER_PORT:-3000}:3000
       - 9229:9229 # enable nodejs devtools debugger
     healthcheck:
       test:

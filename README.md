@@ -27,6 +27,7 @@ Monorepo com [pnpm workspaces](https://pnpm.io/workspaces). As versões comparti
 - `pnpm install`: Instala as dependências do projeto
 - Copie o arquivo `.env.example` do `apps/server` para `.env`
 - `pnpm dev`: Inicia os containers do projeto
+  - Se a porta 3000 estiver ocupada, use `SERVER_PORT=3010 pnpm dev`: a API sobe na 3010 e os apps passam a chamá-la lá
 - `pnpm seed`: Alimenta o banco com dados de teste
 - Abra o Sistema de Boletim em `http://localhost:8080`
   - Login `12345`
