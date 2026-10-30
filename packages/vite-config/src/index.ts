@@ -3,7 +3,7 @@ import path from 'node:path';
 import tailwindcss from '@tailwindcss/vite';
 import react from '@vitejs/plugin-react';
 import { loadEnv } from 'vite';
-import type { UserConfig } from 'vite';
+import type { PluginOption, UserConfig } from 'vite';
 import relay from 'vite-plugin-relay-lite';
 
 import relayCompiler from './relayCompiler.ts';
@@ -18,13 +18,14 @@ type AppConfigOptions = {
   mode: string;
   port: number;
   build?: UserConfig['build'];
+  plugins?: PluginOption[];
 };
 
-export function defineAppConfig({ root, mode, port, build }: AppConfigOptions): UserConfig {
+export function defineAppConfig({ root, mode, port, build, plugins = [] }: AppConfigOptions): UserConfig {
   const env = loadEnv(mode, root, '');
 
   return {
-    plugins: [react(), tailwindcss(), relayCompiler(root), relay({ codegen: false })],
+    plugins: [react(), tailwindcss(), relayCompiler(root), relay({ codegen: false }), ...plugins],
     resolve: {
       alias: {
         '~': path.join(root, 'src'),

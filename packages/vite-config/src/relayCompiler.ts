@@ -40,6 +40,10 @@ export default function relayCompiler(root: string): Plugin {
     name: 'usefaz:relay-compiler',
 
     buildStart() {
+      // Set by a build the dev server starts itself (the offline page), while it compiles on its own.
+      if (process.env.SKIP_RELAY_COMPILER === 'true') {
+        return;
+      }
       const { status } = spawnSync(binary, [], { cwd: root, stdio: 'inherit' });
       if (status !== 0 && this.environment.mode === 'build') {
         this.error('relay-compiler failed');

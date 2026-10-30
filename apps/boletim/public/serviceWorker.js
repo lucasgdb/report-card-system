@@ -8,7 +8,7 @@
  * Keep this file at /serviceWorker.js: installed clients are registered with this URL.
  */
 
-const VERSION = 'v11';
+const VERSION = 'v12';
 const OFFLINE_CACHE = `usefaz-offline-${VERSION}`;
 const FONT_CACHE = 'usefaz-fonts-v2';
 const OFFLINE_URL = '/offline.html';

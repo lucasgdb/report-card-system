@@ -9,5 +9,5 @@
       "~/*": ["./src/*"]
     }
   },
-  "include": ["src", "offline", "vite.config.ts"]
+  "include": ["src", "offline", "vite.config.ts", "offlineDevBundle.ts"]
 }

@@ -1,12 +1,12 @@
 const UPDATE_CHECK_INTERVAL = 60 * 60 * 1000;
 
 /**
- * Registers the service worker (production only: it would get in the way of Vite's dev server).
+ * Registers the service worker, in development too (the dev server builds the offline page for it).
  * It only caches the offline page, so there's no "new version" prompt: online, the app always loads
  * fresh. New workers are still picked up regularly so the offline page doesn't lag behind.
  */
 export function registerServiceWorker() {
-  if (!import.meta.env.PROD || !('serviceWorker' in navigator)) {
+  if (!('serviceWorker' in navigator)) {
     return;
   }
 
