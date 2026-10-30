@@ -1,5 +1,3 @@
-import 'core-js/stable';
-import 'regenerator-runtime/runtime';
 import 'dayjs/locale/pt-br';
 
 import localeData from 'dayjs/plugin/localeData';

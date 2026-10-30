@@ -1,11 +1,10 @@
 import { errorConfig } from '@usefaz/shared';
-import { GraphQLNonNull } from 'graphql';
-import { mutationWithClientMutationId } from 'graphql-relay';
 
 import usefazConnector from '~/database/usefazConnector';
 import { StudentModel } from '~/entities';
-import { IContext } from '~/interfaces';
+import type { IContext } from '~/interfaces';
 import StudentType from '../StudentType';
+import createMutation from '~/utils/createMutation';
 
 type removeAvatarProps = {
   RM: string;
@@ -28,12 +27,12 @@ const removeAvatar = async ({ clientMutationId }: removeAvatarProps, context: IC
   return { student: updatedStudent, clientMutationId };
 };
 
-const RemoveAvatarMutation = mutationWithClientMutationId({
+const RemoveAvatarMutation = createMutation({
   name: 'RemoveAvatarMutation',
   inputFields: {},
   outputFields: {
     student: {
-      type: new GraphQLNonNull(StudentType),
+      type: StudentType,
     },
   },
   mutateAndGetPayload: removeAvatar,

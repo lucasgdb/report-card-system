@@ -1,5 +1,5 @@
 import type { Context } from 'koa';
-import { readFile } from 'fs/promises';
+import { readFile } from 'node:fs/promises';
 import type { File } from 'formidable';
 import { parse, CsvError } from 'csv-parse';
 
@@ -13,13 +13,13 @@ type RequestFiles = {
 };
 
 function readCsvFile<T>(content: Buffer): Promise<T> {
-  return new Promise(function (resolve, reject) {
-    parse(content, { columns: true, delimiter: '|', encoding: 'utf8' }, function (err, data) {
+  return new Promise((resolve, reject) => {
+    parse(content, { columns: true, delimiter: '|', encoding: 'utf8' }, (err, data) => {
       if (err) {
         reject(new CsvError(err.code, err.message));
       }
 
-      resolve(data);
+      resolve(data as T);
     });
   });
 }

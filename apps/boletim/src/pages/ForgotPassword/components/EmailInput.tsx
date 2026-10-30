@@ -1,28 +1,23 @@
-import styled from 'styled-components';
-import TextField from '@mui/material/TextField';
-import InputAdornment from '@mui/material/InputAdornment';
-import MailIcon from '@mui/icons-material/Mail';
+import { InputGroup, InputGroupAddon, InputGroupInput } from '@usefaz/ui/components/ui/input-group';
+import { MailIcon } from 'lucide-react';
 
-const StyledTextField = styled(TextField)`
-  & .MuiInputBase-root {
-    background-color: #f7f5fa;
-  }
-`;
-
-export default function EmailInput() {
+export default function EmailInput(props: React.ComponentProps<typeof InputGroupInput>) {
   return (
-    <StyledTextField
-      placeholder="E-mail"
-      name="email"
-      type="email"
-      variant="outlined"
-      InputProps={{
-        startAdornment: (
-          <InputAdornment position="start">
-            <MailIcon color="primary" />
-          </InputAdornment>
-        ),
-      }}
-    />
+    <InputGroup className="bg-(--input-background)">
+      <InputGroupAddon>
+        <MailIcon className="text-primary" />
+      </InputGroupAddon>
+      <InputGroupInput
+        placeholder="nome@exemplo.com…"
+        name="email"
+        type="email"
+        inputMode="email"
+        autoComplete="email"
+        spellCheck={false}
+        autoCapitalize="none"
+        aria-label="E-mail"
+        {...props}
+      />
+    </InputGroup>
   );
 }

@@ -1,25 +1,23 @@
+import { handleMutationError } from '@usefaz/shared';
+import { FormAlert } from '@usefaz/ui/components/form-alert';
+import { toast } from '@usefaz/ui/components/ui/sonner';
+import { PasswordInput } from '@usefaz/ui/components/password-input';
+import { Button } from '@usefaz/ui/components/ui/button';
 import {
-  SimpleDialog,
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogContent,
-  DialogActions,
-  SimpleButton,
-  PasswordInput,
-  Notification,
-  CloseButton,
-} from '@usefaz/components';
-import styled from 'styled-components';
-import { useMutation } from 'relay-hooks';
+} from '@usefaz/ui/components/ui/dialog';
+import { FieldError } from '@usefaz/ui/components/ui/field';
+import { required, useFormValidation } from '@usefaz/ui/hooks/use-form-validation';
+import { useMutation } from 'react-relay';
 
 import ChangeStudentPasswordMutation from '~/modules/admin/ChangeStudentPasswordMutation';
-import { ChangeStudentPasswordMutation as ChangeStudentPasswordMutationType } from '~/modules/admin/__generated__/ChangeStudentPasswordMutation.graphql';
-
-const OuterEditPasswordDialog = styled(SimpleDialog)`
-  & .MuiPaper-root {
-    max-width: 400px;
-  }
-`;
+import type { ChangeStudentPasswordMutation as ChangeStudentPasswordMutationType } from '~/modules/admin/__generated__/ChangeStudentPasswordMutation.graphql';
 
 type EditPasswordDialogProps = {
   open: boolean;
@@ -32,56 +30,62 @@ export default function EditPasswordDialog({
   studentPasswordRecoveryRequestId,
   onClose,
 }: EditPasswordDialogProps) {
-  const { enqueueSnackbar } = Notification.useSnackbar();
-
-  const [changeStudentPassword, { loading }] =
+  const [changeStudentPassword, loading] =
     useMutation<ChangeStudentPasswordMutationType>(ChangeStudentPasswordMutation);
+  const form = useFormValidation({
+    newPassword: [required('Digite a nova senha do aluno.')],
+  });
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    const formData = new FormData(event.currentTarget);
-
-    const password = formData.get('password').toString();
-    if (!password) {
-      enqueueSnackbar('Digite a nova senha do aluno.', { variant: 'error' });
+    const values = form.validate(event.currentTarget);
+    if (!values) {
       return;
     }
 
     changeStudentPassword({
-      variables: { input: { newPassword: password, studentPasswordRecoveryRequestId } },
-      onCompleted() {
+      variables: { input: { newPassword: values.newPassword, studentPasswordRecoveryRequestId } },
+      onCompleted: ({ changeStudentPassword }) => {
+        if (handleMutationError(form, changeStudentPassword?.error)) {
+          return;
+        }
         onClose();
-        enqueueSnackbar('Senha alterada com sucesso.', { variant: 'success' });
+        toast.success('Senha alterada com sucesso.');
       },
-      onError() {
-        enqueueSnackbar('Falha ao alterar senha.', { variant: 'error' });
-      },
+      onError: (error) => handleMutationError(form, error),
     });
   };
 
   return (
-    <OuterEditPasswordDialog open={open} onClose={onClose} fullWidth>
-      <form onSubmit={handleSubmit}>
-        <DialogHeader>
-          <DialogTitle>Alterar senha</DialogTitle>
-          <CloseButton onClose={onClose} />
-        </DialogHeader>
+    <Dialog open={open} onOpenChange={(nextOpen) => !nextOpen && onClose()}>
+      <DialogContent className="sm:max-w-md">
+        <form onSubmit={handleSubmit} className="grid gap-4" noValidate>
+          <DialogHeader>
+            <DialogTitle>Alterar senha</DialogTitle>
+            <DialogDescription>Defina a nova senha do aluno.</DialogDescription>
+          </DialogHeader>
 
-        <DialogContent>
-          <PasswordInput placeholder="Nova senha" />
-        </DialogContent>
+          <div className="grid gap-2">
+            <PasswordInput
+              placeholder="Nova senha…"
+              autoComplete="new-password"
+              aria-label="Nova senha"
+              {...form.fieldProps('newPassword')}
+            />
+            <FieldError {...form.errorProps('newPassword')} />
+          </div>
 
-        <DialogActions>
-          <SimpleButton color="error" onClick={onClose}>
-            Cancelar
-          </SimpleButton>
+          <FormAlert message={form.formError} />
 
-          <SimpleButton color="secondary" variant="contained" type="submit" disabled={loading}>
-            Salvar
-          </SimpleButton>
-        </DialogActions>
-      </form>
-    </OuterEditPasswordDialog>
+          <DialogFooter>
+            <DialogClose render={<Button variant="outline" />}>Cancelar</DialogClose>
+            <Button type="submit" loading={loading}>
+              Salvar nova senha
+            </Button>
+          </DialogFooter>
+        </form>
+      </DialogContent>
+    </Dialog>
   );
 }

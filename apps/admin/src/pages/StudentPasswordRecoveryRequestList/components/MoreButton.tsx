@@ -1,13 +1,31 @@
-import { ArrowPopper, ContextMenu, ContextMenuOption } from '@usefaz/components';
-import IconButton from '@mui/material/IconButton';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
-import { useRef, useState } from 'react';
-import { GridRenderCellParams } from '@mui/x-data-grid';
-import { useMutation } from 'relay-hooks';
+import type { GridRenderCellParams } from '@usefaz/ui/components/data-table';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@usefaz/ui/components/ui/alert-dialog';
+import { Button } from '@usefaz/ui/components/ui/button';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@usefaz/ui/components/ui/dropdown-menu';
+import { handleMutationError } from '@usefaz/shared';
+import { toast } from '@usefaz/ui/components/ui/sonner';
+import { toastErrors } from '@usefaz/ui/lib/toast-errors';
+import { BanIcon, EllipsisVerticalIcon, KeyRoundIcon } from 'lucide-react';
+import { useState } from 'react';
+import { useMutation } from 'react-relay';
 
-import EditPasswordDialog from './EditPasswordDialog';
 import RefuseStudentPasswordRecoveryRequestMutation from '~/modules/admin/RefuseStudentPasswordRecoveryRequestMutation';
-import { RefuseStudentPasswordRecoveryRequestMutation as RefuseStudentPasswordRecoveryRequestMutationType } from '~/modules/admin/__generated__/RefuseStudentPasswordRecoveryRequestMutation.graphql';
+import type { RefuseStudentPasswordRecoveryRequestMutation as RefuseStudentPasswordRecoveryRequestMutationType } from '~/modules/admin/__generated__/RefuseStudentPasswordRecoveryRequestMutation.graphql';
+import EditPasswordDialog from './EditPasswordDialog';
 
 type MoreButtonProps = {
   params: GridRenderCellParams;
@@ -15,61 +33,76 @@ type MoreButtonProps = {
 };
 
 export default function MoreButton({ params, disabled = false }: MoreButtonProps) {
-  const [refuseStudentPasswordRecoveryRequest, { loading }] =
-    useMutation<RefuseStudentPasswordRecoveryRequestMutationType>(RefuseStudentPasswordRecoveryRequestMutation);
+  const [refuseStudentPasswordRecoveryRequest, loading] = useMutation<RefuseStudentPasswordRecoveryRequestMutationType>(
+    RefuseStudentPasswordRecoveryRequestMutation
+  );
 
-  const buttonRef = useRef(null);
-
-  const [isArrowPopperOpen, setIsArrowPopperOpen] = useState(false);
   const [isEditPasswordDialogOpen, setIsEditPasswordDialogOpen] = useState(false);
-
-  const handleOpenArrowPopper = () => setIsArrowPopperOpen(true);
-  const handleCloseArrowPopper = () => setIsArrowPopperOpen(false);
-
-  const handleOpenPasswordDialog = () => setIsEditPasswordDialogOpen(true);
-  const handleClosePasswordDialog = () => setIsEditPasswordDialogOpen(false);
+  const [isRefuseDialogOpen, setIsRefuseDialogOpen] = useState(false);
 
   const studentPasswordRecoveryRequestId = params.row.id;
 
-  const options: ContextMenuOption[] = [
-    {
-      id: 1,
-      text: 'Editar senha',
-      onClick() {
-        handleCloseArrowPopper();
-        handleOpenPasswordDialog();
+  const handleRefuse = () =>
+    refuseStudentPasswordRecoveryRequest({
+      variables: { input: { studentPasswordRecoveryRequestId } },
+      onCompleted: ({ refuseStudentPasswordRecoveryRequest }) => {
+        if (handleMutationError(toastErrors, refuseStudentPasswordRecoveryRequest?.error)) {
+          return;
+        }
+        setIsRefuseDialogOpen(false);
+        toast.success('Solicitação recusada.');
       },
-    },
-    {
-      id: 2,
-      text: 'Recusar',
-      disabled: loading || params.row.status === 'REFUSED',
-      onClick() {
-        refuseStudentPasswordRecoveryRequest({
-          variables: { input: { studentPasswordRecoveryRequestId } },
-          onCompleted() {
-            handleCloseArrowPopper();
-          },
-        });
-      },
-    },
-  ];
+      onError: (error) => handleMutationError(toastErrors, error),
+    });
 
   return (
     <>
-      <IconButton ref={buttonRef} onClick={handleOpenArrowPopper} disabled={disabled}>
-        <MoreVertIcon />
-      </IconButton>
+      <DropdownMenu>
+        <DropdownMenuTrigger
+          disabled={disabled}
+          render={
+            <Button variant="ghost" size="icon" aria-label={`Mais ações para a solicitação de ${params.row.RM}`} />
+          }
+        >
+          <EllipsisVerticalIcon />
+        </DropdownMenuTrigger>
 
-      <ArrowPopper open={isArrowPopperOpen} onClose={handleCloseArrowPopper} anchorEl={buttonRef.current} timeout={0}>
-        <div>
-          <ContextMenu options={options} />
-        </div>
-      </ArrowPopper>
+        <DropdownMenuContent align="end" className="min-w-44">
+          <DropdownMenuItem onClick={() => setIsEditPasswordDialogOpen(true)}>
+            <KeyRoundIcon />
+            Editar senha
+          </DropdownMenuItem>
+          <DropdownMenuItem
+            variant="destructive"
+            disabled={loading || params.row.status === 'REFUSED'}
+            onClick={() => setIsRefuseDialogOpen(true)}
+          >
+            <BanIcon />
+            Recusar
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+
+      <AlertDialog open={isRefuseDialogOpen} onOpenChange={setIsRefuseDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Recusar solicitação?</AlertDialogTitle>
+            <AlertDialogDescription>
+              A solicitação do RM {params.row.RM} será marcada como recusada e a senha do aluno não será alterada.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancelar</AlertDialogCancel>
+            <AlertDialogAction variant="destructive" onClick={handleRefuse} loading={loading}>
+              Recusar
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
 
       <EditPasswordDialog
         open={isEditPasswordDialogOpen}
-        onClose={handleClosePasswordDialog}
+        onClose={() => setIsEditPasswordDialogOpen(false)}
         studentPasswordRecoveryRequestId={studentPasswordRecoveryRequestId}
       />
     </>

@@ -1,9 +1,12 @@
-import { graphql } from 'relay-hooks';
+import { graphql } from 'react-relay';
 
 const RecoverAdminPasswordMutation = graphql`
   mutation RecoverAdminPasswordMutation($input: RecoverAdminPasswordMutationInput!) {
     recoverAdminPassword(input: $input) {
-      clientMutationId
+      error {
+        field
+        userMessage
+      }
     }
   }
 `;

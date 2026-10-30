@@ -1,8 +1,8 @@
-import { RequiredExceptFor } from '@usefaz/shared';
+import type { RequiredExceptFor } from '@usefaz/shared';
 import type { Knex } from 'knex';
 
 import type { DBConnector } from '~/database/dbConnector';
-import { IBimester, ISchoolReport, ISchoolReportDiscipline } from '~/interfaces';
+import type { IBimester, ISchoolReport, ISchoolReportDiscipline } from '~/interfaces';
 import callTrxOrKnexConnection from '~/utils/callTrxOrKnexConnection';
 
 type SchoolReportBimester = {

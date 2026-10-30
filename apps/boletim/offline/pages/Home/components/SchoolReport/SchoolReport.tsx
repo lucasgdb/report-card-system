@@ -1,47 +1,39 @@
-import styled from 'styled-components';
+import ReportCardSection, { ReportCardEmpty } from '~/components/ReportCardSection';
 
-import getSchoolReport from '../../../../utils/getSchoolReport';
+import getSchoolReport, { getSavedStudent } from '../../../../utils/getSchoolReport';
 import SchoolReportTable from './SchoolReportTable/SchoolReportTable';
 
-const OuterSchoolReport = styled.div`
-  padding: 48px 20px;
-
-  @media (min-width: 600px) {
-    padding: 64px 8%;
-  }
-`;
-
-const Title = styled.p`
-  font: normal normal 600 24px/30px Lexend;
-  color: #494d4b;
-
-  margin: 0;
-`;
-
-const SchoolReportWrapper = styled.div`
-  overflow-x: auto;
-
-  margin-top: 32px;
-`;
+const savedAtFormatter = new Intl.DateTimeFormat('pt-BR', { dateStyle: 'long', timeStyle: 'short' });
 
 export default function SchoolReport() {
   const schoolReport = getSchoolReport();
+  const student = getSavedStudent();
 
   if (schoolReport.length === 0) {
     return (
-      <OuterSchoolReport>
-        <Title>Não há boletim registrado.</Title>
-      </OuterSchoolReport>
+      <ReportCardEmpty
+        title="Nenhum boletim salvo neste dispositivo"
+        description="Conecte-se à internet e abra o boletim para salvá-lo neste dispositivo."
+      />
     );
   }
 
-  return (
-    <OuterSchoolReport>
-      <Title>Boletim escolar</Title>
+  const savedAt = student?.savedAt ? new Date(student.savedAt) : null;
 
-      <SchoolReportWrapper>
-        <SchoolReportTable />
-      </SchoolReportWrapper>
-    </OuterSchoolReport>
+  return (
+    <ReportCardSection
+      description={
+        savedAt ? (
+          <>
+            Cópia salva em <time dateTime={student.savedAt}>{savedAtFormatter.format(savedAt)}</time>. Conecte-se para
+            ver a versão mais recente.
+          </>
+        ) : (
+          'Cópia salva neste dispositivo. Conecte-se para ver a versão mais recente.'
+        )
+      }
+    >
+      <SchoolReportTable year={student?.year} />
+    </ReportCardSection>
   );
 }

@@ -1,15 +1,9 @@
-import { useMediaQuery } from '@mui/material';
-import { GridRowsProp, GridColDef } from '@mui/x-data-grid';
-import { SimpleTable } from '@usefaz/components';
+import { DataTable, type GridColDef, type GridRowsProp } from '@usefaz/ui/components/data-table';
+import { useMediaQuery } from '@usefaz/ui/hooks/use-media-query';
 import { graphql, useFragment } from 'react-relay';
-import styled from 'styled-components';
 
 import MoreButton from './MoreButton';
-import { StudentList_admin$key } from './__generated__/StudentList_admin.graphql';
-
-const OuterStudentList = styled.div`
-  height: calc(100% - 48px);
-`;
+import type { StudentList_admin$key } from './__generated__/StudentList_admin.graphql';
 
 type StudentListProps = {
   admin: StudentList_admin$key;
@@ -38,7 +32,7 @@ export default function StudentList({ admin }: StudentListProps) {
   const isTablet = useMediaQuery('(min-width: 768px)');
 
   const columns: GridColDef[] = [
-    { field: 'RM', headerName: 'RM', width: 100 },
+    { field: 'RM', cellClassName: 'tabular-nums', headerName: 'RM', width: 100 },
     { field: 'fullname', headerName: 'Nome', width: 250 },
     {
       field: 'blank',
@@ -49,7 +43,6 @@ export default function StudentList({ admin }: StudentListProps) {
       editable: false,
       hideable: false,
       flex: 1,
-      hide: !isTablet,
     },
     {
       field: 'actions',
@@ -74,8 +67,8 @@ export default function StudentList({ admin }: StudentListProps) {
   }));
 
   return (
-    <OuterStudentList>
-      <SimpleTable rows={rows} columns={columns} autoHeight={false} />
-    </OuterStudentList>
+    <div className="flex flex-1 flex-col">
+      <DataTable rows={rows} columns={columns} columnVisibilityModel={{ blank: isTablet }} autoHeight={false} />
+    </div>
   );
 }

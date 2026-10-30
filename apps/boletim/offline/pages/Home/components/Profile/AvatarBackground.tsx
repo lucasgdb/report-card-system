@@ -1,37 +1,16 @@
-import styled from 'styled-components';
-
 import Avatar from './Avatar/Avatar';
-
-const OuterAvatarBackground = styled.div`
-  display: flex;
-  justify-content: center;
-
-  @media (min-width: 864px) {
-    width: 320px;
-    height: 100%;
-
-    position: relative;
-
-    display: block;
-  }
-`;
-
-const HomeIconsImage = styled.img`
-  position: absolute;
-  top: 50%;
-  left: 0;
-  transform: translateY(-50%);
-
-  @media (max-width: 863px) {
-    display: none;
-  }
-`;
 
 export default function AvatarBackground() {
   return (
-    <OuterAvatarBackground>
-      <HomeIconsImage src="/assets/images/home_icons.svg" />
+    <div className="flex justify-center min-[864px]:relative min-[864px]:block min-[864px]:h-full min-[864px]:w-[320px]">
+      <img
+        className="absolute top-1/2 -left-4 -translate-y-1/2 max-[863px]:hidden"
+        src="/assets/images/home_icons.svg"
+        alt=""
+        width={354}
+        height={369}
+      />
       <Avatar />
-    </OuterAvatarBackground>
+    </div>
   );
 }

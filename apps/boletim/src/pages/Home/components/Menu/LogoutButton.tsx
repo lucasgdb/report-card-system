@@ -1,43 +1,39 @@
-import { jwtToken } from '@usefaz/shared';
-import styled from 'styled-components';
-import IconButton from '@mui/material/IconButton';
-import Tooltip from '@mui/material/Tooltip';
-import PowerSettingsNewIcon from '@mui/icons-material/PowerSettingsNew';
-import { useMutation } from 'relay-hooks';
+import { handleMutationError } from '@usefaz/shared';
+import { jwtToken } from '@usefaz/shared/browser';
+import { Button } from '@usefaz/ui/components/ui/button';
+import { toastErrors } from '@usefaz/ui/lib/toast-errors';
+import { PowerIcon } from 'lucide-react';
+import { useMutation } from 'react-relay';
 
 import LogoutMutation from '~/modules/auth/LogoutMutation';
-
-const StyledIconButton = styled(IconButton)`
-  && {
-    padding: 0;
-  }
-`;
-
-const StyledPowerSettingsNewIcon = styled(PowerSettingsNewIcon)`
-  && {
-    color: ${(props) => props.theme.text.main};
-    transition: color 0.2s;
-  }
-`;
+import type { LogoutMutation as LogoutMutationType } from '~/modules/auth/__generated__/LogoutMutation.graphql';
 
 export default function LogoutButton() {
-  const [logoutMutation, { loading }] = useMutation(LogoutMutation, {
-    onCompleted() {
-      jwtToken.destroy();
-      window.location.reload();
-    },
-    onError() {
-      window.location.reload();
-    },
-  });
+  const [logoutMutation, loading] = useMutation<LogoutMutationType>(LogoutMutation);
 
-  const handleLogout = () => logoutMutation({ variables: { input: {} } });
+  const handleLogout = () =>
+    logoutMutation({
+      variables: { input: {} },
+      onCompleted: ({ logout }) => {
+        if (handleMutationError(toastErrors, logout?.error)) {
+          return;
+        }
+        jwtToken.destroy();
+        window.location.reload();
+      },
+      onError: (error) => handleMutationError(toastErrors, error),
+    });
 
   return (
-    <Tooltip title="Sair" arrow>
-      <StyledIconButton onClick={handleLogout} disabled={loading}>
-        <StyledPowerSettingsNewIcon />
-      </StyledIconButton>
-    </Tooltip>
+    <Button
+      variant="ghost"
+      size="icon"
+      className="text-(--text-main)"
+      onClick={handleLogout}
+      loading={loading}
+      aria-label="Sair"
+    >
+      <PowerIcon />
+    </Button>
   );
 }

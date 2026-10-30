@@ -1,60 +1,43 @@
-import styled from 'styled-components';
-import { graphql, useQuery } from 'relay-hooks';
-import { useEffect } from 'react';
+import { graphql, useLazyLoadQuery } from 'react-relay';
+import { Suspense } from 'react';
 
-import { StudentListPageQuery } from './__generated__/StudentListPageQuery.graphql';
+import type { StudentListPageQuery } from './__generated__/StudentListPageQuery.graphql';
 import StudentList from './components/StudentList';
 import UploadButton from './components/Upload/UploadButton';
 import PageLoader from '~/components/PageLoader';
 
-const OuterStudentListPage = styled.div`
-  padding: 24px 32px;
-  width: 100%;
-  box-sizing: border-box;
-
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-`;
-
-const Header = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-`;
-
-const Title = styled.h1`
-  font: normal normal 700 22px/25px Lexend;
-  margin: 0;
-  color: #333;
-`;
-
 export default function StudentListPage() {
-  const { data, isLoading } = useQuery<StudentListPageQuery>(graphql`
-    query StudentListPageQuery {
-      admin {
-        ...UploadButton_admin
-        ...StudentList_admin
+  return (
+    <>
+      <title>Alunos | Usefaz Admin</title>
+      <Suspense fallback={<PageLoader />}>
+        <StudentListPageContent />
+      </Suspense>
+    </>
+  );
+}
+
+function StudentListPageContent() {
+  const data = useLazyLoadQuery<StudentListPageQuery>(
+    graphql`
+      query StudentListPageQuery {
+        admin {
+          ...UploadButton_admin
+          ...StudentList_admin
+        }
       }
-    }
-  `);
-
-  useEffect(() => {
-    document.title = 'Alunos | Usefaz Admin';
-  }, []);
-
-  if (isLoading) {
-    return <PageLoader />;
-  }
+    `,
+    {}
+  );
 
   return (
-    <OuterStudentListPage>
-      <Header>
-        <Title>Alunos</Title>
+    <div className="flex w-full flex-col gap-6 px-8 py-6">
+      <div className="flex items-center justify-between">
+        <h1 className="text-[22px] leading-[25px] font-bold text-foreground">Alunos</h1>
         <UploadButton admin={data.admin} />
-      </Header>
+      </div>
 
       <StudentList admin={data.admin} />
-    </OuterStudentListPage>
+    </div>
   );
 }

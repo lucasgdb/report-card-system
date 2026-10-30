@@ -1,9 +1,10 @@
-import { SimpleButton } from '@usefaz/components';
+import { Button } from '@usefaz/ui/components/ui/button';
+import { UploadIcon } from 'lucide-react';
 import { useState } from 'react';
 import { graphql, useFragment } from 'react-relay';
 
 import UploadDialog from './UploadDialog';
-import { UploadButton_admin$key } from './__generated__/UploadButton_admin.graphql';
+import type { UploadButton_admin$key } from './__generated__/UploadButton_admin.graphql';
 
 type UploadButtonProps = {
   admin: UploadButton_admin$key;
@@ -26,9 +27,10 @@ export default function UploadButton({ admin }: UploadButtonProps) {
 
   return (
     <>
-      <SimpleButton variant="contained" color="primary" onClick={handleOpenUploadDialog}>
+      <Button onClick={handleOpenUploadDialog}>
+        <UploadIcon />
         Carregar notas
-      </SimpleButton>
+      </Button>
 
       <UploadDialog open={isUploadDialogOpen} onClose={handleCloseUploadDialog} admin={data} />
     </>

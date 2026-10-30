@@ -1,5 +1,7 @@
 import { fetchWithRetries, __DEV__ } from '@usefaz/shared';
-import url from 'url';
+import url from 'node:url';
+
+import UserError from './UserError';
 
 const validateRecaptchaToken = async (token: string) => {
   if (__DEV__) {
@@ -11,16 +13,16 @@ const validateRecaptchaToken = async (token: string) => {
     response: token,
   });
 
-  const response = await fetchWithRetries({
+  const response = await fetchWithRetries('https://www.google.com/recaptcha/api/siteverify', {
     method: 'POST',
-    url: 'https://www.google.com/recaptcha/api/siteverify',
-    data: params.toString(),
+    body: params.toString(),
     headers: { 'content-type': 'application/x-www-form-urlencoded' },
   });
+  const result = (await response.json()) as { success: boolean; 'error-codes'?: string[] };
 
-  if (!response?.data.success) {
-    console.error(response?.data['error-codes']);
-    throw new Error('CAPTCHA.ERROR');
+  if (!result.success) {
+    console.error(result['error-codes']);
+    throw new UserError('Não foi possível confirmar seu acesso. Recarregue a página e tente novamente.');
   }
 };
 

@@ -1,5 +1,4 @@
-import { Route, Routes, HashRouter } from 'react-router-dom';
-import * as React from 'react';
+import { Route, Routes, HashRouter } from 'react-router';
 
 import HomePage from './pages/Home/HomePage';
 

@@ -1,52 +1,26 @@
-import { useEffect } from 'react';
-import styled from 'styled-components';
-
 import RequestSent from './components/RequestSent';
 
-const OuterRequestSentPage = styled.div`
-  display: grid;
-  place-items: center;
-
-  height: 100vh;
-  padding: 16px 16px 0;
-
-  background: #0020a2 0 0 no-repeat padding-box !important;
-`;
-
-const DotsThingsImage = styled.img`
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-
-  max-width: calc(100% - 64px);
-
-  @media (max-width: 699px) {
-    display: none;
-  }
-`;
-
-const ZLogoImage = styled.img`
-  position: absolute;
-  top: 0;
-  right: 0;
-
-  max-width: 80%;
-`;
+const dotsThingsImageClassName =
+  'absolute top-1/2 left-1/2 max-w-[calc(100%-64px)] -translate-x-1/2 -translate-y-1/2 max-[699px]:hidden';
 
 export default function RequestSentPage() {
-  useEffect(() => {
-    document.title = 'Solicitação enviada | Usefaz Admin';
-  }, []);
-
   return (
-    <OuterRequestSentPage>
-      <DotsThingsImage src="/assets/images/dots.svg" />
-      <DotsThingsImage src="/assets/images/things.svg" />
+    <>
+      <title>Solicitação enviada | Usefaz Admin</title>
+      <div className="grid min-h-dvh place-items-center bg-[#0020a2] px-4 pt-4">
+        <img className={dotsThingsImageClassName} src="/assets/images/dots.svg" alt="" width={964} height={564} />
+        <img className={dotsThingsImageClassName} src="/assets/images/things.svg" alt="" width={800} height={546} />
 
-      <RequestSent />
+        <RequestSent />
 
-      <ZLogoImage src="/assets/images/z_logo.svg" />
-    </OuterRequestSentPage>
+        <img
+          className="absolute top-0 right-0 h-auto max-w-[80%]"
+          src="/assets/images/z_logo.svg"
+          alt=""
+          width={587}
+          height={572}
+        />
+      </div>
+    </>
   );
 }

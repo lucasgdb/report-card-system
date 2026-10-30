@@ -1,44 +1,8 @@
-import styled from 'styled-components';
-import { graphql, useFragment } from 'relay-hooks';
+import { graphql, useFragment } from 'react-relay';
 
-import { Profile_student$key } from './__generated__/Profile_student.graphql';
+import type { Profile_student$key } from './__generated__/Profile_student.graphql';
 import Information from './Information';
 import AvatarBackground from './AvatarBackground';
-
-const OuterProfile = styled.div`
-  background: linear-gradient(92.84deg, #011461 -8.18%, #0020a2 47.5%, #00d4ff 106.78%);
-
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-
-  position: relative;
-
-  padding: 24px 0;
-  width: 100%;
-  overflow: hidden;
-
-  @media (min-width: 864px) {
-    height: 375px;
-
-    padding: 0 0 0 48px;
-
-    flex-direction: row;
-    align-items: center;
-  }
-`;
-
-const ZLogoImage = styled.img`
-  position: absolute;
-  top: 0;
-  right: 0;
-
-  width: 35%;
-
-  @media (max-width: 863px) {
-    display: none;
-  }
-`;
 
 type ProfileProps = {
   student: Profile_student$key;
@@ -56,10 +20,16 @@ export default function Profile({ student }: ProfileProps) {
   );
 
   return (
-    <OuterProfile>
+    <div className="relative flex w-full flex-col gap-2 min-[864px]:gap-16 overflow-hidden bg-(image:--hero-background) py-6 min-[864px]:h-[420px] min-[864px]:flex-row min-[864px]:items-center min-[864px]:py-0 min-[864px]:pl-12">
       <AvatarBackground student={data} />
       <Information student={data} />
-      <ZLogoImage src="/assets/images/z_logo.svg" />
-    </OuterProfile>
+      <img
+        className="absolute top-0 right-0 w-[35%] opacity-(--hero-decoration-opacity) max-[863px]:hidden"
+        src="/assets/images/z_logo.svg"
+        alt=""
+        width={587}
+        height={572}
+      />
+    </div>
   );
 }

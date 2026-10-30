@@ -1,9 +1,9 @@
 import { errorConfig } from '@usefaz/shared';
-import { mutationWithClientMutationId } from 'graphql-relay';
 
 import usefazConnector from '~/database/usefazConnector';
 import { AuthModel } from '~/entities';
 import type { IContext } from '~/interfaces';
+import createMutation from '~/utils/createMutation';
 
 type logoutProps = {
   clientMutationId?: string;
@@ -21,7 +21,7 @@ const logout = async ({ clientMutationId }: logoutProps, context: IContext) => {
   return { clientMutationId };
 };
 
-const LogoutMutation = mutationWithClientMutationId({
+const LogoutMutation = createMutation({
   name: 'LogoutMutation',
   description: 'The logOut mutation can be used to log out an existing user.',
   inputFields: {},

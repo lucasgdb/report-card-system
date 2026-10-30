@@ -1,34 +1,13 @@
-import { graphql, useFragment } from 'relay-hooks';
-import styled from 'styled-components';
-import IconButton from '@mui/material/IconButton';
-import CameraAltOutlinedIcon from '@mui/icons-material/CameraAltOutlined';
-import { useState } from 'react';
+import { Button } from '@usefaz/ui/components/ui/button';
+import { CameraIcon } from 'lucide-react';
+import { lazy, Suspense, useState } from 'react';
+import { graphql, useFragment } from 'react-relay';
 
-import { OpenUploadAvatarModalButton_student$key } from './__generated__/OpenUploadAvatarModalButton_student.graphql';
-import UploadAvatarModal from './UploadAvatarModal';
+import type { OpenUploadAvatarModalButton_student$key } from './__generated__/OpenUploadAvatarModalButton_student.graphql';
 
-const UploadButton = styled(IconButton)`
-  && {
-    position: absolute;
-    bottom: 0;
-    right: 0;
-
-    width: 48px;
-    height: 48px;
-    border-radius: 50%;
-    background-color: #ee7844;
-
-    :hover {
-      background-color: #d66c3d;
-    }
-  }
-`;
-
-const StyledCameraAltOutlinedIcon = styled(CameraAltOutlinedIcon)`
-  && {
-    color: #fff;
-  }
-`;
+// The photo editor (cropper included) is only downloaded when the student goes for the button.
+const loadAvatarPhotoDialog = () => import('./AvatarPhotoDialog');
+const AvatarPhotoDialog = lazy(loadAvatarPhotoDialog);
 
 type OpenUploadAvatarModalButtonProps = {
   student: OpenUploadAvatarModalButton_student$key;
@@ -38,25 +17,38 @@ export default function OpenUploadAvatarModalButton({ student }: OpenUploadAvata
   const data = useFragment<OpenUploadAvatarModalButton_student$key>(
     graphql`
       fragment OpenUploadAvatarModalButton_student on Student {
-        ...UploadAvatarModal_student
+        ...AvatarPhotoDialog_student
       }
     `,
     student
   );
 
   const [isOpen, setIsOpen] = useState(false);
-
-  const handleOpenModal = () => setIsOpen(true);
-
-  const handleCloseModal = () => setIsOpen(false);
+  // Stays mounted after the first open, so closing still animates.
+  const [hasOpened, setHasOpened] = useState(false);
 
   return (
     <>
-      <UploadButton color="primary" onClick={handleOpenModal}>
-        <StyledCameraAltOutlinedIcon />
-      </UploadButton>
+      <Button
+        size="icon-lg"
+        className="absolute right-0 bottom-0 rounded-full"
+        onPointerEnter={loadAvatarPhotoDialog}
+        onFocus={loadAvatarPhotoDialog}
+        onClick={() => {
+          setHasOpened(true);
+          setIsOpen(true);
+        }}
+        aria-label="Alterar foto de perfil"
+        aria-haspopup="dialog"
+      >
+        <CameraIcon />
+      </Button>
 
-      <UploadAvatarModal open={isOpen} onClose={handleCloseModal} student={data} />
+      {hasOpened && (
+        <Suspense>
+          <AvatarPhotoDialog student={data} open={isOpen} onOpenChange={setIsOpen} />
+        </Suspense>
+      )}
     </>
   );
 }

@@ -1,112 +1,16 @@
-import styled, { css } from 'styled-components';
-import { graphql, useFragment } from 'relay-hooks';
+import { AppHeader } from '@usefaz/ui/components/app-header';
+import { SeasonToggle } from '@usefaz/ui/components/seasonal/season-toggle';
+import { useMediaQuery } from '@usefaz/ui/hooks/use-media-query';
+import { cn } from '@usefaz/ui/lib/utils';
+import { graphql, useFragment } from 'react-relay';
 import { useEffect, useState } from 'react';
-import useMediaQuery from '@mui/material/useMediaQuery';
 
-import { Menu_student$key } from './__generated__/Menu_student.graphql';
+import type { Menu_student$key } from './__generated__/Menu_student.graphql';
 import LogoutButton from './LogoutButton';
 import DateInformation from './DateInformation';
 import InstallButton from './InstallButton';
-import SwitchThemeButton from './SwitchThemeButton';
 
-type OuterMenuProps = {
-  $hasMenuBehavior: boolean;
-};
-
-const OuterMenu = styled.div<OuterMenuProps>`
-  padding: 16px 48px;
-
-  display: flex;
-  justify-content: space-between;
-
-  background-color: ${(props) => props.theme.bg.main};
-  transition: all 0.2s;
-
-  position: sticky;
-  top: 0;
-  z-index: 2;
-
-  box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.125), 0px -1px 2px rgba(0, 0, 0, 0.1);
-  padding: 16px 24px;
-
-  @media (min-width: 400px) {
-    padding: 16px 48px;
-  }
-
-  @media (min-width: 1076px) {
-    padding: 36px 10%;
-
-    box-shadow: unset;
-
-    ${({ $hasMenuBehavior }) =>
-      $hasMenuBehavior &&
-      css`
-        box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.125), 0px -1px 2px rgba(0, 0, 0, 0.1);
-        padding: 16px 48px;
-      `}
-  }
-`;
-
-const LeftContentWrapper = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 32px;
-`;
-
-const UsefazLogo = styled.img`
-  width: 137px;
-  transition: filter 0.2s;
-
-  ${({ theme }) =>
-    theme.palette.mode === 'dark' &&
-    css`
-      filter: drop-shadow(0 0 2px #e6e8eb);
-    `}
-`;
-
-const Divider = styled.div`
-  border: 1px solid #e6e8eb;
-  transform: rotate(90deg);
-
-  width: 24px;
-  height: 1px;
-`;
-
-const LeftDivider = styled(Divider)`
-  @media (max-width: 874px) {
-    display: none;
-  }
-`;
-
-const RightDivider = styled(Divider)`
-  @media (max-width: 499px) {
-    display: none;
-  }
-`;
-
-const WelcomeInformationWrapper = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 8px;
-
-  @media (max-width: 874px) {
-    display: none;
-  }
-`;
-
-const WelcomeInformation = styled.p`
-  font: normal normal 600 16px/20px Lexend;
-  color: ${(props) => props.theme.text.main};
-
-  transition: color 0.2s;
-  margin: 0;
-`;
-
-const RightContentWrapper = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 16px;
-`;
+const dividerClassName = 'h-px w-6 rotate-90 border border-border';
 
 type MenuProps = {
   student: Menu_student$key;
@@ -154,29 +58,37 @@ export default function Menu({ student }: MenuProps) {
   }, [hasMenuBehavior, isDesktop]);
 
   return (
-    <OuterMenu $hasMenuBehavior={hasMenuBehavior}>
-      <LeftContentWrapper>
-        <UsefazLogo src="/assets/images/usefaz_logo.svg" />
+    <AppHeader condensed={hasMenuBehavior}>
+      <div className="flex min-w-0 items-center gap-3 min-[500px]:gap-8">
+        <img
+          className="w-[130px] shrink-0 min-[400px]:w-[163px]"
+          src="/assets/images/usefaz_logo.svg"
+          alt="Usefaz"
+          width={163}
+          height={34}
+        />
 
         <InstallButton />
 
-        <LeftDivider />
+        <div className={cn(dividerClassName, 'max-[874px]:hidden')} />
 
-        <WelcomeInformationWrapper>
-          <img src="/assets/icons/clap.svg" alt="Olá!" />
+        <div className="flex min-w-0 items-center gap-2 max-[874px]:hidden">
+          <img src="/assets/icons/clap.svg" alt="" width={24} height={25} />
 
-          <WelcomeInformation>Seja bem-vindo, {data.firstname}!</WelcomeInformation>
-        </WelcomeInformationWrapper>
-      </LeftContentWrapper>
+          <p className="m-0 truncate font-heading text-base leading-5 font-semibold text-(--text-main)">
+            Seja bem-vindo, {data.firstname}!
+          </p>
+        </div>
+      </div>
 
-      <RightContentWrapper>
+      <div className="flex min-w-0 items-center gap-1 min-[500px]:gap-4">
         <DateInformation />
 
-        <RightDivider />
+        <div className={cn(dividerClassName, 'shrink-0 max-[767px]:hidden')} />
 
-        <SwitchThemeButton />
+        <SeasonToggle className="shrink-0 text-(--text-main)" />
         <LogoutButton />
-      </RightContentWrapper>
-    </OuterMenu>
+      </div>
+    </AppHeader>
   );
 }

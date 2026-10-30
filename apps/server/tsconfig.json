@@ -1,16 +1,11 @@
 {
+  "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    "allowJs": false,
-    "moduleResolution": "node",
-    "target": "ESNext",
-    "module": "CommonJS",
-    "resolveJsonModule": true,
     "strict": true,
-    "baseUrl": ".",
+    "types": ["node"],
     "paths": {
-      "~/*": ["src/*"]
+      "~/*": ["./src/*"]
     }
   },
-  "extends": "../../tsconfig.json",
-  "include": ["src", "@types"]
+  "include": ["src", "@types", "migrations", "seeds", "knexfile.ts", "tsdown.config.mts"]
 }

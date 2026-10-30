@@ -1,21 +1,15 @@
 import { errorConfig } from '@usefaz/shared';
-import passport from 'passport';
-import { ExtractJwt, Strategy } from 'passport-jwt';
+import jwt from 'jsonwebtoken';
 import type { Context, Next } from 'koa';
 
 import { UserModel, AuthModel, AdminModel, StudentModel } from '~/entities';
 import usefazConnector from '~/database/usefazConnector';
 
-type authenticateProps = {
+type AuthenticateOptions = {
   requireAuth: boolean;
 };
 
-const params = {
-  secretOrKey: process.env.JWT_SECRET,
-  jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-};
-
-const DEFAULT_PARAMS = {
+const DEFAULT_OPTIONS: AuthenticateOptions = {
   requireAuth: false,
 };
 
@@ -25,115 +19,105 @@ type Payload = {
   email: string | undefined;
 };
 
-const getPayload = (ctx: Context): Promise<Payload> | false => {
-  return new Promise((resolve, reject) => {
-    passport.authenticate('jwt', (err, payload) => {
-      if (err) {
-        reject(err);
-      }
+// Reads the `Authorization: Bearer <token>` header. A missing, malformed, expired or badly signed
+// token means the request is anonymous.
+const getPayload = (ctx: Context): Payload | null => {
+  const [scheme, token] = ctx.get('Authorization').split(/\s+/);
+  if (scheme?.toLowerCase() !== 'bearer' || !token) {
+    return null;
+  }
 
-      resolve(payload);
-    })(ctx.request, ctx.response);
-  });
+  try {
+    const { id, RM, email } = jwt.verify(token, process.env.JWT_SECRET) as Payload;
+    return { id, RM, email };
+  } catch {
+    return null;
+  }
 };
 
-const auth = () => {
-  const strategy = new Strategy(params, (payload: Payload, done) => {
-    const { id, RM, email } = payload;
-
-    return done(null, { id, RM, email });
-  });
-
-  passport.use(strategy);
-
-  return {
-    initialize: (_ctx: Context, next: Next) => {
-      passport.initialize();
-      return next();
-    },
-    studentAuthenticator({ requireAuth = false }: authenticateProps = DEFAULT_PARAMS) {
-      return async function (ctx: Context, next: Next) {
-        try {
-          const payload = await getPayload(ctx);
-          if (requireAuth && !payload) {
-            throw new Error(errorConfig.user.unauthenticated.code);
-          } else if (!payload) {
-            return next();
-          }
-
-          const authEntity = AuthModel(usefazConnector);
-
-          const login = await authEntity.getLoginBy({ id: payload.id });
-          if (requireAuth && !login?.active) {
-            throw new Error(errorConfig.user.unauthenticated.code);
-          } else if (!login?.active) {
-            return next();
-          }
-
-          const userEntity = UserModel(usefazConnector);
-          const user = await userEntity.getUserById(login.user_id!);
-
-          ctx.request.loginId = login.id;
-          ctx.request.user = user ?? null;
-          ctx.request.student = null;
-
-          if (payload.RM) {
-            const studentEntity = StudentModel(usefazConnector);
-            const student = await studentEntity.getStudentByRM(payload.RM);
-            ctx.request.student = student;
-          }
-
-          return next();
-        } catch {
-          ctx.status = 401;
-          ctx.body = {
-            message: errorConfig.user.unauthenticated.code,
-          };
-        }
-      };
-    },
-    adminAuthenticator({ requireAuth = false }: authenticateProps = DEFAULT_PARAMS) {
-      return async function (ctx: Context, next: Next) {
-        try {
-          const payload = await getPayload(ctx);
-          if (requireAuth && !payload) {
-            throw new Error(errorConfig.user.unauthenticated.code);
-          } else if (!payload) {
-            return next();
-          }
-
-          const authEntity = AuthModel(usefazConnector);
-
-          const login = await authEntity.getLoginBy({ id: payload.id });
-          if (requireAuth && !login?.active) {
-            throw new Error(errorConfig.user.unauthenticated.code);
-          } else if (!login?.active) {
-            return next();
-          }
-
-          const userEntity = UserModel(usefazConnector);
-          const user = await userEntity.getUserById(login.user_id!);
-
-          ctx.request.loginId = login.id;
-          ctx.request.user = user ?? null;
-          ctx.request.admin = null;
-
-          if (payload.email) {
-            const adminEntity = AdminModel(usefazConnector);
-            const admin = await adminEntity.getAdminByEmail(payload.email);
-            ctx.request.admin = admin;
-          }
-
-          return next();
-        } catch {
-          ctx.status = 401;
-          ctx.body = {
-            message: errorConfig.user.unauthenticated.code,
-          };
-        }
-      };
-    },
+const unauthenticated = (ctx: Context) => {
+  ctx.status = 401;
+  ctx.body = {
+    message: errorConfig.user.unauthenticated.code,
   };
+};
+
+const authenticateLogin = async (ctx: Context, requireAuth: boolean) => {
+  const payload = getPayload(ctx);
+  if (!payload) {
+    if (requireAuth) {
+      throw new Error(errorConfig.user.unauthenticated.code);
+    }
+
+    return null;
+  }
+
+  const authEntity = AuthModel(usefazConnector);
+
+  const login = await authEntity.getLoginBy({ id: payload.id });
+  if (!login?.active) {
+    if (requireAuth) {
+      throw new Error(errorConfig.user.unauthenticated.code);
+    }
+
+    return null;
+  }
+
+  const userEntity = UserModel(usefazConnector);
+  const user = await userEntity.getUserById(login.user_id!);
+
+  ctx.request.loginId = login.id;
+  ctx.request.user = user ?? null;
+
+  return payload;
+};
+
+const auth = {
+  studentAuthenticator({ requireAuth }: AuthenticateOptions = DEFAULT_OPTIONS) {
+    return async (ctx: Context, next: Next) => {
+      try {
+        const payload = await authenticateLogin(ctx, requireAuth);
+        if (!payload) {
+          return next();
+        }
+
+        ctx.request.student = null;
+
+        if (payload.RM) {
+          const studentEntity = StudentModel(usefazConnector);
+          ctx.request.student = await studentEntity.getStudentByRM(payload.RM);
+        }
+      } catch {
+        unauthenticated(ctx);
+        return;
+      }
+
+      return next();
+    };
+  },
+
+  adminAuthenticator({ requireAuth }: AuthenticateOptions = DEFAULT_OPTIONS) {
+    return async (ctx: Context, next: Next) => {
+      try {
+        const payload = await authenticateLogin(ctx, requireAuth);
+        if (!payload) {
+          return next();
+        }
+
+        ctx.request.admin = null;
+
+        if (payload.email) {
+          const adminEntity = AdminModel(usefazConnector);
+          ctx.request.admin = await adminEntity.getAdminByEmail(payload.email);
+        }
+      } catch {
+        unauthenticated(ctx);
+        return;
+      }
+
+      return next();
+    };
+  },
 };
 
 export default auth;

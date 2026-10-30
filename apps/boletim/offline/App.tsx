@@ -1,5 +1,4 @@
-import { ErrorBoundary } from '@usefaz/components';
-import CssBaseline from '@mui/material/CssBaseline';
+import { ErrorBoundary } from '@usefaz/ui/components/error-boundary';
 
 import Providers from './Providers';
 import AppRoutes from './routes';
@@ -7,8 +6,6 @@ import AppRoutes from './routes';
 export default function App() {
   return (
     <Providers>
-      <CssBaseline />
-
       <ErrorBoundary onActionClick={() => window.location.reload()}>
         <AppRoutes />
       </ErrorBoundary>

@@ -1,50 +1,33 @@
-import { fetchWithRetries } from '@usefaz/shared';
+import { authorizedFetch } from '@usefaz/shared/browser';
 import type { RequestParameters, Variables } from 'relay-runtime';
-
-import { isMutation } from './helpers';
 
 export const GRAPHQL_URL = `${process.env.SERVER_BASE_URL}/graphql`;
 
+/**
+ * Sends an operation to the server. GraphQL errors reject the request (Relay calls `onError`); expected
+ * mutation failures are not errors but data, in the payload's `error` field.
+ */
 const fetchQuery = async (request: RequestParameters, variables: Variables) => {
   try {
-    const response = await fetchWithRetries(
-      {
-        url: GRAPHQL_URL,
-        data: JSON.stringify({
-          name: request.name,
-          query: request.text,
-          variables,
-        }),
-        method: 'POST',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-          'Access-Control-Allow-Origin': '*',
-        },
-      },
-      {
-        fetchTimeout: 20000,
-      }
-    );
+    const response = await authorizedFetch(GRAPHQL_URL, {
+      method: 'POST',
+      headers: { Accept: 'application/json', 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name: request.name, query: request.text, variables }),
+      timeout: 20_000,
+    });
 
-    const data = response?.data;
-
-    if (response?.status === 401 || (isMutation(request) && data?.errors) || !data || data?.errors) {
+    const data = await response.json();
+    if (data.errors) {
       throw data.errors;
     }
 
     return data;
-  } catch (err) {
-    console.error('err: ', err);
-
-    const timeoutRegexp = /Still no successful response after/;
-    const serverUnavailableRegexp = /Failed to fetch/;
-
-    if (timeoutRegexp.test(err.message) || serverUnavailableRegexp.test(err.message)) {
-      throw new Error('Serviço indisponível. Tente novamente mais tarde.');
+  } catch (error) {
+    // GraphQL errors (arrays) are expected to be handled by the caller; log anything else.
+    if (!Array.isArray(error)) {
+      console.error(error);
     }
-
-    throw err;
+    throw error;
   }
 };
 

@@ -7,7 +7,7 @@ import type IStudentPasswordRecoveryRequest from './IStudentPasswordRecoveryRequ
 import type IContext from './IContext';
 import type INotification from './INotification';
 import type ISchoolReport from './ISchoolReport';
-import type { IBimester, IDiscipline, ISchoolReportDiscipline, ISchoolReportDisciplineBimester } from './ISchoolReport';
+import type { IBimester, IDiscipline, ISchoolReportDiscipline } from './ISchoolReport';
 
 export type {
   ILogin,
@@ -22,5 +22,4 @@ export type {
   IBimester,
   IDiscipline,
   ISchoolReportDiscipline,
-  ISchoolReportDisciplineBimester,
 };

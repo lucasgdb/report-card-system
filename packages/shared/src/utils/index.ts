@@ -1,4 +1,4 @@
 import __DEV__ from './__DEV__';
-import fetchWithRetries from './fetchWithRetries';
+import fetchWithRetries, { HttpError } from './fetchWithRetries';
 
-export { __DEV__, fetchWithRetries };
+export { __DEV__, fetchWithRetries, HttpError };

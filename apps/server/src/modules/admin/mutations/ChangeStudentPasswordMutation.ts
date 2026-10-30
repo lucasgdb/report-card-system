@@ -1,13 +1,14 @@
-import { errorConfig } from '@usefaz/shared';
 import { GraphQLNonNull, GraphQLID, GraphQLString } from 'graphql';
-import { fromGlobalId, mutationWithClientMutationId } from 'graphql-relay';
+import { fromGlobalId } from 'graphql-relay';
 import { createTransport } from 'nodemailer';
 
 import usefazConnector from '~/database/usefazConnector';
 import { StudentModel, StudentPasswordRecoveryRequestModel } from '~/entities';
-import { IContext } from '~/interfaces';
+import type { IContext } from '~/interfaces';
 import StudentPasswordRecoveryRequestType from '~/modules/student/StudentPasswordRecoveryRequestType';
 import isAdminOrThrowError from '~/utils/isAdminOrThrowError';
+import createMutation from '~/utils/createMutation';
+import UserError from '~/utils/UserError';
 
 type changeStudentPasswordProps = {
   studentPasswordRecoveryRequestId: string;
@@ -25,6 +26,10 @@ const changeStudentPassword = async (
 ) => {
   isAdminOrThrowError(context);
 
+  if (!newPassword) {
+    throw new UserError('Digite a nova senha do aluno.', 'newPassword');
+  }
+
   const studentPasswordRecoveryRequestId = fromGlobalId(globalStudentPasswordRecoveryRequestId).id;
 
   const studentPasswordRecoveryRequestEntity = StudentPasswordRecoveryRequestModel(usefazConnector);
@@ -35,12 +40,12 @@ const changeStudentPassword = async (
   );
 
   if (!studentPasswordRecoveryRequest) {
-    throw Error(errorConfig.studentPasswordRecoveryRequest.notFound.code);
+    throw new UserError('Esta solicitação não existe mais. Atualize a página.');
   }
 
   const student = await studentEntity.getStudentByRM(studentPasswordRecoveryRequest.RM);
   if (!student) {
-    throw Error(errorConfig.student.notFound.code);
+    throw new UserError('Não encontramos o aluno desta solicitação. Ele pode ter sido removido.');
   }
 
   const updatedRequest = await studentPasswordRecoveryRequestEntity.finalizeRequest(studentPasswordRecoveryRequestId, {
@@ -71,7 +76,7 @@ const changeStudentPassword = async (
   };
 };
 
-const ChangeStudentPasswordMutation = mutationWithClientMutationId({
+const ChangeStudentPasswordMutation = createMutation({
   name: 'ChangeStudentPasswordMutation',
   inputFields: {
     studentPasswordRecoveryRequestId: { type: new GraphQLNonNull(GraphQLID) },

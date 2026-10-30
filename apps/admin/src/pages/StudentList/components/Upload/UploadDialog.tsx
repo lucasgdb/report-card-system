@@ -1,43 +1,23 @@
+import { toast } from '@usefaz/ui/components/ui/sonner';
+import { Button } from '@usefaz/ui/components/ui/button';
 import {
-  SimpleDialog,
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogContent,
-  DialogActions,
-  SimpleButton,
-  Notification,
-  CloseButton,
-} from '@usefaz/components';
-import styled from 'styled-components';
+} from '@usefaz/ui/components/ui/dialog';
+import { FieldError } from '@usefaz/ui/components/ui/field';
+import { FileSpreadsheetIcon } from 'lucide-react';
 import { environment } from '@usefaz/relay';
 import { commitLocalUpdate, graphql, useFragment } from 'react-relay';
-import { fetchWithRetries } from '@usefaz/shared';
-import Button from '@mui/material/Button';
+import { authorizedFetch } from '@usefaz/shared/browser';
 import { ConnectionHandler } from 'relay-runtime';
 
-import { UploadDialog_admin$key } from './__generated__/UploadDialog_admin.graphql';
-import { useState } from 'react';
-
-const OuterUploadDialog = styled(SimpleDialog)`
-  & .MuiPaper-root {
-    max-width: 400px;
-  }
-`;
-
-const StyledDialogContent = styled(DialogContent)`
-  && {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 16px;
-  }
-`;
-
-const Description = styled.p`
-  font: normal normal normal 16px/19px Lexend;
-  color: #666;
-  margin: 0;
-`;
+import type { UploadDialog_admin$key } from './__generated__/UploadDialog_admin.graphql';
+import { useRef, useState } from 'react';
 
 type UploadDialogProps = {
   open: boolean;
@@ -55,34 +35,38 @@ export default function UploadDialog({ open, onClose, admin }: UploadDialogProps
     admin
   );
 
-  const { enqueueSnackbar } = Notification.useSnackbar();
-
+  const inputRef = useRef<HTMLInputElement>(null);
+  const selectButtonRef = useRef<HTMLButtonElement>(null);
   const [filename, setFilename] = useState('');
+  const [fileError, setFileError] = useState('');
   const [loading, setLoading] = useState(false);
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
+
+    if (!filename) {
+      setFileError('Selecione o arquivo .csv com as notas.');
+      selectButtonRef.current?.focus();
+      return;
+    }
 
     const formData = new FormData(event.currentTarget);
 
     try {
       setLoading(true);
 
-      const response = await fetchWithRetries({
+      const response = await authorizedFetch(`${process.env.SERVER_BASE_URL}/admin/student/upload`, {
         method: 'POST',
-        url: `${process.env.SERVER_BASE_URL}/admin/student/upload`,
-        data: formData,
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
+        body: formData,
       });
+      const uploaded = await response.json();
 
       commitLocalUpdate(environment, (store) => {
         const admin = store.get(data.id);
 
         const students = ConnectionHandler.getConnection(admin, 'StudentList_students');
 
-        for (const { node: student } of response.data.students.edges) {
+        for (const { node: student } of uploaded.students.edges) {
           const linkedRecord = store.get(student.id);
           if (!linkedRecord) {
             const newLinkedRecord = store.create(student.id, 'Student');
@@ -96,11 +80,11 @@ export default function UploadDialog({ open, onClose, admin }: UploadDialogProps
         }
       });
 
-      enqueueSnackbar('Upload feito com sucesso.', { variant: 'success' });
+      toast.success('Notas carregadas com sucesso.');
       onClose();
     } catch (err) {
       console.error(err);
-      enqueueSnackbar('Erro ao fazer upload de notas.', { variant: 'error' });
+      toast.error('Não foi possível carregar as notas. Confira se o arquivo .csv segue o modelo e tente novamente.');
     } finally {
       setLoading(false);
     }
@@ -110,42 +94,61 @@ export default function UploadDialog({ open, onClose, admin }: UploadDialogProps
     const newFile = event.target.files.item(0);
     if (newFile) {
       setFilename(newFile.name);
+      setFileError('');
     }
   };
 
   return (
-    <OuterUploadDialog open={open} onClose={onClose} TransitionProps={{ onExited: () => setFilename('') }} fullWidth>
-      <form onSubmit={handleSubmit}>
-        <DialogHeader>
-          <DialogTitle>Carregar notas</DialogTitle>
-          <CloseButton onClose={onClose} />
-        </DialogHeader>
+    <Dialog
+      open={open}
+      onOpenChange={(nextOpen) => !nextOpen && onClose()}
+      onOpenChangeComplete={(nextOpen) => {
+        if (!nextOpen) {
+          setFilename('');
+          setFileError('');
+        }
+      }}
+    >
+      <DialogContent className="sm:max-w-md">
+        <form onSubmit={handleSubmit} className="grid gap-4">
+          <DialogHeader>
+            <DialogTitle>Carregar notas</DialogTitle>
+            <DialogDescription>Selecione o arquivo .csv com as notas dos alunos.</DialogDescription>
+          </DialogHeader>
 
-        <StyledDialogContent>
-          <Description>Clique abaixo para selecionar o arquivo contendo as notas.</Description>
+          <div className="flex flex-col items-start gap-3">
+            <input ref={inputRef} type="file" id="csv" name="csv" accept=".csv" hidden onChange={handleInputChange} />
+            <Button
+              ref={selectButtonRef}
+              variant="outline"
+              onClick={() => inputRef.current?.click()}
+              aria-invalid={fileError ? true : undefined}
+              aria-describedby={fileError ? 'csv-error' : undefined}
+            >
+              <FileSpreadsheetIcon />
+              Selecionar arquivo
+            </Button>
 
-          <Button variant="contained" component="label" htmlFor="csv">
-            Selecionar arquivo
-            <input type="file" id="csv" name="csv" accept=".csv" hidden onChange={handleInputChange} />
-          </Button>
+            <p className="max-w-full min-w-0 text-sm break-all text-muted-foreground" aria-live="polite">
+              {filename ? (
+                <>
+                  <b className="font-medium text-foreground">{filename}</b> selecionado.
+                </>
+              ) : (
+                'Nenhum arquivo selecionado.'
+              )}
+            </p>
+            <FieldError id="csv-error">{fileError}</FieldError>
+          </div>
 
-          {filename && (
-            <Description>
-              <b>{filename}</b> selecionado.
-            </Description>
-          )}
-        </StyledDialogContent>
-
-        <DialogActions>
-          <SimpleButton color="secondary" onClick={onClose}>
-            Cancelar
-          </SimpleButton>
-
-          <SimpleButton color="secondary" variant="contained" type="submit" disabled={!filename || loading}>
-            Enviar
-          </SimpleButton>
-        </DialogActions>
-      </form>
-    </OuterUploadDialog>
+          <DialogFooter>
+            <DialogClose render={<Button variant="outline" />}>Cancelar</DialogClose>
+            <Button type="submit" loading={loading}>
+              Carregar notas
+            </Button>
+          </DialogFooter>
+        </form>
+      </DialogContent>
+    </Dialog>
   );
 }

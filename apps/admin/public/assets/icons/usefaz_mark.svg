@@ -1,0 +1,10 @@
+<svg width="56" height="56" viewBox="-0.89 -0.95 55.72 55.72" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Usefaz">
+  <defs>
+    <clipPath id="usefaz-mark-circle">
+      <circle cx="26.97" cy="26.91" r="26.86"/>
+    </clipPath>
+  </defs>
+  <circle cx="26.97" cy="26.91" r="26.86" fill="#0020A2"/>
+  <path d="M5.9 44.54L2.89 40.38L25.26 11.34L24.21 10.2L20.04 10.67L9.42 14.14L8.27 7.09L20.2 3.1C27 1.35 36.6 1.15 43.2 4.89L46.41 7.81L30.6 20.27L22.29 32.67L29.11 33.08L40.89 29.9L43.23 38.96L23.94 43.1Z" stroke="#FFFFFF" stroke-width="3" stroke-linejoin="round" clip-path="url(#usefaz-mark-circle)"/>
+  <path d="M5.9 44.54L2.89 40.38L25.26 11.34L24.21 10.2L20.04 10.67L9.42 14.14L8.27 7.09L20.2 3.1C27 1.35 36.6 1.15 43.2 4.89L46.41 7.81L30.6 20.27L22.29 32.67L29.11 33.08L40.89 29.9L43.23 38.96L23.94 43.1Z" fill="#F26F35" stroke="#F26F35" stroke-width="0.8" stroke-linejoin="round"/>
+</svg>

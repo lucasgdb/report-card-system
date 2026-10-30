@@ -1,56 +1,23 @@
-import styled from 'styled-components';
-
+import { BrandTitle } from '@usefaz/ui/components/brand-title';
 import Form from './Form';
-
-const OuterLogin = styled.div`
-  width: 100%;
-  max-width: 358px;
-
-  padding-bottom: 16px;
-
-  @media (min-width: 1280px) {
-    position: absolute;
-    top: 153px;
-    right: 256px;
-  }
-`;
-
-const StudentTextImage = styled.img`
-  max-width: 100%;
-`;
-
-const ValueText = styled.h1`
-  font: normal normal 700 36px/54px Lexend;
-  color: #fff;
-
-  margin: 0;
-`;
-
-const LoginText = styled.p`
-  font: normal normal 400 15px/25px Lexend;
-  color: #fafafa;
-
-  margin: 0;
-`;
 
 export default function Login() {
   return (
-    <OuterLogin>
-      <StudentTextImage src="/assets/images/student_text.svg" />
-
-      <ValueText>
+    <div className="w-full">
+      <h1 className="m-0 text-display font-bold text-white">
+        <BrandTitle className="mb-1">Aluno,</BrandTitle>
         você é nosso
         <br />
         maior valor!
-      </ValueText>
+      </h1>
 
-      <LoginText>
+      <p className="m-0 text-[15px] leading-[25px] font-normal text-[#fafafa]">
         Faça seu login para
         <br />
         acessar a plataforma.
-      </LoginText>
+      </p>
 
       <Form />
-    </OuterLogin>
+    </div>
   );
 }

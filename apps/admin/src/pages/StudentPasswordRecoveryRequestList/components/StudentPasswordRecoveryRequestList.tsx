@@ -1,26 +1,21 @@
-import { useMediaQuery } from '@mui/material';
-import { GridRowsProp, GridColDef } from '@mui/x-data-grid';
-import { SimpleBadge, SimpleTable } from '@usefaz/components';
+import { DataTable, type GridColDef, type GridRowsProp } from '@usefaz/ui/components/data-table';
+import { Badge } from '@usefaz/ui/components/ui/badge';
+import { useMediaQuery } from '@usefaz/ui/hooks/use-media-query';
 import { graphql, useFragment } from 'react-relay';
-import styled from 'styled-components';
 
 import MoreButton from './MoreButton';
-import { StudentPasswordRecoveryRequestList_admin$key } from './__generated__/StudentPasswordRecoveryRequestList_admin.graphql';
+import type { StudentPasswordRecoveryRequestList_admin$key } from './__generated__/StudentPasswordRecoveryRequestList_admin.graphql';
 
-const OuterStudentPasswordRecoveryRequestList = styled.div`
-  height: calc(100% - 48px);
-`;
-
-const STATUS = {
+const STATUS: Record<string, string> = {
   PENDING: 'Pendente',
   REFUSED: 'Recusado',
   CHANGED: 'Finalizado',
 };
 
-const STATUS_COLOR = {
-  PENDING: '#808080',
-  REFUSED: '#EF233C',
-  CHANGED: '#1fc969',
+const STATUS_VARIANT: Record<string, 'secondary' | 'destructive' | 'success'> = {
+  PENDING: 'secondary',
+  REFUSED: 'destructive',
+  CHANGED: 'success',
 };
 
 type StudentPasswordRecoveryRequestListProps = {
@@ -54,7 +49,7 @@ export default function StudentPasswordRecoveryRequestList({ admin }: StudentPas
   const isDesktop = useMediaQuery('(min-width: 1200px)');
 
   const columns: GridColDef[] = [
-    { field: 'RM', headerName: 'RM', width: 100 },
+    { field: 'RM', cellClassName: 'tabular-nums', headerName: 'RM', width: 100 },
     { field: 'email', headerName: 'E-mail', width: 300 },
     { field: 'fullname', headerName: 'Nome', width: 250 },
     {
@@ -62,7 +57,9 @@ export default function StudentPasswordRecoveryRequestList({ admin }: StudentPas
       headerName: 'Status',
       width: 125,
       renderCell(params) {
-        return <SimpleBadge text={STATUS[params.value]} bgColor={STATUS_COLOR[params.value]} />;
+        return (
+          <Badge variant={STATUS_VARIANT[params.value] ?? 'outline'}>{STATUS[params.value] ?? 'Desconhecido'}</Badge>
+        );
       },
     },
     {
@@ -74,7 +71,6 @@ export default function StudentPasswordRecoveryRequestList({ admin }: StudentPas
       editable: false,
       hideable: false,
       flex: 1,
-      hide: !isDesktop,
     },
     {
       field: 'actions',
@@ -103,8 +99,8 @@ export default function StudentPasswordRecoveryRequestList({ admin }: StudentPas
   );
 
   return (
-    <OuterStudentPasswordRecoveryRequestList>
-      <SimpleTable rows={rows} columns={columns} autoHeight={false} />
-    </OuterStudentPasswordRecoveryRequestList>
+    <div className="flex flex-1 flex-col">
+      <DataTable rows={rows} columns={columns} columnVisibilityModel={{ blank: isDesktop }} autoHeight={false} />
+    </div>
   );
 }

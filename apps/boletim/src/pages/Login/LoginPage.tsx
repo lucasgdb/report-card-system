@@ -1,101 +1,36 @@
-import styled, { createGlobalStyle } from 'styled-components';
-import useMediaQuery from '@mui/material/useMediaQuery';
-import { GoogleReCaptchaProvider } from 'react-google-recaptcha-v3';
-import { Link } from 'react-router-dom';
-import { useEffect } from 'react';
+import { AuthLayout } from '@usefaz/ui/components/auth-layout';
+import { SeasonIllustration } from '@usefaz/ui/components/seasonal/season-illustration';
+import { Link } from 'react-router';
 
 import Login from './components/Login';
 
-const GlobalStyle = createGlobalStyle`
-  body {
-    @media (max-width: 1279px) {
-      background: #0020a2 0 0 no-repeat padding-box !important;
-    }
-  }
-`;
-
-const OuterLoginPage = styled.div`
-  display: grid;
-  place-items: center;
-
-  height: 100vh;
-  padding: 16px 16px 0;
-`;
-
-const BackgroundImage = styled.img`
-  position: absolute;
-  top: 0;
-  right: 0;
-
-  width: 1105px;
-  height: 809px;
-
-  @media (max-width: 1279px) {
-    display: none;
-  }
-`;
-
-const ZLogoImage = styled.img`
-  position: absolute;
-  top: 0;
-  right: 0;
-
-  max-width: 80%;
-`;
-
-const StyledLink = styled(Link)`
-  && {
-    @media (max-width: 1279px) {
-      display: none;
-    }
-  }
-`;
-
-const UsefazLogoImage = styled.img`
-  position: absolute;
-  left: 160px;
-  top: 52px;
-
-  @media (max-width: 1382px) {
-    left: unset;
-    right: 1000px;
-  }
-`;
-
-const ReadingBookImage = styled.img`
-  position: absolute;
-  right: 726px;
-  top: 219px;
-
-  @media (max-width: 1299px) {
-    display: none;
-  }
-`;
+const mobileBodyStyle =
+  '@media (max-width: 1279px) { body { background: #0020a2 0 0 no-repeat padding-box !important; } }';
 
 export default function LoginPage() {
-  const shouldChangeBodyStyle = useMediaQuery('(max-width: 1279px)');
-
-  useEffect(() => {
-    document.title = 'Login | Usefaz';
-  }, []);
-
   return (
-    <GoogleReCaptchaProvider reCaptchaKey={process.env.RECAPTCHA_V3_PUBLIC_TOKEN} language="pt-BR" useRecaptchaNet>
-      {shouldChangeBodyStyle && <GlobalStyle />}
+    <>
+      <title>Login | Usefaz</title>
+      <style>{mobileBodyStyle}</style>
 
-      <OuterLoginPage>
-        <BackgroundImage src="/assets/images/background_blue.svg" />
-
-        <ZLogoImage src="/assets/images/z_logo.svg" />
-
-        <StyledLink to="/">
-          <UsefazLogoImage src="/assets/images/usefaz_logo.svg" />
-        </StyledLink>
-
+      <AuthLayout
+        logo={
+          <Link className="block rounded-lg outline-none focus-visible:ring-3 focus-visible:ring-primary/50" to="/">
+            <img src="/assets/images/usefaz_logo.svg" alt="Usefaz" width={264} height={55} />
+          </Link>
+        }
+        illustrationBox={{ x: 103, y: 144, width: 650 }}
+        illustration={
+          <SeasonIllustration
+            src="/assets/images/reading_book.svg"
+            width={650}
+            height={695}
+            head={{ x: 174, y: 332, size: 96, rotate: -6 }}
+          />
+        }
+      >
         <Login />
-
-        <ReadingBookImage src="/assets/images/reading_book.svg" />
-      </OuterLoginPage>
-    </GoogleReCaptchaProvider>
+      </AuthLayout>
+    </>
   );
 }

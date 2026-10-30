@@ -1,9 +1,10 @@
 import { GraphQLID, GraphQLList, GraphQLNonNull } from 'graphql';
-import { fromGlobalId, mutationWithClientMutationId } from 'graphql-relay';
+import { fromGlobalId } from 'graphql-relay';
 
 import usefazConnector from '~/database/usefazConnector';
 import { NotificationModel } from '~/entities';
 import { NotificationConnection } from '../NotificationType';
+import createMutation from '~/utils/createMutation';
 
 type setNotificationsAsViewedProps = {
   notificationIds: string[];
@@ -27,7 +28,7 @@ const setNotificationsAsViewed = async ({
   };
 };
 
-export default mutationWithClientMutationId({
+export default createMutation({
   name: 'SetNotificationsAsViewedMutation',
   inputFields: {
     notificationIds: {

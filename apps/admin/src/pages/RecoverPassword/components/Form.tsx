@@ -1,74 +1,34 @@
-import { errorConfig, getError } from '@usefaz/shared';
-import { Notification } from '@usefaz/components';
-import styled from 'styled-components';
-import Button from '@mui/material/Button';
+import { handleMutationError } from '@usefaz/shared';
+import { FormAlert } from '@usefaz/ui/components/form-alert';
+import { PasswordInput } from '@usefaz/ui/components/password-input';
+import { Button } from '@usefaz/ui/components/ui/button';
+import { FieldError } from '@usefaz/ui/components/ui/field';
+import { required, sameAs, useFormValidation } from '@usefaz/ui/hooks/use-form-validation';
+import { useMutation } from 'react-relay';
 import { useNavigate, useParams } from 'react-router';
-import { useMutation } from 'relay-hooks';
 
 import RecoverAdminPasswordMutation from '~/modules/admin/RecoverAdminPasswordMutation';
-import { RecoverAdminPasswordMutation as RecoverAdminPasswordMutationType } from '~/modules/admin/__generated__/RecoverAdminPasswordMutation.graphql';
-import PasswordInput from './PasswordInput';
-
-const OuterForm = styled.div`
-  margin-top: 24px;
-`;
-
-const InputWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-`;
-
-const LoginButton = styled(Button)`
-  && {
-    color: #fafafa;
-    border-radius: 4px;
-    height: 56px;
-    padding: 0;
-
-    margin-top: 24px;
-  }
-`;
+import type { RecoverAdminPasswordMutation as RecoverAdminPasswordMutationType } from '~/modules/admin/__generated__/RecoverAdminPasswordMutation.graphql';
 
 export default function Form() {
-  const { enqueueSnackbar } = Notification.useSnackbar();
-
   const navigate = useNavigate();
   const { requestId, token } = useParams<{ requestId: string; token: string }>();
+  const form = useFormValidation({
+    password: [required('Informe a nova senha.')],
+    passwordConfirmation: [
+      required('Confirme a nova senha.'),
+      sameAs('password', 'As senhas não são iguais. Digite a mesma senha nos dois campos.'),
+    ],
+  });
 
-  const [recoverPasswordMutation, { loading }] = useMutation<RecoverAdminPasswordMutationType>(
-    RecoverAdminPasswordMutation,
-    {
-      onError(errors) {
-        const { notFound } = errorConfig.student;
-
-        const studentNotFoundError = getError(errors, notFound.code);
-        if (studentNotFoundError) {
-          enqueueSnackbar('Aluno não encontrado. Por favor, tente novamente.', { variant: 'error' });
-        }
-      },
-    }
-  );
+  const [recoverPasswordMutation, loading] =
+    useMutation<RecoverAdminPasswordMutationType>(RecoverAdminPasswordMutation);
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    const formData = new FormData(event.currentTarget);
-
-    const password = formData.get('password').toString();
-    if (!password) {
-      enqueueSnackbar('Senha obrigatória.', { variant: 'error' });
-      return;
-    }
-
-    const passwordConfirmation = formData.get('passwordConfirmation').toString();
-    if (!passwordConfirmation) {
-      enqueueSnackbar('Senha obrigatória.', { variant: 'error' });
-      return;
-    }
-
-    if (password !== passwordConfirmation) {
-      enqueueSnackbar('Senha de confirmação deve ser igual a senha.', { variant: 'error' });
+    const values = form.validate(event.currentTarget);
+    if (!values) {
       return;
     }
 
@@ -77,31 +37,47 @@ export default function Form() {
         input: {
           adminPasswordRecoveryRequestId: requestId,
           passwordRecoveryToken: token,
-          password,
-          passwordConfirmation,
+          password: values.password,
+          passwordConfirmation: values.passwordConfirmation,
         },
       },
-      onCompleted() {
-        navigate('/solicitacao-finalizada');
+      onCompleted: ({ recoverAdminPassword }) => {
+        if (handleMutationError(form, recoverAdminPassword?.error)) {
+          return;
+        }
+        navigate('/solicitacao-finalizada', { replace: true });
       },
-      onError() {
-        enqueueSnackbar('Falha ao enviar a solicitação de recuperação de senha.', { variant: 'error' });
-      },
+      onError: (error) => handleMutationError(form, error),
     });
   };
 
   return (
-    <OuterForm>
-      <form onSubmit={handleSubmit}>
-        <InputWrapper>
-          <PasswordInput placeholder="Digite sua nova senha" name="password" />
-          <PasswordInput placeholder="Repita a nova senha" name="passwordConfirmation" />
-        </InputWrapper>
+    <div className="mt-6">
+      <form onSubmit={handleSubmit} noValidate>
+        <FormAlert tone="inverse" message={form.formError} className="mb-4" />
 
-        <LoginButton variant="contained" color="primary" type="submit" disabled={loading} fullWidth>
-          Redefinir
-        </LoginButton>
+        <div className="flex flex-col gap-2">
+          <PasswordInput
+            placeholder="Nova senha…"
+            aria-label="Nova senha"
+            autoComplete="new-password"
+            {...form.fieldProps('password')}
+          />
+          <FieldError tone="inverse" {...form.errorProps('password')} />
+
+          <PasswordInput
+            placeholder="Repita a nova senha…"
+            aria-label="Confirme a nova senha"
+            autoComplete="new-password"
+            {...form.fieldProps('passwordConfirmation')}
+          />
+          <FieldError tone="inverse" {...form.errorProps('passwordConfirmation')} />
+        </div>
+
+        <Button type="submit" size="lg" className="mt-6 w-full" loading={loading}>
+          Redefinir senha
+        </Button>
       </form>
-    </OuterForm>
+    </div>
   );
 }

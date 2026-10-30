@@ -1,95 +1,70 @@
-import { errorConfig, getError } from '@usefaz/shared';
-import { Notification } from '@usefaz/components';
-import styled from 'styled-components';
-import Button from '@mui/material/Button';
+import { handleMutationError } from '@usefaz/shared';
+import { FormAlert } from '@usefaz/ui/components/form-alert';
+import { RMInput } from '@usefaz/ui/components/rm-input';
+import { Button } from '@usefaz/ui/components/ui/button';
+import { FieldError } from '@usefaz/ui/components/ui/field';
+import { email, required, useFormValidation } from '@usefaz/ui/hooks/use-form-validation';
 import { useNavigate } from 'react-router';
-import { useMutation } from 'relay-hooks';
+import { useMutation } from 'react-relay';
 
 import SendStudentPasswordRecoveryRequestMutation from '~/modules/student/SendStudentPasswordRecoveryRequestMutation';
-import { SendStudentPasswordRecoveryRequestMutation as SendStudentPasswordRecoveryRequestMutationType } from '~/modules/student/__generated__/SendStudentPasswordRecoveryRequestMutation.graphql';
-import RMInput from './RMinput';
+import type { SendStudentPasswordRecoveryRequestMutation as SendStudentPasswordRecoveryRequestMutationType } from '~/modules/student/__generated__/SendStudentPasswordRecoveryRequestMutation.graphql';
 import EmailInput from './EmailInput';
 
-const OuterForm = styled.div`
-  margin-top: 24px;
-`;
-
-const InputWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-`;
-
-const LoginButton = styled(Button)`
-  && {
-    color: #fafafa;
-    border-radius: 4px;
-    height: 56px;
-    padding: 0;
-
-    margin-top: 24px;
-  }
-`;
-
 export default function Form() {
-  const { enqueueSnackbar } = Notification.useSnackbar();
-
   const navigate = useNavigate();
 
-  const [sendStudentPasswordRecoveryRequestMutation, { loading }] =
-    useMutation<SendStudentPasswordRecoveryRequestMutationType>(SendStudentPasswordRecoveryRequestMutation, {
-      onError(errors) {
-        const { notFound } = errorConfig.student;
+  const [sendStudentPasswordRecoveryRequestMutation, loading] =
+    useMutation<SendStudentPasswordRecoveryRequestMutationType>(SendStudentPasswordRecoveryRequestMutation);
 
-        const studentNotFoundError = getError(errors, notFound.code);
-        if (studentNotFoundError) {
-          enqueueSnackbar('Aluno não encontrado. Por favor, tente novamente.', { variant: 'error' });
-        }
-      },
-    });
+  const form = useFormValidation({
+    RM: [required('Informe seu número de matrícula.')],
+    email: [required('Informe seu e-mail.'), email('Digite um e-mail válido, como nome@exemplo.com.')],
+  });
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    const formData = new FormData(event.currentTarget);
-
-    const RM = formData.get('RM').toString();
-    if (!RM) {
-      enqueueSnackbar('RM obrigatório.', { variant: 'error' });
-      return;
-    }
-
-    const email = formData.get('email').toString();
-    if (!email) {
-      enqueueSnackbar('E-mail obrigatório.', { variant: 'error' });
+    const values = form.validate(event.currentTarget);
+    if (!values) {
       return;
     }
 
     sendStudentPasswordRecoveryRequestMutation({
       variables: {
-        input: { RM, email },
+        input: values,
       },
-      onCompleted() {
+      onCompleted: ({ sendStudentPasswordRecoveryRequest }) => {
+        if (handleMutationError(form, sendStudentPasswordRecoveryRequest?.error)) {
+          return;
+        }
         navigate('/solicitacao-enviada');
       },
-      onError() {
-        enqueueSnackbar('Falha ao enviar a solicitação de recuperação de senha.', { variant: 'error' });
-      },
+      onError: (error) => handleMutationError(form, error),
     });
   };
 
   return (
-    <OuterForm>
-      <form onSubmit={handleSubmit}>
-        <InputWrapper>
-          <RMInput />
-          <EmailInput />
-        </InputWrapper>
+    <div className="mt-6">
+      <form onSubmit={handleSubmit} noValidate>
+        <FormAlert tone="inverse" message={form.formError} className="mb-4" />
 
-        <LoginButton variant="contained" color="primary" type="submit" disabled={loading} fullWidth>
-          Enviar
-        </LoginButton>
+        <div className="flex flex-col gap-2">
+          <div className="flex flex-col gap-1">
+            <RMInput {...form.fieldProps('RM')} />
+            <FieldError tone="inverse" {...form.errorProps('RM')} />
+          </div>
+
+          <div className="flex flex-col gap-1">
+            <EmailInput {...form.fieldProps('email')} />
+            <FieldError tone="inverse" {...form.errorProps('email')} />
+          </div>
+        </div>
+
+        <Button size="lg" type="submit" loading={loading} className="mt-6 w-full">
+          Enviar solicitação
+        </Button>
       </form>
-    </OuterForm>
+    </div>
   );
 }

@@ -1,103 +1,19 @@
-import styled from 'styled-components';
-import LockResetIcon from '@mui/icons-material/LockReset';
-import SchoolIcon from '@mui/icons-material/School';
+import { GraduationCapIcon, KeyRoundIcon } from 'lucide-react';
 
-import MenuItem, { Item } from './MenuItem';
-
-const OuterMenu = styled.div`
-  width: 320px;
-  height: 100%;
-
-  background-color: #0020a2;
-
-  @media (min-width: 448px) {
-    width: 390px;
-  }
-
-  padding: 48px 24px;
-
-  box-shadow: 4px 0 8px rgba(0, 0, 0, 0.25);
-  border-bottom-right-radius: 24px;
-
-  z-index: 11;
-
-  transition: width 0.2s;
-
-  @media (min-width: 1200px) {
-    padding: 24px 0 40px;
-    width: 72px;
-    height: 100vh;
-    border-bottom-right-radius: 0;
-
-    top: 0;
-
-    overscroll-behavior: contain;
-
-    &&::-webkit-scrollbar {
-      background-color: #200741;
-      width: 14px;
-    }
-
-    &&::-webkit-scrollbar-thumb {
-      border: 4px solid #200741;
-      border-radius: 8px;
-      background-color: #bababa;
-    }
-
-    :hover {
-      width: 300px;
-      overflow-y: auto;
-    }
-  }
-`;
-
-const MenuItemList = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 8px;
-
-  overflow-y: auto;
-  overflow-x: hidden;
-
-  overflow-y: auto;
-  overscroll-behavior: contain;
-  height: 500px;
-  max-height: calc(90vh - 56px - 96px - 24px);
-
-  @media (min-width: 768px) and (max-width: 1199px) {
-    &&::-webkit-scrollbar {
-      background-color: #200741;
-      width: 14px;
-    }
-
-    &&::-webkit-scrollbar-thumb {
-      border: 4px solid #200741;
-      border-radius: 8px;
-      background-color: #bababa;
-    }
-  }
-
-  @media (min-width: 1200px) {
-    overflow-y: unset;
-    overscroll-behavior: unset;
-
-    max-height: unset;
-  }
-`;
+import MenuItem, { type Item } from './MenuItem';
 
 const menuItens: Item[] = [
   {
     id: 1,
     name: 'Alunos',
     link: '/',
-    Icon: <SchoolIcon />,
+    Icon: <GraduationCapIcon />,
   },
   {
     id: 2,
-    name: 'Solicitações de Recuperação de Senha',
+    name: 'Solicitações de recuperação de senha',
     link: '/solicitacoes-de-recuperacao-de-senha',
-    Icon: <LockResetIcon />,
+    Icon: <KeyRoundIcon />,
   },
 ];
 
@@ -107,13 +23,17 @@ type MenuProps = {
 
 const Menu = ({ setIsMenuOpen }: MenuProps) => {
   return (
-    <OuterMenu>
-      <MenuItemList>
+    <nav
+      id="menu-principal"
+      aria-label="Menu principal"
+      className="menu z-11 h-full w-[320px] rounded-br-3xl bg-[#0020a2] px-6 py-12 shadow-[4px_0_8px_rgba(0,0,0,0.25)] transition-[width] duration-200 motion-reduce:transition-none min-[448px]:w-[390px] min-[1200px]:top-0 min-[1200px]:h-dvh min-[1200px]:w-[72px] min-[1200px]:overscroll-contain min-[1200px]:rounded-br-none min-[1200px]:px-0 min-[1200px]:pt-6 min-[1200px]:pb-10 min-[1200px]:focus-within:w-[300px] min-[1200px]:focus-within:overflow-y-auto min-[1200px]:hover:w-[300px] min-[1200px]:hover:overflow-y-auto"
+    >
+      <div className="menu-item-list flex h-[500px] max-h-[calc(90vh-56px-96px-24px)] flex-col items-end gap-2 overflow-x-hidden overflow-y-auto overscroll-contain min-[1200px]:max-h-none min-[1200px]:overflow-y-visible min-[1200px]:overscroll-auto">
         {menuItens.map((item) => {
           return <MenuItem key={item.id} item={item} setIsMenuOpen={setIsMenuOpen} />;
         })}
-      </MenuItemList>
-    </OuterMenu>
+      </div>
+    </nav>
   );
 };
 

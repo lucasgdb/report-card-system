@@ -1,14 +1,9 @@
 {
+  "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    "esModuleInterop": true,
-    "allowJs": false,
-    "moduleResolution": "node",
-    "target": "esnext",
-    "module": "commonjs",
-    "resolveJsonModule": true,
-    "strict": true
+    "lib": ["ES2023", "DOM"],
+    "strict": true,
+    "types": ["node"]
   },
-  "extends": "../../tsconfig.json",
-  "include": ["src"],
-  "exclude": ["**/__tests__"]
+  "include": ["src"]
 }

@@ -3,15 +3,16 @@ version: 0.2
 phases:
   install:
     runtime-versions:
-      nodejs: 14
+      nodejs: 22
+    commands:
+      - corepack enable
   pre_build:
     commands:
-      - yarn --frozen-lockfile --ignore-scripts --non-interactive
+      - pnpm install --frozen-lockfile --filter @usefaz/server...
   build:
     commands:
       - echo Entered the build phase...
-      - yarn workspace @usefaz/server build
-      - yarn workspace @usefaz/shared build
+      - pnpm --filter @usefaz/server build
   post_build:
     commands:
       - echo Entered the post_build phase...
@@ -23,7 +24,7 @@ artifacts:
     - apps/server/**/*
     - packages/shared/**/*
     - docker-compose.yml
-    - tsconfig.base.json
     - package.json
-    - yarn.lock
+    - pnpm-lock.yaml
+    - pnpm-workspace.yaml
   base-directory: ./

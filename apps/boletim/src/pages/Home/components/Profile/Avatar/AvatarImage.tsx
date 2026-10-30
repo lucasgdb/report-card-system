@@ -1,20 +1,8 @@
-import { graphql, useFragment } from 'relay-hooks';
-import { ImageWithLoader, AvatarInitials } from '@usefaz/components';
-import styled from 'styled-components';
+import { graphql, useFragment } from 'react-relay';
+import { AvatarInitials } from '@usefaz/ui/components/avatar-initials';
+import { ImageWithLoader } from '@usefaz/ui/components/image-with-loader';
 
-import { AvatarImage_student$key } from './__generated__/AvatarImage_student.graphql';
-
-const OuterAvatarImage = styled.div`
-  font-size: 56px;
-  width: 100%;
-  height: 100%;
-`;
-
-const StyledImgWithLoader = styled(ImageWithLoader)`
-  width: 100%;
-  height: 100%;
-  border-radius: 50%;
-`;
+import type { AvatarImage_student$key } from './__generated__/AvatarImage_student.graphql';
 
 type AvatarImageProps = {
   student: AvatarImage_student$key;
@@ -33,12 +21,14 @@ export default function AvatarImage({ student }: AvatarImageProps) {
   );
 
   if (data.avatarURL) {
-    return <StyledImgWithLoader src={data.avatarURL} />;
+    return (
+      <ImageWithLoader className="size-full rounded-full object-cover" src={data.avatarURL} alt="Sua foto de perfil" />
+    );
   }
 
   return (
-    <OuterAvatarImage>
+    <div className="size-full text-[56px]">
       <AvatarInitials firstname={data.firstname} lastname={data.lastname} />
-    </OuterAvatarImage>
+    </div>
   );
 }

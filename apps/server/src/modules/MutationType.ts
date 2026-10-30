@@ -1,46 +1,34 @@
-/* eslint-disable global-require */
-/* eslint-disable import/no-dynamic-require */
 import { GraphQLObjectType } from 'graphql';
-import { sync } from 'glob';
 
-const mutationPaths = sync(`${__dirname}/**/mutations/**/*.{js,ts}`, {
-  realpath: true,
-});
-
-const normalizeMutationName = (mutationName: string) => {
-  const newMutationName = mutationName.replace('Mutation', '');
-  return `${newMutationName[0].toLowerCase()}${newMutationName.substring(1)}`;
-};
-
-const normalizeMutationLocation = (mutationLocation: string) => {
-  const slashType = mutationLocation.includes('\\') ? '\\' : '/';
-
-  const newMutationLocation = mutationLocation.slice(mutationLocation.lastIndexOf(slashType) + 1);
-
-  return newMutationLocation.replace(/\.(js|ts)/, '');
-};
-
-const getMutationRelativePath = (path: string) => path.replace(__dirname, '.');
-
-const mutationFieldsReducer = (fields: object, mutation: any) => {
-  const [name, field] = mutation;
-
-  return {
-    ...fields,
-    [normalizeMutationName(name)]: field.default,
-  };
-};
-
-const mutationFieldsInfo = mutationPaths.map((mutationPath) => [
-  normalizeMutationLocation(mutationPath),
-  require(getMutationRelativePath(mutationPath)),
-]);
-
-const mutationFields = mutationFieldsInfo.reduce(mutationFieldsReducer, {});
+import AdminLoginMutation from './admin/mutations/AdminLoginMutation';
+import ChangeStudentInformationMutation from './admin/mutations/ChangeStudentInformationMutation';
+import ChangeStudentPasswordMutation from './admin/mutations/ChangeStudentPasswordMutation';
+import RecoverAdminPasswordMutation from './admin/mutations/RecoverAdminPasswordMutation';
+import RefuseStudentPasswordRecoveryRequestMutation from './admin/mutations/RefuseStudentPasswordRecoveryRequestMutation';
+import RemoveStudentMutation from './admin/mutations/RemoveStudentMutation';
+import SendAdminRecoveryEmailMutation from './admin/mutations/SendAdminRecoveryEmailMutation';
+import LogoutMutation from './auth/mutations/LogoutMutation';
+import SetNotificationsAsViewedMutation from './notification/mutations/SetNotificationsAsViewedMutation';
+import RemoveAvatarMutation from './student/mutations/RemoveAvatarMutation';
+import SendStudentPasswordRecoveryRequestMutation from './student/mutations/SendStudentPasswordRecoveryRequestMutation';
+import StudentLoginMutation from './student/mutations/StudentLoginMutation';
 
 const MutationType = new GraphQLObjectType({
   name: 'Mutation',
-  fields: mutationFields,
+  fields: {
+    adminLogin: AdminLoginMutation,
+    changeStudentInformation: ChangeStudentInformationMutation,
+    changeStudentPassword: ChangeStudentPasswordMutation,
+    recoverAdminPassword: RecoverAdminPasswordMutation,
+    refuseStudentPasswordRecoveryRequest: RefuseStudentPasswordRecoveryRequestMutation,
+    removeStudent: RemoveStudentMutation,
+    sendAdminRecoveryEmail: SendAdminRecoveryEmailMutation,
+    logout: LogoutMutation,
+    setNotificationsAsViewed: SetNotificationsAsViewedMutation,
+    removeAvatar: RemoveAvatarMutation,
+    sendStudentPasswordRecoveryRequest: SendStudentPasswordRecoveryRequestMutation,
+    studentLogin: StudentLoginMutation,
+  },
 });
 
 export default MutationType;

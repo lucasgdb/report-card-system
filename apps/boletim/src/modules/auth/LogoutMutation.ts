@@ -1,9 +1,12 @@
-import { graphql } from 'relay-hooks';
+import { graphql } from 'react-relay';
 
 const LogoutMutation = graphql`
   mutation LogoutMutation($input: LogoutMutationInput!) {
     logout(input: $input) {
-      clientMutationId
+      error {
+        field
+        userMessage
+      }
     }
   }
 `;

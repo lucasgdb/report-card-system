@@ -1,5 +1,5 @@
-import { randomUUID } from 'crypto';
-import path from 'path';
+import { randomUUID } from 'node:crypto';
+import path from 'node:path';
 
 export default function changeFilenameToRandomUUID(filename: string) {
   const fileExtension = path.extname(filename);

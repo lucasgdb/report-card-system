@@ -1,59 +1,23 @@
-import styled from 'styled-components';
-import Button from '@mui/material/Button';
-import IconButton from '@mui/material/IconButton';
-import useMediaQuery from '@mui/material/useMediaQuery';
-import InstallMobileIcon from '@mui/icons-material/InstallMobile';
-import { useEffect } from 'react';
+import { Button } from '@usefaz/ui/components/ui/button';
+import { DownloadIcon } from 'lucide-react';
 
-declare global {
-  interface Window {
-    deferredPrompt: Event;
-    installButtonShouldBeHidden: true | undefined;
-    addInstallButtonEventListener(): void;
-    showInstallButton(): void;
-  }
-}
+import { useInstallPrompt } from '~/pwa/installPrompt';
 
-const MobileInstallButton = styled(IconButton)`
-  && {
-    display: none;
-
-    width: 24px;
-    height: 24px;
-    padding: 0;
-  }
-`;
-
-const DesktopInstallButton = styled(Button)`
-  && {
-    display: none;
-
-    border-radius: 8px;
-    padding: 2px 10px;
-  }
-`;
-
+/**
+ * Offers installing the app, only when the browser supports it and it isn't installed yet.
+ * On small screens only the icon shows; the label stays available to assistive technology.
+ */
 export default function InstallButton() {
-  const isMobile = useMediaQuery('(max-width: 499px)');
+  const { canInstall, install } = useInstallPrompt();
 
-  useEffect(() => {
-    if (window.deferredPrompt && !window.installButtonShouldBeHidden) {
-      window.addInstallButtonEventListener();
-      window.showInstallButton();
-    }
-  }, [isMobile]);
-
-  if (isMobile) {
-    return (
-      <MobileInstallButton color="primary" id="install-button">
-        <InstallMobileIcon color="secondary" />
-      </MobileInstallButton>
-    );
+  if (!canInstall) {
+    return null;
   }
 
   return (
-    <DesktopInstallButton color="primary" variant="contained" id="install-button">
-      Instalar
-    </DesktopInstallButton>
+    <Button size="sm" onClick={install} className="shrink-0 max-[639px]:size-9 max-[639px]:px-0">
+      <DownloadIcon aria-hidden />
+      <span className="max-[639px]:sr-only">Instalar app</span>
+    </Button>
   );
 }

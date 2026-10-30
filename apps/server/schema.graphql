@@ -258,7 +258,19 @@ type Mutation {
 type AdminLoginMutationPayload {
   jwtToken: String
   admin: Admin
+  error: MutationError
   clientMutationId: String
+}
+
+"""An expected failure of a mutation, written for the user."""
+type MutationError {
+  """
+  Input field the error refers to; null when it concerns the whole operation.
+  """
+  field: String
+
+  """Message to show as is (pt-BR)."""
+  userMessage: String!
 }
 
 input AdminLoginMutationInput {
@@ -270,6 +282,7 @@ input AdminLoginMutationInput {
 
 type ChangeStudentInformationMutationPayload {
   student: Student
+  error: MutationError
   clientMutationId: String
 }
 
@@ -283,6 +296,7 @@ input ChangeStudentInformationMutationInput {
 
 type ChangeStudentPasswordMutationPayload {
   studentPasswordRecoveryRequest: StudentPasswordRecoveryRequest
+  error: MutationError
   clientMutationId: String
 }
 
@@ -294,6 +308,7 @@ input ChangeStudentPasswordMutationInput {
 
 type RecoverAdminPasswordMutationPayload {
   adminPasswordRecoveryRequest: AdminPasswordRecoveryRequest
+  error: MutationError
   clientMutationId: String
 }
 
@@ -318,6 +333,7 @@ input RecoverAdminPasswordMutationInput {
 
 type RefuseStudentPasswordRecoveryRequestMutationPayload {
   studentPasswordRecoveryRequest: StudentPasswordRecoveryRequest
+  error: MutationError
   clientMutationId: String
 }
 
@@ -328,6 +344,7 @@ input RefuseStudentPasswordRecoveryRequestMutationInput {
 
 type RemoveStudentMutationPayload {
   student: Student
+  error: MutationError
   clientMutationId: String
 }
 
@@ -337,6 +354,7 @@ input RemoveStudentMutationInput {
 }
 
 type SendAdminRecoveryEmailMutationPayload {
+  error: MutationError
   clientMutationId: String
 }
 
@@ -346,6 +364,7 @@ input SendAdminRecoveryEmailMutationInput {
 }
 
 type LogoutMutationPayload {
+  error: MutationError
   clientMutationId: String
 }
 
@@ -355,6 +374,7 @@ input LogoutMutationInput {
 
 type SetNotificationsAsViewedMutationPayload {
   notifications: NotificationConnection
+  error: MutationError
   clientMutationId: String
 }
 
@@ -364,7 +384,8 @@ input SetNotificationsAsViewedMutationInput {
 }
 
 type RemoveAvatarMutationPayload {
-  student: Student!
+  student: Student
+  error: MutationError
   clientMutationId: String
 }
 
@@ -373,6 +394,7 @@ input RemoveAvatarMutationInput {
 }
 
 type SendStudentPasswordRecoveryRequestMutationPayload {
+  error: MutationError
   clientMutationId: String
 }
 
@@ -385,6 +407,7 @@ input SendStudentPasswordRecoveryRequestMutationInput {
 type StudentLoginMutationPayload {
   jwtToken: String
   student: Student
+  error: MutationError
   clientMutationId: String
 }
 

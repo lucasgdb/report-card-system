@@ -1,0 +1,31 @@
+{
+  "name": "@usefaz/vite-config",
+  "description": "Vite setup shared by the Usefaz web apps",
+  "private": true,
+  "version": "1.0.0",
+  "license": "ISC",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@tailwindcss/vite": "catalog:",
+    "@vitejs/plugin-react": "catalog:",
+    "tailwindcss": "catalog:",
+    "vite-plugin-relay-lite": "catalog:"
+  },
+  "peerDependencies": {
+    "graphql": "catalog:",
+    "relay-compiler": "catalog:",
+    "vite": "catalog:"
+  },
+  "devDependencies": {
+    "@types/node": "catalog:",
+    "graphql": "catalog:",
+    "typescript": "catalog:",
+    "vite": "catalog:"
+  }
+}

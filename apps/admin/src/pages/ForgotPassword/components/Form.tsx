@@ -1,89 +1,60 @@
-import { errorConfig, getError } from '@usefaz/shared';
-import { Notification } from '@usefaz/components';
-import styled from 'styled-components';
-import Button from '@mui/material/Button';
+import { handleMutationError } from '@usefaz/shared';
+import { FormAlert } from '@usefaz/ui/components/form-alert';
+import { Button } from '@usefaz/ui/components/ui/button';
+import { FieldError } from '@usefaz/ui/components/ui/field';
+import { required, useFormValidation } from '@usefaz/ui/hooks/use-form-validation';
+import { useMutation } from 'react-relay';
 import { useNavigate } from 'react-router';
-import { useMutation } from 'relay-hooks';
 
 import SendAdminRecoveryEmailMutation from '~/modules/admin/SendAdminRecoveryEmailMutation';
-import { SendAdminRecoveryEmailMutation as SendAdminRecoveryEmailMutationType } from '~/modules/admin/__generated__/SendAdminRecoveryEmailMutation.graphql';
-import EmailInput from './EmailInput';
-
-const OuterForm = styled.div`
-  margin-top: 24px;
-`;
-
-const InputWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-`;
-
-const LoginButton = styled(Button)`
-  && {
-    color: #fafafa;
-    border-radius: 4px;
-    height: 56px;
-    padding: 0;
-
-    margin-top: 24px;
-  }
-`;
+import type { SendAdminRecoveryEmailMutation as SendAdminRecoveryEmailMutationType } from '~/modules/admin/__generated__/SendAdminRecoveryEmailMutation.graphql';
+import EmailInput from '~/components/EmailInput';
 
 export default function Form() {
-  const { enqueueSnackbar } = Notification.useSnackbar();
-
   const navigate = useNavigate();
+  const form = useFormValidation({
+    email: [required('Informe o e-mail da sua conta.')],
+  });
 
-  const [sendAdminRecoveryEmailMutation, { loading }] = useMutation<SendAdminRecoveryEmailMutationType>(
-    SendAdminRecoveryEmailMutation,
-    {
-      onError(errors) {
-        const { notFound } = errorConfig.admin;
-
-        const adminNotFoundError = getError(errors, notFound.code);
-        if (adminNotFoundError) {
-          enqueueSnackbar('E-mail fornecido não existe na base de dados.', { variant: 'error' });
-          return;
-        }
-
-        enqueueSnackbar('Falha ao enviar a solicitação de recuperação de senha.', { variant: 'error' });
-      },
-    }
-  );
+  const [sendAdminRecoveryEmailMutation, loading] =
+    useMutation<SendAdminRecoveryEmailMutationType>(SendAdminRecoveryEmailMutation);
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    const formData = new FormData(event.currentTarget);
-
-    const email = formData.get('email').toString();
-    if (!email) {
-      enqueueSnackbar('E-mail obrigatório.', { variant: 'error' });
+    const values = form.validate(event.currentTarget);
+    if (!values) {
       return;
     }
 
     sendAdminRecoveryEmailMutation({
       variables: {
-        input: { email },
+        input: { email: values.email },
       },
-      onCompleted() {
+      onCompleted: ({ sendAdminRecoveryEmail }) => {
+        if (handleMutationError(form, sendAdminRecoveryEmail?.error)) {
+          return;
+        }
         navigate('/solicitacao-enviada');
       },
+      onError: (error) => handleMutationError(form, error),
     });
   };
 
   return (
-    <OuterForm>
-      <form onSubmit={handleSubmit}>
-        <InputWrapper>
-          <EmailInput />
-        </InputWrapper>
+    <div className="mt-6">
+      <form onSubmit={handleSubmit} noValidate>
+        <FormAlert tone="inverse" message={form.formError} className="mb-4" />
 
-        <LoginButton variant="contained" color="primary" type="submit" disabled={loading} fullWidth>
-          Enviar
-        </LoginButton>
+        <div className="flex flex-col gap-2">
+          <EmailInput {...form.fieldProps('email')} />
+          <FieldError tone="inverse" {...form.errorProps('email')} />
+        </div>
+
+        <Button type="submit" size="lg" className="mt-6 w-full" loading={loading}>
+          Enviar link de recuperação
+        </Button>
       </form>
-    </OuterForm>
+    </div>
   );
 }

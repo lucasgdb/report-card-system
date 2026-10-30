@@ -1,31 +1,11 @@
-import styled from 'styled-components';
-
+import { SeasonAvatarAccessory } from '@usefaz/ui/components/seasonal/season-avatar-accessory';
 import DefaultAvatar from './DefaultAvatar';
-
-const OuterAvatar = styled.div`
-  position: relative;
-
-  width: 150px;
-  height: 150px;
-
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  border-radius: 50%;
-  border: 4px solid #ee7844;
-
-  @media (min-width: 864px) {
-    position: absolute;
-    left: 133px;
-    top: 113px;
-  }
-`;
 
 export default function Avatar() {
   return (
-    <OuterAvatar>
+    <div className="relative flex size-[150px] items-center justify-center rounded-full border-4 border-[#ee7844] min-[864px]:absolute min-[864px]:top-[113px] min-[864px]:left-[133px]">
       <DefaultAvatar />
-    </OuterAvatar>
+      <SeasonAvatarAccessory />
+    </div>
   );
 }

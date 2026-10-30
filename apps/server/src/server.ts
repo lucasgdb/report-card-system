@@ -1,9 +1,10 @@
 import Koa from 'koa';
 import koaStatic from 'koa-static';
-import koaBody from 'koa-body';
+import { koaBody } from 'koa-body';
 import mount from 'koa-mount';
-import path from 'path';
 import cors from '@koa/cors';
+
+import { PUBLIC_DIR } from './paths';
 
 import healthCheckerRouter from './routes/healthChecker.routes';
 import avatarRouter from './routes/avatar.routes';
@@ -13,7 +14,7 @@ const server = new Koa();
 
 server.use(cors({ allowMethods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'] }));
 
-server.use(mount('/public', koaStatic(path.resolve(__dirname, '../public'))));
+server.use(mount('/public', koaStatic(PUBLIC_DIR)));
 
 server.use(avatarRouter.routes()).use(avatarRouter.allowedMethods());
 

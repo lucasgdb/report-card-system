@@ -1,7 +1,5 @@
-import { errorConfig } from '@usefaz/shared';
 import * as bcrypt from 'bcryptjs';
 import { GraphQLNonNull, GraphQLString } from 'graphql';
-import { mutationWithClientMutationId } from 'graphql-relay';
 import * as jwt from 'jsonwebtoken';
 
 import usefazConnector from '~/database/usefazConnector';
@@ -9,6 +7,8 @@ import { AdminModel, AuthModel } from '~/entities';
 import type { IAdmin } from '~/interfaces';
 import validateRecaptchaToken from '~/utils/validateRecaptchaToken';
 import AdminType from '../AdminType';
+import createMutation from '~/utils/createMutation';
+import UserError from '~/utils/UserError';
 
 const getAdminJwtToken = async (admin: IAdmin, password: string) => {
   if (!bcrypt.compareSync(password, admin.password!)) {
@@ -41,20 +41,17 @@ const adminLogin = async ({ email, password, token, clientMutationId }: adminLog
 
   const adminEntity = AdminModel(usefazConnector);
 
+  // Same message for an unknown e-mail and a wrong password, so the form doesn't reveal which accounts exist.
   const admin = await adminEntity.getAdminByEmail(email);
-  if (!admin) {
-    throw new Error(errorConfig.student.notFound.code);
-  }
-
-  const jwtToken = await getAdminJwtToken(admin, password);
+  const jwtToken = admin && (await getAdminJwtToken(admin, password));
   if (!jwtToken) {
-    throw new Error(errorConfig.student.notFound.code);
+    throw new UserError('E-mail ou senha incorretos. Confira os dados e tente novamente.');
   }
 
   return { jwtToken, admin, clientMutationId };
 };
 
-const AdminLoginMutation = mutationWithClientMutationId({
+const AdminLoginMutation = createMutation({
   name: 'AdminLoginMutation',
   inputFields: {
     email: { type: new GraphQLNonNull(GraphQLString) },

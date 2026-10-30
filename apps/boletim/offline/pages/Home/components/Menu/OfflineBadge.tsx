@@ -1,21 +1,11 @@
-import styled from 'styled-components';
-
-const OuterOfflineBadge = styled.div`
-  background-color: #f44336;
-  padding: 6px 8px;
-  border-radius: 8px;
-`;
-
-const OfflineText = styled.p`
-  font: normal normal normal 16px/19px Lexend;
-  color: #fff;
-  margin: 0;
-`;
+import { Badge } from '@usefaz/ui/components/ui/badge';
+import { WifiOffIcon } from 'lucide-react';
 
 export default function OfflineBadge() {
   return (
-    <OuterOfflineBadge>
-      <OfflineText>Offline</OfflineText>
-    </OuterOfflineBadge>
+    <Badge variant="destructive">
+      <WifiOffIcon aria-hidden />
+      Offline
+    </Badge>
   );
 }

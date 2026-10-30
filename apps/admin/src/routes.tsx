@@ -1,10 +1,12 @@
-import { Route, Routes, HashRouter } from 'react-router-dom';
+import { Route, Routes, HashRouter } from 'react-router';
 import * as React from 'react';
 
-import NavbarLayout from './layout/Navbar/NavbarLayout';
+import EnvironmentLayout from '~/layout/EnvironmentLayout';
 import SuspenseRouter from './components/SuspenseRouter';
 
-const EnvironmentLayout = React.lazy(() => import('~/layout/EnvironmentLayout'));
+// The signed-in shell (menu, notifications) isn't needed on the login, so it loads with the first page.
+const NavbarLayout = React.lazy(() => import('./layout/Navbar/NavbarLayout'));
+
 const ErrorPage = React.lazy(() => import('~/pages/Error/ErrorPage'));
 const ForgotPasswordPage = React.lazy(() => import('~/pages/ForgotPassword/ForgotPasswordPage'));
 const RequestSentPage = React.lazy(() => import('~/pages/RequestSent/RequestSentPage'));

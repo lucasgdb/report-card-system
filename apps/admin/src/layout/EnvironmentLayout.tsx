@@ -1,28 +1,35 @@
-import { PageLoader } from '@usefaz/components';
-import { graphql, useQuery } from 'relay-hooks';
-import styled from 'styled-components';
-import { Outlet } from 'react-router-dom';
+import { jwtToken } from '@usefaz/shared/browser';
+import { PageLoader } from '@usefaz/ui/components/page-loader';
+import { graphql, useLazyLoadQuery } from 'react-relay';
+import { Outlet } from 'react-router';
 import * as React from 'react';
 
-import { EnvironmentLayoutQuery } from './__generated__/EnvironmentLayoutQuery.graphql';
+import type { EnvironmentLayoutQuery } from './__generated__/EnvironmentLayoutQuery.graphql';
 
-const OuterEnvironmentLayout = styled.div``;
+const LoginPage = React.lazy(() => import('~/pages/Login/LoginPage'));
 
 export default function EnvironmentLayout() {
-  const { data, isLoading } = useQuery<EnvironmentLayoutQuery>(graphql`
-    query EnvironmentLayoutQuery {
-      admin {
-        id
-      }
-    }
-  `);
+  return (
+    <React.Suspense fallback={<PageLoader />}>
+      {/* Without a session cookie there's nothing to ask the server: the login shows right away. */}
+      {jwtToken.get() ? <EnvironmentLayoutContent /> : <LoginPage />}
+    </React.Suspense>
+  );
+}
 
-  if (isLoading) {
-    return <PageLoader />;
-  }
+function EnvironmentLayoutContent() {
+  const data = useLazyLoadQuery<EnvironmentLayoutQuery>(
+    graphql`
+      query EnvironmentLayoutQuery {
+        admin {
+          id
+        }
+      }
+    `,
+    {}
+  );
 
   if (!data?.admin?.id) {
-    const LoginPage = React.lazy(() => import('~/pages/Login/LoginPage'));
     return (
       <React.Suspense fallback={<PageLoader />}>
         <LoginPage />
@@ -30,9 +37,5 @@ export default function EnvironmentLayout() {
     );
   }
 
-  return (
-    <OuterEnvironmentLayout>
-      <Outlet />
-    </OuterEnvironmentLayout>
-  );
+  return <Outlet />;
 }

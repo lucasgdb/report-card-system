@@ -1,87 +1,30 @@
-import styled, { css } from 'styled-components';
-import dayjs from 'dayjs';
-import { useFragment, useMutation, graphql } from 'relay-hooks';
+import { cn } from '@usefaz/ui/lib/utils';
+
+const absoluteDate = new Intl.DateTimeFormat('pt-BR', { dateStyle: 'long', timeStyle: 'short' });
+import { useFragment, useMutation, graphql } from 'react-relay';
 
 import SetNotificationsAsViewedMutation from '~/modules/notification/SetNotificationsAsViewedMutation';
-import { SetNotificationsAsViewedMutation as SetNotificationsAsViewedMutationType } from '~/modules/notification/__generated__/SetNotificationsAsViewedMutation.graphql';
+import type { SetNotificationsAsViewedMutation as SetNotificationsAsViewedMutationType } from '~/modules/notification/__generated__/SetNotificationsAsViewedMutation.graphql';
 
-const OuterNotification = styled.div`
-  background: #fff 0% 0% no-repeat padding-box;
-  padding: 16px 0;
+const breakWordsClassName = 'break-words [word-break:break-word] hyphens-auto';
 
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-`;
+const relativeTime = new Intl.RelativeTimeFormat('pt-BR', { numeric: 'auto' });
 
-type TitleProps = {
-  $viewed: boolean;
+const RELATIVE_UNITS: [Intl.RelativeTimeFormatUnit, number][] = [
+  ['year', 365 * 24 * 60 * 60],
+  ['month', 30 * 24 * 60 * 60],
+  ['week', 7 * 24 * 60 * 60],
+  ['day', 24 * 60 * 60],
+  ['hour', 60 * 60],
+  ['minute', 60],
+];
+
+/** "há 5 minutos", "ontem"… */
+const fromNow = (date: Date) => {
+  const seconds = (date.getTime() - Date.now()) / 1000;
+  const [unit, size] = RELATIVE_UNITS.find(([, unitSeconds]) => Math.abs(seconds) >= unitSeconds) ?? ['second', 1];
+  return unit === 'second' ? 'agora' : relativeTime.format(Math.round(seconds / size), unit);
 };
-
-const Title = styled.h1<TitleProps>`
-  font: normal normal bold 16px/19px Lexend;
-  color: #333;
-  margin: 0;
-
-  overflow-wrap: break-word;
-  word-wrap: break-word;
-
-  -ms-word-break: break-all;
-  word-break: break-all;
-  word-break: break-word;
-
-  -ms-hyphens: auto;
-  -moz-hyphens: auto;
-  -webkit-hyphens: auto;
-  hyphens: auto;
-
-  ${({ $viewed }) =>
-    !$viewed &&
-    css`
-      text-indent: 16px;
-      position: relative;
-
-      ::before {
-        content: '';
-
-        position: absolute;
-        top: 8px;
-        left: 4px;
-
-        background: #fe2a59 0% 0% no-repeat padding-box;
-        width: 4px;
-        height: 4px;
-        border-radius: 50%;
-
-        display: inline-block;
-        margin-right: 8px;
-      }
-    `}
-`;
-
-const Date = styled.span`
-  font: normal normal normal 12px/15px Lexend;
-  letter-spacing: 0;
-  color: #999;
-`;
-
-const Message = styled.p`
-  font: normal normal normal 14px/17px Lexend;
-  margin: 0;
-  color: #666;
-
-  overflow-wrap: break-word;
-  word-wrap: break-word;
-
-  -ms-word-break: break-all;
-  word-break: break-all;
-  word-break: break-word;
-
-  -ms-hyphens: auto;
-  -moz-hyphens: auto;
-  -webkit-hyphens: auto;
-  hyphens: auto;
-`;
 
 export default function Notification({ notification }) {
   const data = useFragment(
@@ -111,11 +54,36 @@ export default function Notification({ notification }) {
     });
   };
 
+  const markAsViewed = handleSetNotificationAsViewed(data);
+  const sentAt = new Date(data.sentAt);
+
   return (
-    <OuterNotification onMouseEnter={handleSetNotificationAsViewed(data)}>
-      <Title $viewed={data.viewed}>{data.title}</Title>
-      <Message>{data.message}</Message>
-      <Date>{dayjs(data.sentAt).fromNow()}</Date>
-    </OuterNotification>
+    // Feed pattern: each notification is focusable, and reading it (hover or focus) marks it as viewed.
+    <article
+      // biome-ignore lint/a11y/noNoninteractiveTabindex: articles of a role="feed" are focusable by design
+      tabIndex={0}
+      className="flex flex-col gap-2 rounded-md py-4 outline-none focus-visible:ring-3 focus-visible:ring-ring/50"
+      onMouseEnter={markAsViewed}
+      onFocus={markAsViewed}
+    >
+      <h3
+        className={cn(
+          'text-base leading-[19px] font-bold text-foreground',
+          breakWordsClassName,
+          !data.viewed &&
+            'relative indent-4 before:absolute before:top-2 before:left-1 before:inline-block before:size-1 before:rounded-full before:bg-[#fe2a59] before:content-[""]'
+        )}
+      >
+        {data.title}
+      </h3>
+      <p className={cn('text-sm leading-[17px] text-muted-foreground', breakWordsClassName)}>{data.message}</p>
+      <time
+        dateTime={sentAt.toISOString()}
+        title={absoluteDate.format(sentAt)}
+        className="text-xs leading-[15px] text-muted-foreground/80"
+      >
+        {fromNow(sentAt)}
+      </time>
+    </article>
   );
 }

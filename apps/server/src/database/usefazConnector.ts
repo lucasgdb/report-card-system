@@ -1,4 +1,4 @@
-import assert from 'assert';
+import assert from 'node:assert';
 import type { Knex } from 'knex';
 
 import type { DBConnector } from './dbConnector';
@@ -20,7 +20,7 @@ const checkConnection = async () => {
     assert.strictEqual(data.check, 2);
 
     return true;
-  } catch (e) {
+  } catch {
     console.error('DB out of service!');
     return false;
   }

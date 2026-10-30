@@ -1,12 +1,13 @@
-import { errorConfig } from '@usefaz/shared';
 import { GraphQLNonNull, GraphQLString } from 'graphql';
-import { mutationWithClientMutationId, toGlobalId } from 'graphql-relay';
+import { toGlobalId } from 'graphql-relay';
 import { createTransport } from 'nodemailer';
-import crypto from 'crypto';
+import crypto from 'node:crypto';
 import dayjs from 'dayjs';
 
 import usefazConnector from '~/database/usefazConnector';
 import { AdminModel, AdminPasswordRecoveryRequestModel } from '~/entities';
+import createMutation from '~/utils/createMutation';
+import UserError from '~/utils/UserError';
 
 type sendAdminRecoveryEmailProps = {
   email: string;
@@ -20,7 +21,7 @@ const sendAdminRecoveryEmail = async ({ email: adminEmail, clientMutationId }: s
 
   const admin = await adminEntity.getAdminByEmail(email);
   if (!admin) {
-    throw new Error(errorConfig.admin.notFound.code);
+    throw new UserError('Não encontramos uma conta com esse e-mail.', 'email');
   }
 
   const adminPasswordRecoveryRequestEntity = AdminPasswordRecoveryRequestModel(usefazConnector);
@@ -61,7 +62,7 @@ const sendAdminRecoveryEmail = async ({ email: adminEmail, clientMutationId }: s
   return { clientMutationId };
 };
 
-const SendAdminRecoveryEmailMutation = mutationWithClientMutationId({
+const SendAdminRecoveryEmailMutation = createMutation({
   name: 'SendAdminRecoveryEmailMutation',
   inputFields: {
     email: { type: new GraphQLNonNull(GraphQLString) },

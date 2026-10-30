@@ -1,14 +1,12 @@
-import styled from 'styled-components';
-import Checkbox from '@mui/material/Checkbox';
-import FormControlLabel from '@mui/material/FormControlLabel';
+import { Checkbox } from '@usefaz/ui/components/ui/checkbox';
+import { FieldLabel } from '@usefaz/ui/components/ui/field';
 
-const StyledFormControlLabel = styled(FormControlLabel)`
-  & .MuiTypography-root {
-    font: normal normal 400 13px/16px Lexend;
-    color: #f7f5fa;
-  }
-`;
-
+/** The label wraps the checkbox so the whole row is one click target. */
 export default function RememberMeCheckbox() {
-  return <StyledFormControlLabel label="Lembrar-me" name="rememberMe" control={<Checkbox defaultChecked />} />;
+  return (
+    <FieldLabel className="items-center gap-2 py-1 text-[13px] font-normal text-[#f7f5fa]">
+      <Checkbox name="rememberMe" defaultChecked />
+      Lembrar-me
+    </FieldLabel>
+  );
 }

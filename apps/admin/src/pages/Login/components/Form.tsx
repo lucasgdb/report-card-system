@@ -1,138 +1,127 @@
-import { errorConfig, getError, jwtToken, __DEV__ } from '@usefaz/shared';
-import { Notification, PasswordInput } from '@usefaz/components';
-import styled from 'styled-components';
-import Button from '@mui/material/Button';
+import { handleMutationError } from '@usefaz/shared';
+import { getRecaptchaToken, jwtToken, preloadRecaptcha } from '@usefaz/shared/browser';
+import { FormAlert } from '@usefaz/ui/components/form-alert';
+import { PasswordInput } from '@usefaz/ui/components/password-input';
+import { Button } from '@usefaz/ui/components/ui/button';
+import { FieldError } from '@usefaz/ui/components/ui/field';
+import { required, useFormValidation } from '@usefaz/ui/hooks/use-form-validation';
 import { useState } from 'react';
-import { useMutation } from 'relay-hooks';
-import { Link } from 'react-router-dom';
-import { useGoogleReCaptcha } from 'react-google-recaptcha-v3';
+import { useMutation } from 'react-relay';
+import { Link } from 'react-router';
 
 import AdminLoginMutation from '~/modules/admin/AdminLoginMutation';
-import { AdminLoginMutation as AdminLoginMutationType } from '~/modules/admin/__generated__/AdminLoginMutation.graphql';
-import EmailInput from './EmailInput';
+import type { AdminLoginMutation as AdminLoginMutationType } from '~/modules/admin/__generated__/AdminLoginMutation.graphql';
+import EmailInput from '~/components/EmailInput';
 import RememberMeCheckbox from './RememberMeCheckbox';
 
-const OuterForm = styled.div`
-  margin-top: 42px;
-`;
+const REMEMBERED_EMAIL_KEY = 'Usefaz-Email';
 
-const InputWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-`;
+// Storage can be blocked (private mode, policies): remembering the e-mail is just a convenience.
+const readRememberedEmail = () => {
+  try {
+    return localStorage.getItem(REMEMBERED_EMAIL_KEY) ?? undefined;
+  } catch {
+    return undefined;
+  }
+};
 
-const OptionsWrapper = styled.div`
-  padding: 24px 0;
-
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-`;
-
-const Hyperlink = styled(Link)`
-  && {
-    color: #f7f5fa;
-    text-decoration: none;
-
-    :hover {
-      text-decoration: underline;
+const rememberEmail = (email: string | null) => {
+  try {
+    if (email) {
+      localStorage.setItem(REMEMBERED_EMAIL_KEY, email);
+    } else {
+      localStorage.removeItem(REMEMBERED_EMAIL_KEY);
     }
+  } catch {
+    // Ignored, see readRememberedEmail.
   }
-`;
+};
 
-const LoginButton = styled(Button)`
-  && {
-    color: #fafafa;
-    border-radius: 4px;
-    height: 56px;
-    padding: 0;
-  }
-`;
+const RECAPTCHA_ERROR = 'Não foi possível verificar seu acesso. Recarregue a página e tente novamente.';
 
 export default function Form() {
-  const { executeRecaptcha } = useGoogleReCaptcha();
+  const form = useFormValidation({
+    email: [required('Informe seu e-mail.')],
+    password: [required('Informe sua senha.')],
+  });
 
-  const { enqueueSnackbar } = Notification.useSnackbar();
-
+  const [rememberedEmail] = useState(readRememberedEmail);
   const [loadingRecaptcha, setLoadingRecaptcha] = useState(false);
 
-  const [loginMutation, { loading }] = useMutation<AdminLoginMutationType>(AdminLoginMutation);
+  const [loginMutation, loading] = useMutation<AdminLoginMutationType>(AdminLoginMutation);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
+    const formElement = event.currentTarget;
+    const values = form.validate(formElement);
+    if (!values) {
+      return;
+    }
+
+    const { email, password } = values;
+    const rememberMe = Boolean(new FormData(formElement).get('rememberMe'));
+
+    setLoadingRecaptcha(true);
+
+    let token: string;
     try {
-      const formData = new FormData(event.currentTarget);
-
-      const email = formData.get('email').toString();
-      if (!email) {
-        enqueueSnackbar('E-mail obrigatório.', { variant: 'error' });
-        return;
-      }
-
-      const password = formData.get('password').toString();
-      if (!password) {
-        enqueueSnackbar('Senha obrigatória.', { variant: 'error' });
-        return;
-      }
-
-      const rememberMe = Boolean(formData.get('rememberMe')?.toString());
-
-      setLoadingRecaptcha(true);
-
-      const token = __DEV__ ? '' : await executeRecaptcha('login');
-
-      loginMutation({
-        variables: {
-          input: { email, password, token },
-        },
-        onCompleted: ({ adminLogin }) => {
-          if (adminLogin.jwtToken) {
-            if (rememberMe) {
-              localStorage.setItem('Usefaz-Email', email);
-            } else {
-              localStorage.removeItem('Usefaz-Email');
-            }
-
-            jwtToken.set(adminLogin.jwtToken);
-
-            window.location.reload();
-          }
-        },
-        onError(errors) {
-          const { notFound } = errorConfig.student;
-
-          const studentNotFoundError = getError(errors, notFound.code);
-          if (studentNotFoundError) {
-            enqueueSnackbar('Administrador não encontrado. Por favor, tente novamente.', { variant: 'error' });
-          }
-
-          setLoadingRecaptcha(false);
-        },
-      });
+      token = await getRecaptchaToken('login');
     } catch {
       setLoadingRecaptcha(false);
+      form.setFormError(RECAPTCHA_ERROR);
+      return;
     }
+
+    loginMutation({
+      variables: {
+        input: { email, password, token },
+      },
+      onCompleted: ({ adminLogin }) => {
+        if (handleMutationError(form, adminLogin?.error) || !adminLogin?.jwtToken) {
+          setLoadingRecaptcha(false);
+          return;
+        }
+
+        rememberEmail(rememberMe ? email : null);
+        jwtToken.set(adminLogin.jwtToken);
+        window.location.reload();
+      },
+      onError: (error) => {
+        setLoadingRecaptcha(false);
+        handleMutationError(form, error);
+      },
+    });
   };
 
   return (
-    <OuterForm>
-      <form onSubmit={handleSubmit}>
-        <InputWrapper>
-          <EmailInput />
-          <PasswordInput />
-        </InputWrapper>
+    <div className="mt-[42px]">
+      {/* reCAPTCHA is only needed to submit: start loading it once the admin reaches the form. */}
+      <form onSubmit={handleSubmit} onFocus={preloadRecaptcha} onPointerEnter={preloadRecaptcha} noValidate>
+        <FormAlert tone="inverse" message={form.formError} className="mb-4" />
 
-        <OptionsWrapper>
+        <div className="flex flex-col gap-2">
+          <EmailInput autoComplete="username" defaultValue={rememberedEmail} {...form.fieldProps('email')} />
+          <FieldError tone="inverse" {...form.errorProps('email')} />
+
+          <PasswordInput aria-label="Senha" {...form.fieldProps('password')} />
+          <FieldError tone="inverse" {...form.errorProps('password')} />
+        </div>
+
+        <div className="flex items-center justify-between py-6">
           <RememberMeCheckbox />
-          <Hyperlink to="/esqueci-minha-senha">Esqueci minha senha</Hyperlink>
-        </OptionsWrapper>
+          <Link
+            to="/esqueci-minha-senha"
+            className="rounded-sm text-[#f7f5fa] no-underline outline-none hover:underline focus-visible:ring-3 focus-visible:ring-white/60"
+          >
+            Esqueci minha senha
+          </Link>
+        </div>
 
-        <LoginButton variant="contained" color="primary" type="submit" disabled={loading || loadingRecaptcha} fullWidth>
+        <Button type="submit" size="lg" className="w-full" loading={loading || loadingRecaptcha}>
           Entrar
-        </LoginButton>
+        </Button>
       </form>
-    </OuterForm>
+    </div>
   );
 }

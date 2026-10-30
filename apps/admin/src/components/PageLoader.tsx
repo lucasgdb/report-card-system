@@ -1,23 +1,6 @@
-import CircularProgress from '@mui/material/CircularProgress';
-import styled from 'styled-components';
+import { PageLoader as BasePageLoader } from '@usefaz/ui/components/page-loader';
 
-const OuterPageLoader = styled.div`
-  width: 100%;
-  height: calc(100vh - 56px);
-
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  @media (min-width: 1200px) {
-    height: calc(100vh - 78px);
-  }
-`;
-
+/** Page loader below the navbar (56px on mobile, 78px on desktop). */
 export default function PageLoader() {
-  return (
-    <OuterPageLoader>
-      <CircularProgress />
-    </OuterPageLoader>
-  );
+  return <BasePageLoader className="h-[calc(100vh-56px)] min-[1200px]:h-[calc(100vh-78px)]" />;
 }

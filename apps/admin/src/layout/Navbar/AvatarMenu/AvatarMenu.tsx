@@ -1,33 +1,20 @@
-import { useRef, useState } from 'react';
-import styled from 'styled-components';
-import { ArrowPopper, ContextMenu, ContextMenuOption } from '@usefaz/components';
-import { graphql, useFragment, useMutation } from 'relay-hooks';
-import ArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import { handleMutationError } from '@usefaz/shared';
+import { jwtToken } from '@usefaz/shared/browser';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@usefaz/ui/components/ui/dropdown-menu';
+import { toast } from '@usefaz/ui/components/ui/sonner';
+import { toastErrors } from '@usefaz/ui/lib/toast-errors';
+import { ChevronDownIcon, LogOutIcon } from 'lucide-react';
+import { graphql, useFragment, useMutation } from 'react-relay';
 
-import { AvatarMenu_admin$key } from './__generated__/AvatarMenu_admin.graphql';
-import Avatar from './Avatar';
 import LogoutMutation from '~/modules/auth/LogoutMutation';
-import { jwtToken } from '@usefaz/shared';
-
-const OuterAvatarMenu = styled.div`
-  cursor: pointer;
-  -webkit-tap-highlight-color: transparent;
-
-  display: flex;
-  align-items: center;
-  gap: 4px;
-`;
-
-const StyledArrowDownIcon = styled(ArrowDownIcon)`
-  && {
-    font-size: 19px;
-    color: #fff;
-
-    @media (min-width: 1200px) {
-      color: #777;
-    }
-  }
-`;
+import type { LogoutMutation as LogoutMutationType } from '~/modules/auth/__generated__/LogoutMutation.graphql';
+import type { AvatarMenu_admin$key } from './__generated__/AvatarMenu_admin.graphql';
+import Avatar from './Avatar';
 
 type AvatarMenuProps = {
   admin: AvatarMenu_admin$key;
@@ -43,48 +30,44 @@ export default function AvatarMenu({ admin }: AvatarMenuProps) {
     admin
   );
 
-  const [logoutMutation, { loading }] = useMutation(LogoutMutation, {
-    onCompleted() {
-      jwtToken.destroy();
-      window.location.reload();
-    },
-    onError() {
-      window.location.reload();
-    },
-  });
+  const [logoutMutation, loading] = useMutation<LogoutMutationType>(LogoutMutation);
 
-  const avatarRef = useRef(null);
+  const handleLogout = () => {
+    const toastId = toast.loading('Saindo…');
 
-  const [isArrowPopperOpen, setIsArrowPopperOpen] = useState(false);
-
-  const handleOpenArrowPopper = () => setIsArrowPopperOpen(true);
-  const handleCloseArrowPopper = () => setIsArrowPopperOpen(false);
-
-  const handleLogout = () => logoutMutation({ variables: { input: {} } });
-
-  const options: ContextMenuOption[] = [
-    {
-      id: 1,
-      text: 'Sair',
-      disabled: loading,
-      onClick() {
-        handleLogout();
+    logoutMutation({
+      variables: { input: {} },
+      onCompleted: ({ logout }) => {
+        if (handleMutationError(toastErrors, logout?.error)) {
+          toast.dismiss(toastId);
+          return;
+        }
+        jwtToken.destroy();
+        window.location.reload();
       },
-    },
-  ];
+      onError: (error) => {
+        toast.dismiss(toastId);
+        handleMutationError(toastErrors, error);
+      },
+    });
+  };
 
   return (
-    <>
-      <OuterAvatarMenu onClick={handleOpenArrowPopper}>
-        <Avatar ref={avatarRef} admin={data} />
-        <StyledArrowDownIcon />
-      </OuterAvatarMenu>
+    <DropdownMenu>
+      <DropdownMenuTrigger
+        aria-label="Menu da conta"
+        className="flex cursor-pointer items-center gap-1 rounded-full outline-none transition-opacity hover:opacity-85 focus-visible:ring-3 focus-visible:ring-ring/50"
+      >
+        <Avatar admin={data} />
+        <ChevronDownIcon className="size-5 text-white min-[1200px]:text-[#777]" />
+      </DropdownMenuTrigger>
 
-      <ArrowPopper open={isArrowPopperOpen} onClose={handleCloseArrowPopper} anchorEl={avatarRef.current} disablePortal>
-        <div>
-          <ContextMenu options={options} />
-        </div>
-      </ArrowPopper>
-    </>
+      <DropdownMenuContent align="end" className="min-w-44">
+        <DropdownMenuItem variant="destructive" disabled={loading} onClick={handleLogout}>
+          <LogOutIcon />
+          Sair
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 }

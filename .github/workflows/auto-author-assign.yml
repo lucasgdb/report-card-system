@@ -1,5 +1,5 @@
 # .github/workflows/auto-author-assign.yml
-name: 'Auto Author Assign'
+name: "Auto Author Assign"
 
 on:
   pull_request:
@@ -11,4 +11,4 @@ jobs:
     steps:
       - uses: toshimaru/auto-author-assign@v1.4.0
         with:
-          repo-token: '${{ secrets.GITHUB_TOKEN }}'
+          repo-token: "${{ secrets.GITHUB_TOKEN }}"

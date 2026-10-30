@@ -5,6 +5,7 @@ import fetchQuery from './fetchQuery';
 import { forceFetch, isMutation, isQuery } from './helpers';
 
 const oneMinute = 60 * 1000;
+
 export const relayResponseCache = new QueryResponseCache({
   size: 250,
   ttl: oneMinute,

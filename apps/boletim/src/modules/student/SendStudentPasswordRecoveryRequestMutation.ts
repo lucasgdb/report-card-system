@@ -1,9 +1,12 @@
-import { graphql } from 'relay-hooks';
+import { graphql } from 'react-relay';
 
 const SendStudentPasswordRecoveryRequestMutation = graphql`
   mutation SendStudentPasswordRecoveryRequestMutation($input: SendStudentPasswordRecoveryRequestMutationInput!) {
     sendStudentPasswordRecoveryRequest(input: $input) {
-      clientMutationId
+      error {
+        field
+        userMessage
+      }
     }
   }
 `;

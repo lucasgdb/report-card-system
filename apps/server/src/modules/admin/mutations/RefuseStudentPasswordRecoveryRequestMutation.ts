@@ -1,11 +1,12 @@
 import { GraphQLNonNull, GraphQLID } from 'graphql';
-import { fromGlobalId, mutationWithClientMutationId } from 'graphql-relay';
+import { fromGlobalId } from 'graphql-relay';
 
 import usefazConnector from '~/database/usefazConnector';
 import { StudentPasswordRecoveryRequestModel } from '~/entities';
-import { IContext } from '~/interfaces';
+import type { IContext } from '~/interfaces';
 import StudentPasswordRecoveryRequestType from '~/modules/student/StudentPasswordRecoveryRequestType';
 import isAdminOrThrowError from '~/utils/isAdminOrThrowError';
+import createMutation from '~/utils/createMutation';
 
 type refuseStudentPasswordRecoveryRequestProps = {
   studentPasswordRecoveryRequestId: string;
@@ -33,7 +34,7 @@ const refuseStudentPasswordRecoveryRequest = async (
   };
 };
 
-const RefuseStudentPasswordRecoveryRequestMutation = mutationWithClientMutationId({
+const RefuseStudentPasswordRecoveryRequestMutation = createMutation({
   name: 'RefuseStudentPasswordRecoveryRequestMutation',
   inputFields: {
     studentPasswordRecoveryRequestId: { type: new GraphQLNonNull(GraphQLID) },

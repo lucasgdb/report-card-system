@@ -1,49 +1,32 @@
 import {
-  SimpleDialog,
-  DialogHeader,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  SimpleButton,
-  Notification,
-  CloseButton,
-} from '@usefaz/components';
-import styled from 'styled-components';
-import { useMutation, useFragment, graphql } from 'relay-hooks';
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@usefaz/ui/components/ui/alert-dialog';
+import { handleMutationError } from '@usefaz/shared';
+import { toast } from '@usefaz/ui/components/ui/sonner';
+import { toastErrors } from '@usefaz/ui/lib/toast-errors';
+import { graphql, useFragment, useMutation } from 'react-relay';
 import { ConnectionHandler } from 'relay-runtime';
 
 import RemoveStudentMutation from '~/modules/admin/RemoveStudentMutation';
-import { RemoveStudentMutation as RemoveStudentMutationType } from '~/modules/admin/__generated__/RemoveStudentMutation.graphql';
-import { RemoveStudentDialog_admin$key } from './__generated__/RemoveStudentDialog_admin.graphql';
-
-const OuterRemoveStudentDialog = styled(SimpleDialog)`
-  & .MuiPaper-root {
-    max-width: 600px;
-  }
-`;
-
-const StyledDialogContent = styled(DialogContent)`
-  && {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-  }
-`;
-
-const Description = styled.p`
-  font: normal normal normal 16px/19px Lexend;
-  color: #666;
-  margin: 0;
-`;
+import type { RemoveStudentMutation as RemoveStudentMutationType } from '~/modules/admin/__generated__/RemoveStudentMutation.graphql';
+import type { RemoveStudentDialog_admin$key } from './__generated__/RemoveStudentDialog_admin.graphql';
 
 type RemoveStudentDialogProps = {
   open: boolean;
   studentId: string;
+  fullname: string;
   onClose(): void;
   admin: RemoveStudentDialog_admin$key;
 };
 
-export default function RemoveStudentDialog({ open, studentId, onClose, admin }: RemoveStudentDialogProps) {
+export default function RemoveStudentDialog({ open, studentId, fullname, onClose, admin }: RemoveStudentDialogProps) {
   const data = useFragment<RemoveStudentDialog_admin$key>(
     graphql`
       fragment RemoveStudentDialog_admin on Admin {
@@ -53,54 +36,41 @@ export default function RemoveStudentDialog({ open, studentId, onClose, admin }:
     admin
   );
 
-  const { enqueueSnackbar } = Notification.useSnackbar();
+  const [removeStudent, loading] = useMutation<RemoveStudentMutationType>(RemoveStudentMutation);
 
-  const [removeStudent, { loading }] = useMutation<RemoveStudentMutationType>(RemoveStudentMutation);
-
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-
+  const handleRemove = () => {
     removeStudent({
-      variables: { input: { studentId } },
-      onCompleted() {
+      variables: {
+        input: { studentId },
+        connections: [ConnectionHandler.getConnectionID(data.id, 'StudentList_students')],
+      },
+      onCompleted: ({ removeStudent }) => {
+        if (handleMutationError(toastErrors, removeStudent?.error)) {
+          return;
+        }
         onClose();
-        enqueueSnackbar('Aluno removido com sucesso.', { variant: 'success' });
+        toast.success('Aluno removido com sucesso.');
       },
-      onError() {
-        enqueueSnackbar('Falha ao remover aluno.', { variant: 'error' });
-      },
-      updater: (store) => {
-        const admin = store.get(data.id);
-
-        const students = ConnectionHandler.getConnection(admin, 'StudentList_students');
-
-        ConnectionHandler.deleteNode(students, studentId);
-      },
+      onError: (error) => handleMutationError(toastErrors, error),
     });
   };
 
   return (
-    <OuterRemoveStudentDialog open={open} onClose={onClose} fullWidth>
-      <form onSubmit={handleSubmit}>
-        <DialogHeader>
-          <DialogTitle>Deseja remover o aluno?</DialogTitle>
-          <CloseButton onClose={onClose} />
-        </DialogHeader>
-
-        <StyledDialogContent>
-          <Description>Clique em remover para remover o aluno do sistema.</Description>
-        </StyledDialogContent>
-
-        <DialogActions>
-          <SimpleButton color="secondary" onClick={onClose}>
-            Cancelar
-          </SimpleButton>
-
-          <SimpleButton color="error" variant="contained" type="submit" disabled={loading}>
+    <AlertDialog open={open} onOpenChange={(nextOpen) => !nextOpen && onClose()}>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>Remover aluno?</AlertDialogTitle>
+          <AlertDialogDescription>
+            {fullname} será removido do sistema, junto com o boletim. Essa ação não pode ser desfeita.
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel>Cancelar</AlertDialogCancel>
+          <AlertDialogAction variant="destructive" onClick={handleRemove} loading={loading}>
             Remover
-          </SimpleButton>
-        </DialogActions>
-      </form>
-    </OuterRemoveStudentDialog>
+          </AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
   );
 }

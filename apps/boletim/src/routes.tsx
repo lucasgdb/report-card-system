@@ -1,8 +1,9 @@
-import { PageLoader } from '@usefaz/components';
-import { Route, Routes, HashRouter } from 'react-router-dom';
+import { PageLoader } from '@usefaz/ui/components/page-loader';
+import { Route, Routes, HashRouter } from 'react-router';
 import * as React from 'react';
 
-const EnvironmentLayout = React.lazy(() => import('~/layout/EnvironmentLayout'));
+import EnvironmentLayout from '~/layout/EnvironmentLayout';
+
 const ErrorPage = React.lazy(() => import('~/pages/Error/ErrorPage'));
 const HomePage = React.lazy(() => import('~/pages/Home/HomePage'));
 const ForgotPasswordPage = React.lazy(() => import('~/pages/ForgotPassword/ForgotPasswordPage'));

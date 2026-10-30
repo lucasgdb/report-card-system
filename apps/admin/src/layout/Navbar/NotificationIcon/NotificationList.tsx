@@ -1,88 +1,30 @@
-import CircularProgress from '@mui/material/CircularProgress';
-import styled from 'styled-components';
-import { useFragment, graphql } from 'relay-hooks';
-import { useState } from 'react';
+import { Button } from '@usefaz/ui/components/ui/button';
+import { Spinner } from '@usefaz/ui/components/ui/spinner';
+import { useFragment, graphql } from 'react-relay';
 
+import type { NotificationList_admin$key } from './__generated__/NotificationList_admin.graphql';
 import Notification from './Notification';
 import LineBreak from './LineBreak';
 
-const OuterNotificationList = styled.div`
-  overflow-y: auto;
-  max-height: 336px;
-
-  padding-right: 8px;
-
-  overscroll-behavior: contain;
-
-  div:last-child div {
-    padding-bottom: 0;
-  }
-
-  div:last-child ${LineBreak} {
-    display: none;
-  }
-
-  &::-webkit-scrollbar-thumb {
-    background-color: #999;
-    border-radius: 8px;
-  }
-
-  &::-webkit-scrollbar-thumb:hover {
-    background-color: #777;
-  }
-
-  &::-webkit-scrollbar {
-    width: 8px;
-    border-radius: 8px;
-    background-color: #e8e6f2;
-  }
-`;
-
-const NotificationWrapper = styled.div`
-  :first-child div {
-    padding-top: 0;
-  }
-`;
-
-const EmptyNotificationText = styled.p`
-  font: normal normal normal 14px/17px Lexend;
-  margin: 0;
-  color: #666;
-`;
-
-const OuterLoader = styled.div`
-  display: flex;
-  justify-content: center;
-
-  padding: 16px 0 0;
-`;
+const notificationListClassName = 'notification-list max-h-[336px] overflow-y-auto overscroll-contain pr-2';
 
 const Loader = () => {
   return (
-    <OuterLoader>
-      <CircularProgress color="secondary" />
-    </OuterLoader>
+    <div className="flex justify-center pt-4">
+      <Spinner className="size-6 text-secondary" />
+    </div>
   );
 };
 
-const handleNotificationsScroll = (hasMore, loadMore, isLoading, setIsLoading) => (event) => {
-  const target = event.currentTarget;
-  const isAtBottom = target.scrollTop + target.clientHeight === target.scrollHeight;
-
-  if (isAtBottom && hasMore() && !isLoading) {
-    setIsLoading(true);
-    loadMore(5, () => setIsLoading(false));
-  }
-};
-
 type NotificationListProps = {
-  admin: any;
-  hasMore: any;
-  loadMore: any;
+  admin: NotificationList_admin$key;
+  hasNext: boolean;
+  isLoadingNext: boolean;
+  loadNext(count: number): void;
 };
 
-export default function NotificationList({ admin, hasMore, loadMore }: NotificationListProps) {
-  const data = useFragment(
+export default function NotificationList({ admin, hasNext, isLoadingNext, loadNext }: NotificationListProps) {
+  const data = useFragment<NotificationList_admin$key>(
     graphql`
       fragment NotificationList_admin on Admin
       @argumentDefinitions(count: { type: "Int", defaultValue: 5 }, after: { type: "String" }) {
@@ -99,27 +41,56 @@ export default function NotificationList({ admin, hasMore, loadMore }: Notificat
     admin
   );
 
-  const [isLoading, setIsLoading] = useState(false);
+  const loadMore = () => {
+    if (hasNext && !isLoadingNext) {
+      loadNext(5);
+    }
+  };
+
+  const handleNotificationsScroll = (event: React.UIEvent<HTMLDivElement>) => {
+    const target = event.currentTarget;
+    // A small threshold: with zoom or HiDPI screens the scroll position can be fractional.
+    const isAtBottom = target.scrollTop + target.clientHeight >= target.scrollHeight - 8;
+
+    if (isAtBottom) {
+      loadMore();
+    }
+  };
 
   const notificationsSent = (data.notifications?.edges ?? []).map(({ node: notification }) => notification);
   if (notificationsSent.length === 0) {
     return (
-      <OuterNotificationList>
-        <EmptyNotificationText>Nenhuma notificação ainda.</EmptyNotificationText>
-      </OuterNotificationList>
+      <div className={notificationListClassName}>
+        <p className="text-sm text-muted-foreground">Nenhuma notificação ainda.</p>
+      </div>
     );
   }
 
   return (
-    <OuterNotificationList onScroll={handleNotificationsScroll(hasMore, loadMore, isLoading, setIsLoading)}>
+    <div
+      role="feed"
+      aria-label="Notificações"
+      aria-busy={isLoadingNext}
+      className={notificationListClassName}
+      onScroll={handleNotificationsScroll}
+    >
       {notificationsSent.map((notification) => (
-        <NotificationWrapper key={notification.id}>
+        <div
+          key={notification.id}
+          className="first:[&>article]:pt-0 last:[&>article]:pb-0 last:[&_[data-line-break]]:hidden"
+        >
           <Notification notification={notification} />
           <LineBreak />
-        </NotificationWrapper>
+        </div>
       ))}
 
-      {isLoading && <Loader />}
-    </OuterNotificationList>
+      {isLoadingNext && <Loader />}
+
+      {hasNext && !isLoadingNext && (
+        <Button variant="ghost" size="sm" className="mt-2 w-full" onClick={loadMore}>
+          Carregar mais
+        </Button>
+      )}
+    </div>
   );
 }

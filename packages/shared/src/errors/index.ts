@@ -1,2 +1,3 @@
 export { default as errorConfig } from './errorConfig';
-export { default as getError } from './getError';
+export { handleMutationError, UNEXPECTED_ERROR_MESSAGE } from './handleMutationError';
+export type { MutationError, MutationErrorTarget } from './handleMutationError';

@@ -1,13 +1,18 @@
-import { ArrowPopper, ContextMenu, ContextMenuOption } from '@usefaz/components';
-import IconButton from '@mui/material/IconButton';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
-import { useRef, useState } from 'react';
-import { GridRenderCellParams } from '@mui/x-data-grid';
+import type { GridRenderCellParams } from '@usefaz/ui/components/data-table';
+import { Button } from '@usefaz/ui/components/ui/button';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@usefaz/ui/components/ui/dropdown-menu';
+import { EllipsisVerticalIcon, PencilIcon, Trash2Icon } from 'lucide-react';
+import { useState } from 'react';
 import { graphql, useFragment } from 'react-relay';
 
 import EditStudentInformationDialog from './EditStudentInformationDialog';
 import RemoveStudentDialog from './RemoveStudentDialog';
-import { MoreButton_admin$key } from './__generated__/MoreButton_admin.graphql';
+import type { MoreButton_admin$key } from './__generated__/MoreButton_admin.graphql';
 
 type MoreButtonProps = {
   params: GridRenderCellParams;
@@ -25,64 +30,44 @@ export default function MoreButton({ params, disabled = false, admin }: MoreButt
     admin
   );
 
-  const buttonRef = useRef(null);
-
-  const [isArrowPopperOpen, setIsArrowPopperOpen] = useState(false);
   const [isEditStudentInformationDialogOpen, setIsEditStudentInformationDialogOpen] = useState(false);
   const [isRemoveStudentDialogOpen, setIsRemoveStudentDialogOpen] = useState(false);
 
-  const handleOpenArrowPopper = () => setIsArrowPopperOpen(true);
-  const handleCloseArrowPopper = () => setIsArrowPopperOpen(false);
-
-  const handleOpenEditStudentInformationDialog = () => setIsEditStudentInformationDialogOpen(true);
-  const handleCloseEditStudentInformationDialog = () => setIsEditStudentInformationDialogOpen(false);
-
-  const handleOpenRemoveStudentDialog = () => setIsRemoveStudentDialogOpen(true);
-  const handleCloseRemoveStudentDialog = () => setIsRemoveStudentDialogOpen(false);
-
-  const options: ContextMenuOption[] = [
-    {
-      id: 1,
-      text: 'Editar Informações',
-      onClick() {
-        handleCloseArrowPopper();
-        handleOpenEditStudentInformationDialog();
-      },
-    },
-    {
-      id: 2,
-      text: 'Remover',
-      onClick() {
-        handleCloseArrowPopper();
-        handleOpenRemoveStudentDialog();
-      },
-    },
-  ];
-
   return (
     <>
-      <IconButton ref={buttonRef} onClick={handleOpenArrowPopper} disabled={disabled}>
-        <MoreVertIcon />
-      </IconButton>
+      <DropdownMenu>
+        <DropdownMenuTrigger
+          disabled={disabled}
+          render={<Button variant="ghost" size="icon" aria-label={`Mais ações para ${params.row.fullname}`} />}
+        >
+          <EllipsisVerticalIcon />
+        </DropdownMenuTrigger>
 
-      <ArrowPopper open={isArrowPopperOpen} onClose={handleCloseArrowPopper} anchorEl={buttonRef.current} timeout={0}>
-        <div>
-          <ContextMenu options={options} />
-        </div>
-      </ArrowPopper>
+        <DropdownMenuContent align="end" className="min-w-48">
+          <DropdownMenuItem onClick={() => setIsEditStudentInformationDialogOpen(true)}>
+            <PencilIcon />
+            Editar informações
+          </DropdownMenuItem>
+          <DropdownMenuItem variant="destructive" onClick={() => setIsRemoveStudentDialogOpen(true)}>
+            <Trash2Icon />
+            Remover
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
 
       <EditStudentInformationDialog
         open={isEditStudentInformationDialogOpen}
         studentId={params.row.id}
         RM={params.row.RM}
         fullname={params.row.fullname}
-        onClose={handleCloseEditStudentInformationDialog}
+        onClose={() => setIsEditStudentInformationDialogOpen(false)}
       />
 
       <RemoveStudentDialog
         open={isRemoveStudentDialogOpen}
         studentId={params.row.id}
-        onClose={handleCloseRemoveStudentDialog}
+        fullname={params.row.fullname}
+        onClose={() => setIsRemoveStudentDialogOpen(false)}
         admin={data}
       />
     </>

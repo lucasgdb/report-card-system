@@ -1,4 +1,4 @@
-import { GraphQLObjectType, GraphQLObjectTypeConfig, GraphQLInterfaceType } from 'graphql';
+import { GraphQLObjectType, type GraphQLObjectTypeConfig, type GraphQLInterfaceType } from 'graphql';
 import { fromGlobalId, globalIdField, nodeDefinitions } from 'graphql-relay';
 
 import usefazConnector from '~/database/usefazConnector';
@@ -35,14 +35,12 @@ const getNode = async ({ tableName, id, context }: getNodeProps) => {
 };
 
 export const { nodeInterface, nodeField, nodesField } = nodeDefinitions<IContext>(
-  function (globalId, context) {
+  (globalId, context) => {
     const { type, id } = fromGlobalId(globalId);
     return getNode({ tableName: type, id, context });
   },
 
-  function (data) {
-    return registeredTypeNames[data.tableName];
-  }
+  (data) => registeredTypeNames[data.tableName]
 );
 
 export const registerGraphQLNodeObjectType = <T>(tableName: string, getter: getterType | null = null) => {

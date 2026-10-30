@@ -1,11 +1,12 @@
 import { GraphQLID, GraphQLNonNull } from 'graphql';
-import { fromGlobalId, mutationWithClientMutationId } from 'graphql-relay';
+import { fromGlobalId } from 'graphql-relay';
 
 import usefazConnector from '~/database/usefazConnector';
 import { StudentModel } from '~/entities';
-import { IContext } from '~/interfaces';
+import type { IContext } from '~/interfaces';
 import StudentType from '~/modules/student/StudentType';
 import isAdminOrThrowError from '~/utils/isAdminOrThrowError';
+import createMutation from '~/utils/createMutation';
 
 type removeStudentProps = {
   studentId: string;
@@ -29,7 +30,7 @@ const removeStudent = async (
   };
 };
 
-const RemoveStudentMutation = mutationWithClientMutationId({
+const RemoveStudentMutation = createMutation({
   name: 'RemoveStudentMutation',
   inputFields: {
     studentId: { type: new GraphQLNonNull(GraphQLID) },

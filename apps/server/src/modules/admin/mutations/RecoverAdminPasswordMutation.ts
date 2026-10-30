@@ -1,11 +1,13 @@
 import { GraphQLNonNull, GraphQLString, GraphQLID } from 'graphql';
-import { fromGlobalId, mutationWithClientMutationId } from 'graphql-relay';
+import { fromGlobalId } from 'graphql-relay';
 import dayjs from 'dayjs';
 
 import usefazConnector from '~/database/usefazConnector';
 import { AdminModel, AdminPasswordRecoveryRequestModel } from '~/entities';
 import createPassword from '~/utils/createPassword';
 import AdminPasswordRecoveryRequestType from '../AdminPasswordRecoveryRequestType';
+import createMutation from '~/utils/createMutation';
+import UserError from '~/utils/UserError';
 
 const isTokenExpired = (expiresAt: string) => dayjs(expiresAt).isBefore(dayjs());
 
@@ -24,28 +26,29 @@ const recoverAdminPassword = async ({
   passwordConfirmation,
   clientMutationId,
 }: recoverAdminPasswordProps) => {
-  if (password !== passwordConfirmation) {
-    throw new Error('password must be equal');
+  if (!password) {
+    throw new UserError('Informe a nova senha.', 'password');
   }
+
+  if (password !== passwordConfirmation) {
+    throw new UserError('As senhas não são iguais. Digite a mesma senha nos dois campos.', 'passwordConfirmation');
+  }
+
+  const invalidLink = new UserError('Este link é inválido ou expirou. Solicite um novo link de recuperação.');
 
   const adminPasswordRecoveryRequestId = fromGlobalId(adminPasswordRecoveryRequestGlobalId).id;
 
   const adminPasswordRecoveryRequestEntity = AdminPasswordRecoveryRequestModel(usefazConnector);
 
-  const adminPasswordRecoveryRequest = await adminPasswordRecoveryRequestEntity.getRequest(
-    adminPasswordRecoveryRequestId
-  );
+  const adminPasswordRecoveryRequest =
+    await adminPasswordRecoveryRequestEntity.getRequest(adminPasswordRecoveryRequestId);
 
-  if (!adminPasswordRecoveryRequest) {
-    throw new Error('invalid request id');
-  }
-
-  if (adminPasswordRecoveryRequest.token !== passwordRecoveryToken) {
-    throw new Error('invalid request token');
-  }
-
-  if (isTokenExpired(adminPasswordRecoveryRequest.expires_at)) {
-    throw new Error('request token expired');
+  if (
+    !adminPasswordRecoveryRequest ||
+    adminPasswordRecoveryRequest.token !== passwordRecoveryToken ||
+    isTokenExpired(adminPasswordRecoveryRequest.expires_at)
+  ) {
+    throw invalidLink;
   }
 
   const adminEntity = AdminModel(usefazConnector);
@@ -54,7 +57,7 @@ const recoverAdminPassword = async ({
 
   const newPassword = createPassword(password);
   if (newPassword === admin!.password) {
-    throw new Error('password should not be the same');
+    throw new UserError('A nova senha precisa ser diferente da atual.', 'password');
   }
 
   await adminPasswordRecoveryRequestEntity.finalizeRequest(adminPasswordRecoveryRequest.id, {
@@ -65,7 +68,7 @@ const recoverAdminPassword = async ({
   return { adminPasswordRecoveryRequest, clientMutationId };
 };
 
-const RecoverAdminPasswordMutation = mutationWithClientMutationId({
+const RecoverAdminPasswordMutation = createMutation({
   name: 'RecoverAdminPasswordMutation',
   inputFields: {
     adminPasswordRecoveryRequestId: { type: new GraphQLNonNull(GraphQLID) },

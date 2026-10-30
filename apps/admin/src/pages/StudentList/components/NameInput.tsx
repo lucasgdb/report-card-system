@@ -1,29 +1,19 @@
-import PersonIcon from '@mui/icons-material/Person';
-import styled from 'styled-components';
-import TextField, { TextFieldProps } from '@mui/material/TextField';
-import InputAdornment from '@mui/material/InputAdornment';
+import { InputGroup, InputGroupAddon, InputGroupInput } from '@usefaz/ui/components/ui/input-group';
+import { UserIcon } from 'lucide-react';
 
-const StyledTextField = styled(TextField)`
-  & .MuiInputBase-root {
-    background-color: #f7f5fa;
-  }
-`;
-
-export default function NameInput(props: TextFieldProps) {
+export default function NameInput(props: React.ComponentProps<'input'>) {
   return (
-    <StyledTextField
-      name="fullname"
-      placeholder="Nome completo"
-      type="text"
-      variant="outlined"
-      InputProps={{
-        startAdornment: (
-          <InputAdornment position="start">
-            <PersonIcon color="primary" />
-          </InputAdornment>
-        ),
-      }}
-      {...props}
-    />
+    <InputGroup className="bg-(--input-background)">
+      <InputGroupAddon>
+        <UserIcon className="text-primary" />
+      </InputGroupAddon>
+      <InputGroupInput
+        name="fullname"
+        autoComplete="off"
+        placeholder="Nome completo…"
+        aria-label="Nome completo"
+        {...props}
+      />
+    </InputGroup>
   );
 }

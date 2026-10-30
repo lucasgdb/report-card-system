@@ -1,7 +1,5 @@
-import { errorConfig } from '@usefaz/shared';
 import * as bcrypt from 'bcryptjs';
 import { GraphQLNonNull, GraphQLString } from 'graphql';
-import { mutationWithClientMutationId } from 'graphql-relay';
 import * as jwt from 'jsonwebtoken';
 
 import usefazConnector from '~/database/usefazConnector';
@@ -9,6 +7,8 @@ import { StudentModel, AuthModel } from '~/entities';
 import type { IStudent } from '~/interfaces';
 import StudentType from '~/modules/student/StudentType';
 import validateRecaptchaToken from '~/utils/validateRecaptchaToken';
+import createMutation from '~/utils/createMutation';
+import UserError from '~/utils/UserError';
 
 const getStudentJwtToken = async (student: IStudent, password: string) => {
   if (!bcrypt.compareSync(password, student.password!)) {
@@ -41,20 +41,17 @@ const studentLogin = async ({ RM, password, token, clientMutationId }: studentLo
 
   const studentEntity = StudentModel(usefazConnector);
 
+  // Same message for an unknown RM and a wrong password, so the form doesn't reveal which RMs exist.
   const student = await studentEntity.getStudentByRM(RM);
-  if (!student) {
-    throw new Error(errorConfig.student.notFound.code);
-  }
-
-  const jwtToken = await getStudentJwtToken(student, password);
+  const jwtToken = student && (await getStudentJwtToken(student, password));
   if (!jwtToken) {
-    throw new Error(errorConfig.student.notFound.code);
+    throw new UserError('RM ou senha incorretos. Confira os dados e tente novamente.');
   }
 
   return { jwtToken, student, clientMutationId };
 };
 
-const StudentLoginMutation = mutationWithClientMutationId({
+const StudentLoginMutation = createMutation({
   name: 'StudentLoginMutation',
   inputFields: {
     RM: { type: new GraphQLNonNull(GraphQLString) },

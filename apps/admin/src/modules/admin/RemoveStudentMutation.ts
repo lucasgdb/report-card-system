@@ -1,10 +1,14 @@
-import { graphql } from 'relay-hooks';
+import { graphql } from 'react-relay';
 
 const RemoveStudentMutation = graphql`
-  mutation RemoveStudentMutation($input: RemoveStudentMutationInput!) {
+  mutation RemoveStudentMutation($input: RemoveStudentMutationInput!, $connections: [ID!]!) {
     removeStudent(input: $input) {
+      error {
+        field
+        userMessage
+      }
       student {
-        id
+        id @deleteEdge(connections: $connections)
       }
     }
   }

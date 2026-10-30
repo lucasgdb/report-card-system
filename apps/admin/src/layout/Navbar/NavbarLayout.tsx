@@ -1,31 +1,22 @@
-import styled from 'styled-components';
 import { Outlet } from 'react-router';
 import { useState, Suspense } from 'react';
-import { graphql, useQuery } from 'relay-hooks';
-import { PageLoader } from '@usefaz/components';
+import { graphql, useLazyLoadQuery } from 'react-relay';
+import { PageLoader } from '@usefaz/ui/components/page-loader';
 
-import { NavbarLayoutQuery } from './__generated__/NavbarLayoutQuery.graphql';
+import type { NavbarLayoutQuery } from './__generated__/NavbarLayoutQuery.graphql';
 import Navbar from './Navbar';
 import MenuLayout from '../Menu/MenuLayout';
 
-const OuterNavbarLayout = styled.div`
-  display: flex;
-  flex-direction: column;
-
-  width: 100%;
-  min-height: 100vh;
-`;
-
-export const PageWrapper = styled.div`
-  width: 100%;
-
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-`;
-
 const NavbarLayout = () => {
-  const { data, isLoading } = useQuery<NavbarLayoutQuery>(
+  return (
+    <Suspense fallback={<PageLoader />}>
+      <NavbarLayoutContent />
+    </Suspense>
+  );
+};
+
+const NavbarLayoutContent = () => {
+  const data = useLazyLoadQuery<NavbarLayoutQuery>(
     graphql`
       query NavbarLayoutQuery($count: Int!, $after: String) {
         admin {
@@ -38,22 +29,29 @@ const NavbarLayout = () => {
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  if (isLoading) {
-    return <PageLoader />;
-  }
-
   return (
-    <OuterNavbarLayout>
+    <div className="flex min-h-dvh w-full flex-col">
+      {/* HashRouter owns the URL fragment, so the skip link moves focus instead of navigating to #conteudo. */}
+      <button
+        type="button"
+        onClick={() => document.getElementById('conteudo')?.focus()}
+        className="sr-only z-50 rounded-md bg-background text-sm font-medium text-foreground shadow-md outline-none focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:px-4 focus:py-2 focus:ring-3 focus:ring-ring/50"
+      >
+        Pular para o conteúdo
+      </button>
+
       <Navbar admin={data.admin} isMenuOpen={isMenuOpen} setIsMenuOpen={setIsMenuOpen} />
 
-      <PageWrapper>
+      <div className="flex w-full flex-1 flex-col">
         <MenuLayout isMenuOpen={isMenuOpen} setIsMenuOpen={setIsMenuOpen}>
-          <Suspense fallback={<PageLoader />}>
-            <Outlet />
-          </Suspense>
+          <main id="conteudo" tabIndex={-1} className="flex w-full flex-1 outline-none">
+            <Suspense fallback={<PageLoader />}>
+              <Outlet />
+            </Suspense>
+          </main>
         </MenuLayout>
-      </PageWrapper>
-    </OuterNavbarLayout>
+      </div>
+    </div>
   );
 };
 

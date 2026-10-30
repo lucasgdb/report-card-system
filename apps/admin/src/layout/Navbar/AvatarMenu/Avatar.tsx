@@ -1,36 +1,14 @@
-import { AvatarInitials, ImageWithLoader } from '@usefaz/components';
-import { forwardRef } from 'react';
-import styled from 'styled-components';
-import { graphql, useFragment } from 'relay-hooks';
+import { AvatarInitials } from '@usefaz/ui/components/avatar-initials';
+import { ImageWithLoader } from '@usefaz/ui/components/image-with-loader';
+import { graphql, useFragment } from 'react-relay';
 
-import { Avatar_admin$key } from './__generated__/Avatar_admin.graphql';
-
-const OuterAvatar = styled.div`
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-
-  font-size: 16px;
-
-  @media (min-width: 1200px) {
-    font-size: 19px;
-
-    width: 48px;
-    height: 48px;
-  }
-`;
-
-const AvatarImage = styled(ImageWithLoader)`
-  width: 100%;
-  height: 100%;
-  border-radius: 50%;
-`;
+import type { Avatar_admin$key } from './__generated__/Avatar_admin.graphql';
 
 type AvatarProps = {
   admin: Avatar_admin$key;
 };
 
-export default forwardRef(function Avatar({ admin }: AvatarProps, ref: React.ForwardedRef<HTMLDivElement>) {
+export default function Avatar({ admin }: AvatarProps) {
   const data = useFragment<Avatar_admin$key>(
     graphql`
       fragment Avatar_admin on Admin {
@@ -43,12 +21,12 @@ export default forwardRef(function Avatar({ admin }: AvatarProps, ref: React.For
   );
 
   return (
-    <OuterAvatar ref={ref}>
+    <div className="size-10 rounded-full text-base min-[1200px]:size-12 min-[1200px]:text-[19px]">
       {data.avatarURL ? (
-        <AvatarImage src={data.avatarURL} />
+        <ImageWithLoader className="size-full rounded-full object-cover" src={data.avatarURL} alt="" />
       ) : (
         <AvatarInitials firstname={data.firstname} lastname={data.lastname} />
       )}
-    </OuterAvatar>
+    </div>
   );
-});
+}

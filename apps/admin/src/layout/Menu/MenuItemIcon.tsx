@@ -1,16 +1,9 @@
-import styled from 'styled-components';
+type MenuItemIconProps = {
+  children: React.ReactNode;
+};
 
-const OuterMenuItemIcon = styled.div`
-  min-width: 72px;
-  height: 56px;
-
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
-
-const MenuItemIcon = ({ children }) => {
-  return <OuterMenuItemIcon>{children}</OuterMenuItemIcon>;
+const MenuItemIcon = ({ children }: MenuItemIconProps) => {
+  return <div className="flex h-14 min-w-[72px] items-center justify-center">{children}</div>;
 };
 
 export default MenuItemIcon;
