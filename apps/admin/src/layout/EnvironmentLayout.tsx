@@ -1,4 +1,4 @@
-import { jwtToken } from '@usefaz/shared/browser';
+import { session } from '@usefaz/shared/browser';
 import { PageLoader } from '@usefaz/ui/components/page-loader';
 import { graphql, useLazyLoadQuery } from 'react-relay';
 import { Outlet } from 'react-router';
@@ -11,8 +11,8 @@ const LoginPage = React.lazy(() => import('~/pages/Login/LoginPage'));
 export default function EnvironmentLayout() {
   return (
     <React.Suspense fallback={<PageLoader />}>
-      {/* Without a session cookie there's nothing to ask the server: the login shows right away. */}
-      {jwtToken.get() ? <EnvironmentLayoutContent /> : <LoginPage />}
+      {/* Not signed in on this device: there's nothing to ask the server, so the login shows right away. */}
+      {session.isSignedIn() ? <EnvironmentLayoutContent /> : <LoginPage />}
     </React.Suspense>
   );
 }
@@ -28,6 +28,14 @@ function EnvironmentLayoutContent() {
     `,
     {}
   );
+
+  const signedIn = Boolean(data?.admin);
+  // The session ended (expired or signed out elsewhere): forget it, so the next visit skips the check.
+  React.useEffect(() => {
+    if (!signedIn) {
+      session.clear();
+    }
+  }, [signedIn]);
 
   if (!data?.admin?.id) {
     return (

@@ -1,4 +1,5 @@
 import StudentSummary from '~/components/StudentSummary';
+import { isApproved, toReportCardRows } from '~/utils/reportCard';
 import { graphql, useFragment } from 'react-relay';
 
 import type { Information_student$key } from './__generated__/Information_student.graphql';
@@ -18,10 +19,21 @@ export default function Information({ student }: InformationProps) {
           year
 
           schoolReportRows {
-            count
             edges {
               node {
-                id
+                disciplineName
+                firstBimesterGrade
+                firstBimesterRecGrade
+                firstBimesterAbsences
+                secondBimesterGrade
+                secondBimesterRecGrade
+                secondBimesterAbsences
+                thirdBimesterGrade
+                thirdBimesterRecGrade
+                thirdBimesterAbsences
+                fourthBimesterGrade
+                fourthBimesterRecGrade
+                fourthBimesterAbsences
               }
             }
           }
@@ -36,7 +48,9 @@ export default function Information({ student }: InformationProps) {
       RM={data.RM}
       fullname={data.fullname}
       year={data.schoolReport?.year}
-      approved={data.schoolReport?.schoolReportRows?.count > 0}
+      approved={isApproved(
+        toReportCardRows((data.schoolReport?.schoolReportRows?.edges ?? []).map(({ node }) => node))
+      )}
     />
   );
 }

@@ -1,5 +1,5 @@
 import { handleMutationError } from '@usefaz/shared';
-import { jwtToken } from '@usefaz/shared/browser';
+import { session } from '@usefaz/shared/browser';
 import { Button } from '@usefaz/ui/components/ui/button';
 import { toastErrors } from '@usefaz/ui/lib/toast-errors';
 import { PowerIcon } from 'lucide-react';
@@ -18,7 +18,7 @@ export default function LogoutButton() {
         if (handleMutationError(toastErrors, logout?.error)) {
           return;
         }
-        jwtToken.destroy();
+        session.clear();
         window.location.reload();
       },
       onError: (error) => handleMutationError(toastErrors, error),

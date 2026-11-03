@@ -3,7 +3,7 @@ import { FormAlert } from '@usefaz/ui/components/form-alert';
 import { PasswordInput } from '@usefaz/ui/components/password-input';
 import { Button } from '@usefaz/ui/components/ui/button';
 import { FieldError } from '@usefaz/ui/components/ui/field';
-import { required, sameAs, useFormValidation } from '@usefaz/ui/hooks/use-form-validation';
+import { minLength, required, sameAs, useFormValidation } from '@usefaz/ui/hooks/use-form-validation';
 import { useMutation } from 'react-relay';
 import { useNavigate, useParams } from 'react-router';
 
@@ -14,7 +14,7 @@ export default function Form() {
   const navigate = useNavigate();
   const { requestId, token } = useParams<{ requestId: string; token: string }>();
   const form = useFormValidation({
-    password: [required('Informe a nova senha.')],
+    password: [required('Informe a nova senha.'), minLength(8, 'A senha precisa ter pelo menos 8 caracteres.')],
     passwordConfirmation: [
       required('Confirme a nova senha.'),
       sameAs('password', 'As senhas não são iguais. Digite a mesma senha nos dois campos.'),

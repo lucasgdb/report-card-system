@@ -8,6 +8,8 @@ const ErrorPage = React.lazy(() => import('~/pages/Error/ErrorPage'));
 const HomePage = React.lazy(() => import('~/pages/Home/HomePage'));
 const ForgotPasswordPage = React.lazy(() => import('~/pages/ForgotPassword/ForgotPasswordPage'));
 const RequestSentPage = React.lazy(() => import('~/pages/RequestSent/RequestSentPage'));
+const ResetPasswordPage = React.lazy(() => import('~/pages/ResetPassword/ResetPasswordPage'));
+const PasswordChangedPage = React.lazy(() => import('~/pages/PasswordChanged/PasswordChangedPage'));
 
 export default function AppRoutes() {
   return (
@@ -20,6 +22,8 @@ export default function AppRoutes() {
 
           <Route path="/esqueci-minha-senha" element={<ForgotPasswordPage />} />
           <Route path="/solicitacao-enviada" element={<RequestSentPage />} />
+          <Route path="/redefinir-senha/:requestId/:token" element={<ResetPasswordPage />} />
+          <Route path="/senha-redefinida" element={<PasswordChangedPage />} />
 
           <Route path="*" element={<ErrorPage />} />
         </Routes>

@@ -1,265 +1,129 @@
-type Query {
-  """Fetches an object given its ID"""
-  node(
-    """The ID of an object"""
-    id: ID!
-  ): Node
-
-  """Fetches objects given their IDs"""
-  nodes(
-    """The IDs of objects"""
-    ids: [ID!]!
-  ): [Node]!
-  admin: Admin
-  student: Student
-  system: System
-}
-
-"""An object with an ID"""
-interface Node {
-  """The id of the object."""
-  id: ID!
-}
-
 type Admin implements Node {
-  """The ID of an object"""
-  id: ID!
-  firstname: String!
-
-  """admin's lastname (must not be equals firstname)"""
-  lastname: String
-  email: String!
-  fullname: String!
   avatarURL: String
-  students(
-    """Returns the items in the list that come after the specified cursor."""
-    after: String
 
-    """Returns the first n items from the list."""
-    first: Int
-
-    """Returns the items in the list that come before the specified cursor."""
-    before: String
-
-    """Returns the last n items from the list."""
-    last: Int
-  ): StudentConnection
-  studentPasswordRecoveryRequests(
-    """Returns the items in the list that come after the specified cursor."""
-    after: String
-
-    """Returns the first n items from the list."""
-    first: Int
-
-    """Returns the items in the list that come before the specified cursor."""
-    before: String
-
-    """Returns the last n items from the list."""
-    last: Int
-  ): StudentPasswordRecoveryRequestConnection
-  notifications(
-    """Returns the items in the list that come after the specified cursor."""
-    after: String
-
-    """Returns the first n items from the list."""
-    first: Int
-
-    """Returns the items in the list that come before the specified cursor."""
-    before: String
-
-    """Returns the last n items from the list."""
-    last: Int
-  ): NotificationConnection
-}
-
-"""A connection to a list of items."""
-type StudentConnection {
-  """Information to aid in pagination."""
-  pageInfo: PageInfo!
-
-  """A list of edges."""
-  edges: [StudentEdge]
-}
-
-"""Information about pagination in a connection."""
-type PageInfo {
-  """When paginating forwards, are there more items?"""
-  hasNextPage: Boolean!
-
-  """When paginating backwards, are there more items?"""
-  hasPreviousPage: Boolean!
-
-  """When paginating backwards, the cursor to continue."""
-  startCursor: String
-
-  """When paginating forwards, the cursor to continue."""
-  endCursor: String
-}
-
-"""An edge in a connection."""
-type StudentEdge {
-  """The item at the end of the edge"""
-  node: Student
-
-  """A cursor for use in pagination"""
-  cursor: String!
-}
-
-type Student implements Node {
-  """The ID of an object"""
-  id: ID!
-  RM: String!
-  firstname: String!
-
-  """student's lastname (must not be equals firstname)"""
-  lastname: String
-  fullname: String!
-  avatarURL: String
-  schoolReport: SchoolReport
-}
-
-type SchoolReport implements Node {
-  """The ID of an object"""
-  id: ID!
-  year: Int!
-  schoolReportRows(
-    """Returns the items in the list that come after the specified cursor."""
-    after: String
-
-    """Returns the first n items from the list."""
-    first: Int
-
-    """Returns the items in the list that come before the specified cursor."""
-    before: String
-
-    """Returns the last n items from the list."""
-    last: Int
-  ): SchoolReportRowConnection
-}
-
-"""A connection to a list of items."""
-type SchoolReportRowConnection {
-  """Information to aid in pagination."""
-  pageInfo: PageInfo!
-
-  """A list of edges."""
-  edges: [SchoolReportRowEdge]
-  count: Int!
-}
-
-"""An edge in a connection."""
-type SchoolReportRowEdge {
-  """The item at the end of the edge"""
-  node: SchoolReportRowType
-
-  """A cursor for use in pagination"""
-  cursor: String!
-}
-
-type SchoolReportRowType {
-  id: ID!
-  disciplineName: String!
-  firstBimesterGrade: Float!
-  firstBimesterRecGrade: Float
-  firstBimesterAbsences: Int!
-  secondBimesterGrade: Float!
-  secondBimesterRecGrade: Float
-  secondBimesterAbsences: Int!
-  thirdBimesterGrade: Float!
-  thirdBimesterRecGrade: Float
-  thirdBimesterAbsences: Int!
-  fourthBimesterGrade: Float!
-  fourthBimesterRecGrade: Float
-  fourthBimesterAbsences: Int!
-}
-
-"""A connection to a list of items."""
-type StudentPasswordRecoveryRequestConnection {
-  """Information to aid in pagination."""
-  pageInfo: PageInfo!
-
-  """A list of edges."""
-  edges: [StudentPasswordRecoveryRequestEdge]
-}
-
-"""An edge in a connection."""
-type StudentPasswordRecoveryRequestEdge {
-  """The item at the end of the edge"""
-  node: StudentPasswordRecoveryRequest
-
-  """A cursor for use in pagination"""
-  cursor: String!
-}
-
-type StudentPasswordRecoveryRequest implements Node {
-  """The ID of an object"""
-  id: ID!
-  RM: String!
+  """Codes for the `discipline_id` column of the grades spreadsheet."""
+  disciplines: [DisciplineCode!]!
   email: String!
-  status: StudentPasswordRecoveryRequestStatusEnum!
-  student: Student!
-}
-
-enum StudentPasswordRecoveryRequestStatusEnum {
-  PENDING
-  REFUSED
-  CHANGED
-}
-
-"""A connection to a list of items."""
-type NotificationConnection {
-  """Information to aid in pagination."""
-  pageInfo: PageInfo!
-
-  """A list of edges."""
-  edges: [NotificationEdge]
-  count: Int!
-}
-
-"""An edge in a connection."""
-type NotificationEdge {
-  """The item at the end of the edge"""
-  node: Notification
-
-  """A cursor for use in pagination"""
-  cursor: String!
-}
-
-type Notification implements Node {
-  """The ID of an object"""
+  firstname: String!
+  fullname: String!
   id: ID!
-  title: String!
-  message: String!
-  viewed: Boolean!
-  sentAt: String!
+  lastname: String
+  notifications(after: String, before: String, first: Int, last: Int): NotificationConnection
+
+  """Requests waiting for an admin (shown next to the menu item)."""
+  pendingStudentPasswordRecoveryRequestCount: Int!
+  studentPasswordRecoveryRequests(after: String, before: String, first: Int, last: Int): StudentPasswordRecoveryRequestConnection
+  students(after: String, before: String, first: Int, last: Int): StudentConnection
 }
 
-type System {
-  test: Int
-}
-
-type Mutation {
-  adminLogin(input: AdminLoginMutationInput!): AdminLoginMutationPayload
-  changeStudentInformation(input: ChangeStudentInformationMutationInput!): ChangeStudentInformationMutationPayload
-  changeStudentPassword(input: ChangeStudentPasswordMutationInput!): ChangeStudentPasswordMutationPayload
-  recoverAdminPassword(input: RecoverAdminPasswordMutationInput!): RecoverAdminPasswordMutationPayload
-  refuseStudentPasswordRecoveryRequest(input: RefuseStudentPasswordRecoveryRequestMutationInput!): RefuseStudentPasswordRecoveryRequestMutationPayload
-  removeStudent(input: RemoveStudentMutationInput!): RemoveStudentMutationPayload
-  sendAdminRecoveryEmail(input: SendAdminRecoveryEmailMutationInput!): SendAdminRecoveryEmailMutationPayload
-
-  """The logOut mutation can be used to log out an existing user."""
-  logout(input: LogoutMutationInput!): LogoutMutationPayload
-  setNotificationsAsViewed(input: SetNotificationsAsViewedMutationInput!): SetNotificationsAsViewedMutationPayload
-  removeAvatar(input: RemoveAvatarMutationInput!): RemoveAvatarMutationPayload
-  sendStudentPasswordRecoveryRequest(input: SendStudentPasswordRecoveryRequestMutationInput!): SendStudentPasswordRecoveryRequestMutationPayload
-  studentLogin(input: StudentLoginMutationInput!): StudentLoginMutationPayload
+input AdminLoginMutationInput {
+  clientMutationId: ID
+  email: String!
+  password: String!
+  token: String!
 }
 
 type AdminLoginMutationPayload {
-  jwtToken: String
   admin: Admin
+  clientMutationId: ID
   error: MutationError
-  clientMutationId: String
+}
+
+type AdminPasswordRecoveryRequest implements Node {
+  id: ID!
+  status: AdminPasswordRecoveryRequestStatusEnum!
+}
+
+enum AdminPasswordRecoveryRequestStatusEnum {
+  CHANGED
+  PENDING
+}
+
+"""A bimester's marks; null while not given yet."""
+input BimesterMarksInput {
+  absences: Int
+  grade: Float
+  recGrade: Float
+}
+
+input ChangeStudentInformationMutationInput {
+  RM: String!
+  clientMutationId: ID
+  fullname: String!
+  password: String
+  studentId: ID!
+}
+
+type ChangeStudentInformationMutationPayload {
+  clientMutationId: ID
+  error: MutationError
+  student: Student
+}
+
+"""
+A discipline and the code that identifies it in the grades spreadsheet.
+"""
+type DisciplineCode {
+  code: Int!
+  name: String!
+}
+
+input DisciplineMarksInput {
+  bimesters: [BimesterMarksInput!]!
+  disciplineCode: Int!
+}
+
+input LogoutMutationInput {
+  clientMutationId: ID
+}
+
+type LogoutMutationPayload {
+  clientMutationId: ID
+  error: MutationError
+}
+
+type Mutation {
+  """Signs an admin in: the session goes in an httpOnly cookie."""
+  adminLogin(input: AdminLoginMutationInput!): AdminLoginMutationPayload!
+  changeStudentInformation(input: ChangeStudentInformationMutationInput!): ChangeStudentInformationMutationPayload!
+
+  """
+  Ends the session of the app the request comes from and clears its cookie.
+  """
+  logout(input: LogoutMutationInput!): LogoutMutationPayload!
+
+  """
+  An admin sets a new password with their reset link. Signs them out everywhere.
+  """
+  recoverAdminPassword(input: RecoverAdminPasswordMutationInput!): RecoverAdminPasswordMutationPayload!
+  refuseStudentPasswordRecoveryRequest(input: RefuseStudentPasswordRecoveryRequestMutationInput!): RefuseStudentPasswordRecoveryRequestMutationPayload!
+
+  """Removes the signed-in student's photo."""
+  removeAvatar(input: RemoveAvatarMutationInput!): RemoveAvatarMutationPayload!
+  removeStudent(input: RemoveStudentMutationInput!): RemoveStudentMutationPayload!
+
+  """
+  A student sets a new password with the link an admin sent them. Signs them out everywhere.
+  """
+  resetStudentPassword(input: ResetStudentPasswordMutationInput!): ResetStudentPasswordMutationPayload!
+  saveStudentGrades(input: SaveStudentGradesMutationInput!): SaveStudentGradesMutationPayload!
+
+  """E-mails an admin a link to choose a new password."""
+  sendAdminRecoveryEmail(input: SendAdminRecoveryEmailMutationInput!): SendAdminRecoveryEmailMutationPayload!
+
+  """A student who forgot their password asks the admins for a reset link."""
+  sendStudentPasswordRecoveryRequest(input: SendStudentPasswordRecoveryRequestMutationInput!): SendStudentPasswordRecoveryRequestMutationPayload!
+
+  """
+  Approves a student's request: e-mails them a link to choose a new password (again, if resent).
+  """
+  sendStudentPasswordResetLink(input: SendStudentPasswordResetLinkMutationInput!): SendStudentPasswordResetLinkMutationPayload!
+  setNotificationsAsViewed(input: SetNotificationsAsViewedMutationInput!): SetNotificationsAsViewedMutationPayload!
+
+  """
+  Signs a student in to the boletim: the session goes in an httpOnly cookie.
+  """
+  studentLogin(input: StudentLoginMutationInput!): StudentLoginMutationPayload!
 }
 
 """An expected failure of a mutation, written for the user."""
@@ -273,147 +137,265 @@ type MutationError {
   userMessage: String!
 }
 
-input AdminLoginMutationInput {
-  email: String!
-  password: String!
-  token: String!
-  clientMutationId: String
-}
-
-type ChangeStudentInformationMutationPayload {
-  student: Student
-  error: MutationError
-  clientMutationId: String
-}
-
-input ChangeStudentInformationMutationInput {
-  studentId: ID!
-  fullname: String
-  RM: String
-  password: String
-  clientMutationId: String
-}
-
-type ChangeStudentPasswordMutationPayload {
-  studentPasswordRecoveryRequest: StudentPasswordRecoveryRequest
-  error: MutationError
-  clientMutationId: String
-}
-
-input ChangeStudentPasswordMutationInput {
-  studentPasswordRecoveryRequestId: ID!
-  newPassword: String!
-  clientMutationId: String
-}
-
-type RecoverAdminPasswordMutationPayload {
-  adminPasswordRecoveryRequest: AdminPasswordRecoveryRequest
-  error: MutationError
-  clientMutationId: String
-}
-
-type AdminPasswordRecoveryRequest implements Node {
-  """The ID of an object"""
+interface Node {
   id: ID!
-  status: AdminPasswordRecoveryRequestStatusEnum!
 }
 
-enum AdminPasswordRecoveryRequestStatusEnum {
-  PENDING
-  CHANGED
+type Notification implements Node {
+  id: ID!
+  message: String!
+  sentAt: String!
+  title: String!
+  viewed: Boolean!
+}
+
+type NotificationConnection {
+  count: Int!
+  edges: [NotificationEdge!]!
+  pageInfo: PageInfo!
+}
+
+type NotificationEdge {
+  cursor: String!
+  node: Notification!
+}
+
+type PageInfo {
+  endCursor: String
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
+  startCursor: String
+}
+
+type Query {
+  admin: Admin
+
+  """
+  Whether a student password reset link (from the e-mail) can still be used.
+  """
+  isStudentPasswordResetLinkValid(passwordRecoveryToken: String!, studentPasswordRecoveryRequestId: ID!): Boolean!
+  node(id: ID!): Node
+  nodes(ids: [ID!]!): [Node]!
+  student: Student
+  system: System
 }
 
 input RecoverAdminPasswordMutationInput {
   adminPasswordRecoveryRequestId: ID!
-  passwordRecoveryToken: String!
+  clientMutationId: ID
   password: String!
   passwordConfirmation: String!
-  clientMutationId: String
+  passwordRecoveryToken: String!
 }
 
-type RefuseStudentPasswordRecoveryRequestMutationPayload {
-  studentPasswordRecoveryRequest: StudentPasswordRecoveryRequest
+type RecoverAdminPasswordMutationPayload {
+  adminPasswordRecoveryRequest: AdminPasswordRecoveryRequest
+  clientMutationId: ID
   error: MutationError
-  clientMutationId: String
 }
 
 input RefuseStudentPasswordRecoveryRequestMutationInput {
+  clientMutationId: ID
   studentPasswordRecoveryRequestId: ID!
-  clientMutationId: String
 }
 
-type RemoveStudentMutationPayload {
-  student: Student
+type RefuseStudentPasswordRecoveryRequestMutationPayload {
+  admin: Admin
+  clientMutationId: ID
   error: MutationError
-  clientMutationId: String
-}
-
-input RemoveStudentMutationInput {
-  studentId: ID!
-  clientMutationId: String
-}
-
-type SendAdminRecoveryEmailMutationPayload {
-  error: MutationError
-  clientMutationId: String
-}
-
-input SendAdminRecoveryEmailMutationInput {
-  email: String!
-  clientMutationId: String
-}
-
-type LogoutMutationPayload {
-  error: MutationError
-  clientMutationId: String
-}
-
-input LogoutMutationInput {
-  clientMutationId: String
-}
-
-type SetNotificationsAsViewedMutationPayload {
-  notifications: NotificationConnection
-  error: MutationError
-  clientMutationId: String
-}
-
-input SetNotificationsAsViewedMutationInput {
-  notificationIds: [ID!]
-  clientMutationId: String
-}
-
-type RemoveAvatarMutationPayload {
-  student: Student
-  error: MutationError
-  clientMutationId: String
+  studentPasswordRecoveryRequest: StudentPasswordRecoveryRequest
 }
 
 input RemoveAvatarMutationInput {
-  clientMutationId: String
+  clientMutationId: ID
 }
 
-type SendStudentPasswordRecoveryRequestMutationPayload {
+type RemoveAvatarMutationPayload {
+  clientMutationId: ID
   error: MutationError
-  clientMutationId: String
+  student: Student
+}
+
+input RemoveStudentMutationInput {
+  clientMutationId: ID
+  studentId: ID!
+}
+
+type RemoveStudentMutationPayload {
+  clientMutationId: ID
+  error: MutationError
+  student: Student
+}
+
+input ResetStudentPasswordMutationInput {
+  clientMutationId: ID
+  password: String!
+  passwordConfirmation: String!
+  passwordRecoveryToken: String!
+  studentPasswordRecoveryRequestId: ID!
+}
+
+type ResetStudentPasswordMutationPayload {
+  clientMutationId: ID
+  error: MutationError
+}
+
+input SaveStudentGradesMutationInput {
+  clientMutationId: ID
+  disciplines: [DisciplineMarksInput!]!
+  studentId: ID!
+  year: Int!
+}
+
+type SaveStudentGradesMutationPayload {
+  clientMutationId: ID
+  error: MutationError
+  student: Student
+}
+
+type SchoolReport implements Node {
+  id: ID!
+  schoolReportRows(after: String, before: String, first: Int, last: Int): SchoolReportRowConnection
+  year: Int!
+}
+
+type SchoolReportRowConnection {
+  count: Int!
+  edges: [SchoolReportRowEdge!]!
+  pageInfo: PageInfo!
+}
+
+type SchoolReportRowEdge {
+  cursor: String!
+  node: SchoolReportRowType!
+}
+
+type SchoolReportRowType {
+  disciplineCode: Int!
+  disciplineName: String!
+  firstBimesterAbsences: Int
+  firstBimesterGrade: Float
+  firstBimesterRecGrade: Float
+  fourthBimesterAbsences: Int
+  fourthBimesterGrade: Float
+  fourthBimesterRecGrade: Float
+  id: ID!
+  secondBimesterAbsences: Int
+  secondBimesterGrade: Float
+  secondBimesterRecGrade: Float
+  thirdBimesterAbsences: Int
+  thirdBimesterGrade: Float
+  thirdBimesterRecGrade: Float
+}
+
+input SendAdminRecoveryEmailMutationInput {
+  clientMutationId: ID
+  email: String!
+}
+
+type SendAdminRecoveryEmailMutationPayload {
+  clientMutationId: ID
+  error: MutationError
 }
 
 input SendStudentPasswordRecoveryRequestMutationInput {
   RM: String!
+  clientMutationId: ID
   email: String!
-  clientMutationId: String
 }
 
-type StudentLoginMutationPayload {
-  jwtToken: String
-  student: Student
+type SendStudentPasswordRecoveryRequestMutationPayload {
+  clientMutationId: ID
   error: MutationError
-  clientMutationId: String
+}
+
+input SendStudentPasswordResetLinkMutationInput {
+  clientMutationId: ID
+  studentPasswordRecoveryRequestId: ID!
+}
+
+type SendStudentPasswordResetLinkMutationPayload {
+  admin: Admin
+  clientMutationId: ID
+  error: MutationError
+  studentPasswordRecoveryRequest: StudentPasswordRecoveryRequest
+}
+
+input SetNotificationsAsViewedMutationInput {
+  clientMutationId: ID
+  notificationIds: [ID!]!
+}
+
+type SetNotificationsAsViewedMutationPayload {
+  clientMutationId: ID
+  error: MutationError
+  notifications: NotificationConnection
+}
+
+type Student implements Node {
+  RM: String!
+  avatarURL: String
+  firstname: String!
+  fullname: String!
+  id: ID!
+  lastname: String
+  schoolReport: SchoolReport
+}
+
+type StudentConnection {
+  edges: [StudentEdge!]!
+  pageInfo: PageInfo!
+}
+
+type StudentEdge {
+  cursor: String!
+  node: Student!
 }
 
 input StudentLoginMutationInput {
   RM: String!
+  clientMutationId: ID
   password: String!
   token: String!
-  clientMutationId: String
+}
+
+type StudentLoginMutationPayload {
+  clientMutationId: ID
+  error: MutationError
+  student: Student
+}
+
+type StudentPasswordRecoveryRequest implements Node {
+  RM: String!
+  createdAt: String!
+  email: String!
+  id: ID!
+  status: StudentPasswordRecoveryRequestStatusEnum!
+  student: Student
+}
+
+type StudentPasswordRecoveryRequestConnection {
+  edges: [StudentPasswordRecoveryRequestEdge!]!
+  pageInfo: PageInfo!
+}
+
+type StudentPasswordRecoveryRequestEdge {
+  cursor: String!
+  node: StudentPasswordRecoveryRequest!
+}
+
+enum StudentPasswordRecoveryRequestStatusEnum {
+  """The student chose a new password."""
+  CHANGED
+
+  """Approved: the student got a link to choose a new password."""
+  LINK_SENT
+
+  """Waiting for an admin."""
+  PENDING
+  REFUSED
+}
+
+type System {
+  test: Int
 }

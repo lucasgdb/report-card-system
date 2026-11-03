@@ -1,8 +1,8 @@
 import { environment } from '@usefaz/relay';
-import { jwtToken } from '@usefaz/shared/browser';
+import { session } from '@usefaz/shared/browser';
 import { fetchQuery } from 'react-relay';
 
-import NavbarLayoutQuery from '~/layout/Navbar/__generated__/NavbarLayoutQuery.graphql';
+import AdminLayoutQuery from '~/layout/__generated__/AdminLayoutQuery.graphql';
 import StudentListPageQuery from '~/pages/StudentList/__generated__/StudentListPageQuery.graphql';
 
 /**
@@ -11,13 +11,13 @@ import StudentListPageQuery from '~/pages/StudentList/__generated__/StudentListP
  * with the pages' own `useLazyLoadQuery`.
  */
 export function preloadFirstScreen() {
-  if (!jwtToken.get()) {
+  if (!session.isSignedIn()) {
     void import('~/pages/Login/LoginPage');
     return;
   }
 
-  void import('~/layout/Navbar/NavbarLayout');
-  fetchQuery(environment, NavbarLayoutQuery, { count: 5 }).subscribe({});
+  void import('~/layout/AdminLayout');
+  fetchQuery(environment, AdminLayoutQuery, { count: 5 }).subscribe({});
 
   if (window.location.hash.replace(/^#\/?/, '') === '') {
     void import('~/pages/StudentList/StudentListPage');

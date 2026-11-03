@@ -1,5 +1,5 @@
 import { environment } from '@usefaz/relay';
-import { jwtToken } from '@usefaz/shared/browser';
+import { session } from '@usefaz/shared/browser';
 import { fetchQuery } from 'react-relay';
 
 import HomePageQuery from '~/pages/Home/__generated__/HomePageQuery.graphql';
@@ -10,7 +10,7 @@ import HomePageQuery from '~/pages/Home/__generated__/HomePageQuery.graphql';
  * with the page's own `useLazyLoadQuery`.
  */
 export function preloadFirstScreen() {
-  if (!jwtToken.get()) {
+  if (!session.isSignedIn()) {
     void import('~/pages/Login/LoginPage');
     return;
   }

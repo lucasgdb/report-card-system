@@ -54,7 +54,7 @@ export function PasswordInput({
       <InputGroupAddon align="inline-end">
         <InputGroupButton
           size="icon-sm"
-          className="rounded-full text-secondary"
+          className="text-secondary"
           // A fixed name plus aria-pressed: "Mostrar senha, pressionado" means the password is visible.
           aria-label="Mostrar senha"
           aria-pressed={visible}

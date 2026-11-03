@@ -6,11 +6,13 @@ import {
   AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
+  AlertDialogMedia,
   AlertDialogTitle,
 } from '@usefaz/ui/components/ui/alert-dialog';
 import { handleMutationError } from '@usefaz/shared';
 import { toast } from '@usefaz/ui/components/ui/sonner';
 import { toastErrors } from '@usefaz/ui/lib/toast-errors';
+import { Trash2Icon } from 'lucide-react';
 import { graphql, useFragment, useMutation } from 'react-relay';
 import { ConnectionHandler } from 'relay-runtime';
 
@@ -59,9 +61,13 @@ export default function RemoveStudentDialog({ open, studentId, fullname, onClose
     <AlertDialog open={open} onOpenChange={(nextOpen) => !nextOpen && onClose()}>
       <AlertDialogContent>
         <AlertDialogHeader>
+          <AlertDialogMedia variant="destructive">
+            <Trash2Icon />
+          </AlertDialogMedia>
           <AlertDialogTitle>Remover aluno?</AlertDialogTitle>
           <AlertDialogDescription>
-            {fullname} será removido do sistema, junto com o boletim. Essa ação não pode ser desfeita.
+            <b className="font-medium text-foreground">{fullname}</b> será removido do sistema, junto com o boletim.
+            Essa ação não pode ser desfeita.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>

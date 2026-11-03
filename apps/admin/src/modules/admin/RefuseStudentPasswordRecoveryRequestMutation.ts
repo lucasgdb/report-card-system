@@ -11,6 +11,10 @@ const RefuseStudentPasswordRecoveryRequestMutation = graphql`
         id
         status
       }
+      admin {
+        id
+        pendingStudentPasswordRecoveryRequestCount
+      }
     }
   }
 `;

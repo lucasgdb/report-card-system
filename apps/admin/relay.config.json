@@ -4,5 +4,9 @@
   "schema": "../server/schema.graphql",
   "language": "typescript",
   "eagerEsModules": true,
-  "excludes": ["**/node_modules/**", "**/__generated__/**"]
+  "excludes": ["**/node_modules/**", "**/__generated__/**"],
+  "persistConfig": {
+    "file": "../server/persisted-operations/admin.json",
+    "algorithm": "SHA256"
+  }
 }

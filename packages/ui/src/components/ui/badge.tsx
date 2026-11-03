@@ -15,12 +15,15 @@ const badgeVariants = cva(
         // Usefaz: soft status badges.
         success: 'bg-emerald-100 text-emerald-800 dark:bg-emerald-500/15 dark:text-emerald-300',
         warning: 'bg-amber-100 text-amber-800 dark:bg-amber-500/15 dark:text-amber-300',
+        info: 'bg-secondary/8 text-secondary',
         outline: 'border-border text-foreground [a]:hover:bg-muted [a]:hover:text-muted-foreground',
         ghost: 'hover:bg-muted hover:text-muted-foreground dark:hover:bg-muted/50',
         link: 'text-primary underline-offset-4 hover:underline',
       },
       size: {
         default: 'h-5 px-2 py-0.5 text-xs',
+        /** Statuses in tables and lists. */
+        md: 'h-7 gap-1.5 px-3 text-[0.8125rem]',
         /** Prominent statuses, e.g. "Aprovado" in the profile. */
         lg: 'h-10 rounded-lg px-5 font-heading text-base font-semibold',
       },

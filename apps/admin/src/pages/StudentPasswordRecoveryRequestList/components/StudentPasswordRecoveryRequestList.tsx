@@ -1,22 +1,33 @@
 import { DataTable, type GridColDef, type GridRowsProp } from '@usefaz/ui/components/data-table';
-import { Badge } from '@usefaz/ui/components/ui/badge';
+import { PageHeader } from '@usefaz/ui/components/page-header';
+import { StatusBadge, type StatusTone } from '@usefaz/ui/components/status-badge';
+import { ToggleGroup, ToggleGroupItem } from '@usefaz/ui/components/ui/toggle-group';
 import { useMediaQuery } from '@usefaz/ui/hooks/use-media-query';
+import { useState } from 'react';
 import { graphql, useFragment } from 'react-relay';
 
 import MoreButton from './MoreButton';
 import type { StudentPasswordRecoveryRequestList_admin$key } from './__generated__/StudentPasswordRecoveryRequestList_admin.graphql';
 
-const STATUS: Record<string, string> = {
-  PENDING: 'Pendente',
-  REFUSED: 'Recusado',
-  CHANGED: 'Finalizado',
+type Status = 'PENDING' | 'LINK_SENT' | 'CHANGED' | 'REFUSED';
+type Filter = Status | 'ALL';
+
+const STATUS: Record<Status, { label: string; tone: StatusTone }> = {
+  PENDING: { label: 'Pendente', tone: 'warning' },
+  LINK_SENT: { label: 'Link enviado', tone: 'info' },
+  CHANGED: { label: 'Concluído', tone: 'success' },
+  REFUSED: { label: 'Recusado', tone: 'destructive' },
 };
 
-const STATUS_VARIANT: Record<string, 'secondary' | 'destructive' | 'success'> = {
-  PENDING: 'secondary',
-  REFUSED: 'destructive',
-  CHANGED: 'success',
-};
+const FILTERS: { value: Filter; label: string }[] = [
+  { value: 'ALL', label: 'Todos' },
+  { value: 'PENDING', label: 'Pendentes' },
+  { value: 'LINK_SENT', label: 'Link enviado' },
+  { value: 'CHANGED', label: 'Concluídos' },
+  { value: 'REFUSED', label: 'Recusados' },
+];
+
+const requestedAt = new Intl.DateTimeFormat('pt-BR', { dateStyle: 'short', timeStyle: 'short' });
 
 type StudentPasswordRecoveryRequestListProps = {
   admin: StudentPasswordRecoveryRequestList_admin$key;
@@ -34,6 +45,7 @@ export default function StudentPasswordRecoveryRequestList({ admin }: StudentPas
               RM
               email
               status
+              createdAt
 
               student {
                 fullname
@@ -46,61 +58,101 @@ export default function StudentPasswordRecoveryRequestList({ admin }: StudentPas
     admin
   );
 
-  const isDesktop = useMediaQuery('(min-width: 1200px)');
+  // Phones keep the essentials: who, status and the actions.
+  const isTablet = useMediaQuery('(min-width: 768px)');
+
+  const requests = (data.studentPasswordRecoveryRequests?.edges ?? []).map(({ node }) => node);
+  const pending = requests.filter((request) => request.status === 'PENDING').length;
+  // Start where there's work to do.
+  const [filter, setFilter] = useState<Filter>(pending > 0 ? 'PENDING' : 'ALL');
+
+  const countOf = (value: Filter) =>
+    value === 'ALL' ? requests.length : requests.filter((request) => request.status === value).length;
 
   const columns: GridColDef[] = [
-    { field: 'RM', cellClassName: 'tabular-nums', headerName: 'RM', width: 100 },
-    { field: 'email', headerName: 'E-mail', width: 300 },
-    { field: 'fullname', headerName: 'Nome', width: 250 },
+    {
+      field: 'student',
+      headerName: 'Aluno',
+      flex: 1,
+      width: 180,
+      renderCell: ({ row }) => (
+        <div className="flex min-w-0 flex-col">
+          <span className="truncate font-medium text-foreground">{row.fullname}</span>
+          <span className="text-xs text-muted-foreground tabular-nums">RM {row.RM}</span>
+        </div>
+      ),
+    },
+    { field: 'email', headerName: 'E-mail', width: 280, cellClassName: 'text-muted-foreground' },
+    {
+      field: 'createdAt',
+      headerName: 'Pedido em',
+      width: 170,
+      cellClassName: 'tabular-nums text-muted-foreground',
+      renderCell: ({ value }) => <time dateTime={value}>{requestedAt.format(new Date(value))}</time>,
+    },
     {
       field: 'status',
       headerName: 'Status',
-      width: 125,
-      renderCell(params) {
-        return (
-          <Badge variant={STATUS_VARIANT[params.value] ?? 'outline'}>{STATUS[params.value] ?? 'Desconhecido'}</Badge>
-        );
+      width: 160,
+      renderCell: ({ value }) => {
+        const status = STATUS[value as Status];
+        return <StatusBadge tone={status?.tone ?? 'neutral'}>{status?.label ?? value}</StatusBadge>;
       },
-    },
-    {
-      field: 'blank',
-      headerName: '',
-      disableColumnMenu: true,
-      sortable: false,
-      filterable: false,
-      editable: false,
-      hideable: false,
-      flex: 1,
     },
     {
       field: 'actions',
       headerName: 'Ações',
-      width: 100,
+      width: 88,
       headerAlign: 'center',
       align: 'center',
       sortable: false,
-      filterable: false,
-      hideable: false,
-      disableColumnMenu: true,
       renderCell(params) {
         return <MoreButton params={params} disabled={params.row.status === 'CHANGED'} />;
       },
     },
   ];
 
-  const rows: GridRowsProp = data.studentPasswordRecoveryRequests.edges.map(
-    ({ node: studentPasswordRecoveryRequest }) => ({
-      id: studentPasswordRecoveryRequest.id,
-      RM: studentPasswordRecoveryRequest.RM,
-      email: studentPasswordRecoveryRequest.email,
-      fullname: studentPasswordRecoveryRequest.student.fullname,
-      status: studentPasswordRecoveryRequest.status,
-    })
-  );
+  const rows: GridRowsProp = requests
+    .filter((request) => filter === 'ALL' || request.status === filter)
+    .map((request) => ({
+      id: request.id,
+      RM: request.RM,
+      email: request.email,
+      // The student may have been removed since the request.
+      fullname: request.student?.fullname ?? 'Aluno removido',
+      createdAt: request.createdAt,
+      status: request.status,
+    }));
 
   return (
-    <div className="flex flex-1 flex-col">
-      <DataTable rows={rows} columns={columns} columnVisibilityModel={{ blank: isDesktop }} autoHeight={false} />
-    </div>
+    <>
+      <PageHeader
+        title="Recuperação de senha"
+        description="Pedidos de alunos que esqueceram a senha. Envie um link para o aluno criar uma nova ou recuse o pedido."
+      />
+
+      <ToggleGroup
+        aria-label="Filtrar por status"
+        value={[filter]}
+        onValueChange={(value) => value[0] && setFilter(value[0] as Filter)}
+        className="max-w-full flex-nowrap self-start overflow-x-auto"
+      >
+        {FILTERS.map(({ value, label }) => (
+          <ToggleGroupItem key={value} value={value}>
+            {label}
+            <span className="text-xs tabular-nums opacity-70">{countOf(value)}</span>
+          </ToggleGroupItem>
+        ))}
+      </ToggleGroup>
+
+      <DataTable
+        rows={rows}
+        columns={columns}
+        columnVisibilityModel={{ email: isTablet, createdAt: isTablet }}
+        emptyMessage={
+          filter === 'ALL' ? 'Nenhum pedido de recuperação de senha ainda.' : 'Nenhum pedido com esse status.'
+        }
+      />
+    </>
   );
 }

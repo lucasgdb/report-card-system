@@ -16,7 +16,7 @@
     "start:server": "pnpm --filter @usefaz/server dev",
     "start:boletim": "pnpm --filter @usefaz/boletim dev",
     "start:admin": "pnpm --filter @usefaz/admin dev",
-    "seed": "docker compose exec server pnpm seed",
+    "db:reset": "docker compose exec server pnpm db:reset",
     "relay": "pnpm --filter \"./apps/*\" --if-present relay",
     "build": "pnpm --recursive --if-present build",
     "typecheck": "pnpm --recursive --if-present typecheck",

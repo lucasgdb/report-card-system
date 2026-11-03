@@ -10,7 +10,7 @@ import relayCompiler from './relayCompiler.ts';
 
 // The apps and the shared packages read their settings from `process.env`, so the variables
 // from `.env.<mode>` are inlined at build time.
-const ENV_KEYS = ['SERVER_BASE_URL', 'AUTHORIZATION_HEADER', 'RECAPTCHA_V3_PUBLIC_TOKEN'];
+const ENV_KEYS = ['SERVER_BASE_URL', 'USEFAZ_APP', 'RECAPTCHA_V3_PUBLIC_TOKEN'];
 
 type AppConfigOptions = {
   /** The app's folder, usually `import.meta.dirname`. */

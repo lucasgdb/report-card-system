@@ -1,4 +1,4 @@
-import __DEV__ from '../utils/__DEV__';
+import __DEV__ from '../utils/__DEV__.ts';
 
 type Grecaptcha = {
   ready(callback: () => void): void;

@@ -12,7 +12,7 @@ Monorepo com [pnpm workspaces](https://pnpm.io/workspaces). As versões comparti
 
 | Pacote                 | Descrição                                                        |
 | ---------------------- | ---------------------------------------------------------------- |
-| `apps/server`          | API GraphQL (Koa + graphql-http + Knex/PostgreSQL)               |
+| `apps/server`          | API GraphQL (Hono + GraphQL Yoga + Pothos + Kysely/PostgreSQL)   |
 | `apps/boletim`         | Sistema de Boletim (React + Relay + Vite)                        |
 | `apps/admin`           | Sistema do Administrador (React + Relay + Vite)                  |
 | `packages/ui`          | Componentes React compartilhados (Tailwind + shadcn com Base UI) |
@@ -28,20 +28,35 @@ Monorepo com [pnpm workspaces](https://pnpm.io/workspaces). As versões comparti
 - Copie o arquivo `.env.example` do `apps/server` para `.env`
 - `pnpm dev`: Inicia os containers do projeto
   - Se a porta 3000 estiver ocupada, use `SERVER_PORT=3010 pnpm dev`: a API sobe na 3010 e os apps passam a chamá-la lá
-- `pnpm seed`: Alimenta o banco com dados de teste
+- `pnpm db:reset`: Recria o banco do zero e alimenta com dados de teste (só em desenvolvimento)
 - Abra o Sistema de Boletim em `http://localhost:8080`
-  - Login `12345`
-  - Password `123`
+  - RM `12345`
+  - Senha `usefaz123`
 - Abra o Sistema do Administrador em `http://localhost:8081`
-  - Login `lucasgdbittencourt@gmail.com`
-  - Password `123`
+  - E-mail `lucasgdbittencourt@gmail.com`
+  - Senha `usefaz123`
 - `pnpm stop`: Desliga o projeto.
+
+E-mails (links de redefinição de senha) saem pelo SMTP do Gmail. Para testar sem enviar nada, use `MAIL_DRIVER=log` no `.env` do servidor: o e-mail, com o link, aparece no log (`docker logs server`).
 
 ### Scripts
 
 - `pnpm lint` / `pnpm lint:fix`: Lint e formatação com [Biome](https://biomejs.dev)
 - `pnpm typecheck`: Gera os artefatos do Relay e checa os tipos de todos os pacotes
 - `pnpm build`: Gera o build de produção de todos os apps
+
+No servidor (`pnpm --filter @usefaz/server <script>`, ou `docker compose exec server pnpm <script>`):
+
+- `migrate` / `rollback`: Aplica as migrations pendentes / desfaz a última
+- `db:types`: Gera os tipos do Kysely (`src/database/types.ts`) a partir do banco, depois de uma migration
+- `db:reset`: Recria o banco com os dados de teste (só em desenvolvimento)
+
+### Servidor
+
+- **Sessão**: cookie `httpOnly` com um token opaco (só o hash fica no banco), um por app (`X-Usefaz-App`). Senhas com argon2id.
+- **GraphQL**: só aceita persisted queries em produção. O `relay-compiler` de cada app grava as operações em `apps/server/persisted-operations/`; rode `pnpm relay` depois de mudar uma query ou mutation.
+- **Erros**: falhas que o usuário pode corrigir voltam como dado (`error { field userMessage }`); veja `packages/ui/README.md`.
+- **Uploads**: avatares no `public/` do servidor (`STORAGE_DRIVER=local`) ou num bucket S3 (`STORAGE_DRIVER=s3` e as variáveis `S3_*`).
 
 ## Telas do Sistema de Boletim
 

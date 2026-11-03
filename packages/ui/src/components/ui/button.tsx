@@ -15,11 +15,15 @@ const buttonVariants = cva(
         secondary:
           'bg-secondary text-secondary-foreground not-data-disabled:hover:bg-secondary-hover not-data-disabled:active:bg-secondary-active',
         outline:
-          'border-border bg-background text-foreground not-data-disabled:hover:bg-muted aria-expanded:bg-muted dark:border-input dark:bg-input/30 dark:not-data-disabled:hover:bg-input/50',
+          'border-border bg-card text-foreground not-data-disabled:hover:border-input not-data-disabled:hover:bg-muted not-data-disabled:active:bg-accent aria-expanded:bg-muted',
         ghost:
           'text-foreground not-data-disabled:hover:bg-muted aria-expanded:bg-muted dark:not-data-disabled:hover:bg-muted/50',
+        // Ghost on the brand blue (sidebar, phone header).
+        'ghost-inverse': 'text-white not-data-disabled:hover:bg-white/10 aria-expanded:bg-white/15',
         destructive:
-          'bg-destructive/10 text-destructive not-data-disabled:hover:bg-destructive/20 focus-visible:ring-destructive/25 dark:bg-destructive/20 dark:text-red-300 dark:not-data-disabled:hover:bg-destructive/30',
+          'bg-destructive/10 text-destructive not-data-disabled:hover:bg-destructive/20 focus-visible:ring-destructive/25',
+        // A soft neutral button: the dismissing side of a confirmation (Cancelar), next to a soft destructive action.
+        soft: 'bg-foreground/5 text-foreground not-data-disabled:hover:bg-foreground/10 not-data-disabled:active:bg-foreground/15 aria-expanded:bg-foreground/10',
         link: 'text-primary underline-offset-4 not-data-disabled:hover:underline',
       },
       size: {

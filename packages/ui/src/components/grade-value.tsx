@@ -3,6 +3,16 @@ import { cn } from '@usefaz/ui/lib/utils';
 const formatGrade = (grade: number) =>
   grade.toLocaleString('pt-BR', { minimumFractionDigits: 1, maximumFractionDigits: 2 });
 
+/** A mark not given yet: a dash (or `symbol`, e.g. "N/A"), read as `label` by screen readers. */
+export function EmptyValue({ label, symbol = '—' }: { label: string; symbol?: string }) {
+  return (
+    <span data-slot="empty-value" className="text-sm font-medium text-(--text-muted)">
+      <span aria-hidden>{symbol}</span>
+      <span className="sr-only">{label}</span>
+    </span>
+  );
+}
+
 type GradeValueProps = {
   grade?: number | null;
   /** Recovery grade; when present it replaces the grade, which is shown struck through. */
@@ -14,12 +24,7 @@ export function GradeValue({ grade, recovery }: GradeValueProps) {
   const hasRecovery = recovery !== null && recovery !== undefined;
 
   if (!hasGrade && !hasRecovery) {
-    return (
-      <span data-slot="grade-value" data-state="empty" className="text-(--text-muted)">
-        <span aria-hidden>—</span>
-        <span className="sr-only">Sem nota</span>
-      </span>
-    );
+    return <EmptyValue label="Sem nota" />;
   }
 
   return (

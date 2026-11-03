@@ -6,11 +6,12 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@usefaz/ui/components/ui/dropdown-menu';
-import { EllipsisVerticalIcon, PencilIcon, Trash2Icon } from 'lucide-react';
+import { EllipsisVerticalIcon, NotebookPenIcon, PencilIcon, Trash2Icon } from 'lucide-react';
 import { useState } from 'react';
 import { graphql, useFragment } from 'react-relay';
 
 import EditStudentInformationDialog from './EditStudentInformationDialog';
+import GradesSheet from './Grades/GradesSheet';
 import RemoveStudentDialog from './RemoveStudentDialog';
 import type { MoreButton_admin$key } from './__generated__/MoreButton_admin.graphql';
 
@@ -30,6 +31,7 @@ export default function MoreButton({ params, disabled = false, admin }: MoreButt
     admin
   );
 
+  const [isGradesSheetOpen, setIsGradesSheetOpen] = useState(false);
   const [isEditStudentInformationDialogOpen, setIsEditStudentInformationDialogOpen] = useState(false);
   const [isRemoveStudentDialogOpen, setIsRemoveStudentDialogOpen] = useState(false);
 
@@ -43,7 +45,11 @@ export default function MoreButton({ params, disabled = false, admin }: MoreButt
           <EllipsisVerticalIcon />
         </DropdownMenuTrigger>
 
-        <DropdownMenuContent align="end" className="min-w-48">
+        <DropdownMenuContent align="end" className="min-w-52">
+          <DropdownMenuItem onClick={() => setIsGradesSheetOpen(true)}>
+            <NotebookPenIcon />
+            Editar notas
+          </DropdownMenuItem>
           <DropdownMenuItem onClick={() => setIsEditStudentInformationDialogOpen(true)}>
             <PencilIcon />
             Editar informações
@@ -54,6 +60,13 @@ export default function MoreButton({ params, disabled = false, admin }: MoreButt
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
+
+      <GradesSheet
+        open={isGradesSheetOpen}
+        studentId={params.row.id}
+        fullname={params.row.fullname}
+        onClose={() => setIsGradesSheetOpen(false)}
+      />
 
       <EditStudentInformationDialog
         open={isEditStudentInformationDialogOpen}

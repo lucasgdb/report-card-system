@@ -1,5 +1,5 @@
 import { handleMutationError } from '@usefaz/shared';
-import { getRecaptchaToken, jwtToken, preloadRecaptcha } from '@usefaz/shared/browser';
+import { getRecaptchaToken, preloadRecaptcha, session } from '@usefaz/shared/browser';
 import { FormAlert } from '@usefaz/ui/components/form-alert';
 import { PasswordInput } from '@usefaz/ui/components/password-input';
 import { Button } from '@usefaz/ui/components/ui/button';
@@ -78,13 +78,13 @@ export default function Form() {
         input: { email, password, token },
       },
       onCompleted: ({ adminLogin }) => {
-        if (handleMutationError(form, adminLogin?.error) || !adminLogin?.jwtToken) {
+        if (handleMutationError(form, adminLogin?.error) || !adminLogin?.admin) {
           setLoadingRecaptcha(false);
           return;
         }
 
         rememberEmail(rememberMe ? email : null);
-        jwtToken.set(adminLogin.jwtToken);
+        session.markSignedIn();
         window.location.reload();
       },
       onError: (error) => {

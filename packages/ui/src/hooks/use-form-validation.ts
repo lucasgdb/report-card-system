@@ -29,6 +29,12 @@ export const email =
   (value) =>
     !value || EMAIL_PATTERN.test(value) ? undefined : message;
 
+/** When filled in, the field must have at least `length` characters (e.g. a new password). */
+export const minLength =
+  (length: number, message: string): Rule<unknown> =>
+  (value) =>
+    !value || value.length >= length ? undefined : message;
+
 /** The field must repeat another one (e.g. a password confirmation). */
 export const sameAs =
   <Name extends string>(field: Name, message: string): Rule<Record<Name, string>> =>

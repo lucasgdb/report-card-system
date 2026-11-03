@@ -1,4 +1,5 @@
 import StudentSummary from '~/components/StudentSummary';
+import { isApproved, toReportCardRows } from '~/utils/reportCard';
 
 import getSchoolReport, { getSavedStudent } from '../../../../utils/getSchoolReport';
 
@@ -13,7 +14,7 @@ export default function Information() {
       RM={student.RM}
       fullname={student.fullname}
       year={student.year}
-      approved={getSchoolReport().length > 0}
+      approved={isApproved(toReportCardRows(getSchoolReport()))}
     />
   );
 }

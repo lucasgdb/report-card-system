@@ -1,4 +1,4 @@
-import { GradeValue } from '@usefaz/ui/components/grade-value';
+import { EmptyValue, GradeValue } from '@usefaz/ui/components/grade-value';
 import {
   ReportTable,
   ReportTableBody,
@@ -15,7 +15,7 @@ import { ToneLegend } from '@usefaz/ui/components/tone-legend';
 import { useState } from 'react';
 
 import SubjectIcon from '~/components/SubjectIcon';
-import type { ReportCardRow } from '~/utils/reportCard';
+import { ABSENCE_LIMIT, PASSING_AVERAGE, type ReportCardRow } from '~/utils/reportCard';
 import { readStorage, writeStorage } from '~/utils/storage';
 
 // The student's choice of pinning the subjects column on phones (pinned unless they turned it off).
@@ -27,7 +27,7 @@ const BIMESTER_LABELS = ['1º bimestre', '2º bimestre', '3º bimestre', '4º bi
 const roundAverage = (average: number) => Math.round(average * 10) / 10;
 
 const averageStatus = (average: number): { tone: ScoreTone; label: string } => {
-  if (average >= 7) {
+  if (average >= PASSING_AVERAGE) {
     return { tone: 'success', label: 'aprovado' };
   }
   if (average >= 5) {
@@ -37,7 +37,7 @@ const averageStatus = (average: number): { tone: ScoreTone; label: string } => {
 };
 
 const absencesStatus = (absences: number): { tone: ScoreTone; label: string } => {
-  if (absences >= 18) {
+  if (absences >= ABSENCE_LIMIT) {
     return { tone: 'destructive', label: 'acima do limite' };
   }
   if (absences >= 11) {
@@ -103,8 +103,8 @@ export default function ReportCardTable({ rows, year }: ReportCardTableProps) {
 
         <ReportTableBody>
           {rows.map((row) => {
-            const average = averageStatus(roundAverage(row.finalAverage));
-            const absences = absencesStatus(row.totalAbsences);
+            const average = row.finalAverage === null ? null : averageStatus(roundAverage(row.finalAverage));
+            const absences = row.totalAbsences === null ? null : absencesStatus(row.totalAbsences);
 
             return (
               <ReportTableRow key={row.subject}>
@@ -124,18 +124,28 @@ export default function ReportCardTable({ rows, year }: ReportCardTableProps) {
                   <ReportTableCell key={`${BIMESTER_LABELS[index]}-grade`} divider={index > 0}>
                     <GradeValue grade={bimester.grade} recovery={bimester.recovery} />
                   </ReportTableCell>,
-                  <ReportTableCell key={`${BIMESTER_LABELS[index]}-absences`}>{bimester.absences}</ReportTableCell>,
+                  <ReportTableCell key={`${BIMESTER_LABELS[index]}-absences`}>
+                    {bimester.absences ?? <EmptyValue label="Faltas não lançadas" />}
+                  </ReportTableCell>,
                 ])}
 
                 <ReportTableCell divider>
-                  <ScoreBadge tone={average.tone} srLabel={average.label}>
-                    {formatAverage(row.finalAverage)}
-                  </ScoreBadge>
+                  {row.finalAverage === null || !average ? (
+                    <EmptyValue symbol="N/A" label="Média só depois de todas as notas lançadas" />
+                  ) : (
+                    <ScoreBadge tone={average.tone} srLabel={average.label}>
+                      {formatAverage(row.finalAverage)}
+                    </ScoreBadge>
+                  )}
                 </ReportTableCell>
                 <ReportTableCell>
-                  <ScoreBadge tone={absences.tone} srLabel={absences.label}>
-                    {row.totalAbsences}
-                  </ScoreBadge>
+                  {row.totalAbsences === null || !absences ? (
+                    <EmptyValue label="Faltas não lançadas" />
+                  ) : (
+                    <ScoreBadge tone={absences.tone} srLabel={absences.label}>
+                      {row.totalAbsences}
+                    </ScoreBadge>
+                  )}
                 </ReportTableCell>
               </ReportTableRow>
             );
@@ -158,6 +168,12 @@ export default function ReportCardTable({ rows, year }: ReportCardTableProps) {
             { tone: 'destructive', label: '18 faltas ou mais' },
           ]}
         />
+        {rows.some((row) => row.finalAverage === null) && (
+          <p className="text-xs text-(--text-muted)">
+            N/A: a média final aparece quando as notas dos quatro bimestres forem lançadas. "—" indica nota ou faltas
+            ainda não lançadas.
+          </p>
+        )}
       </div>
     </div>
   );

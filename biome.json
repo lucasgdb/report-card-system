@@ -6,7 +6,16 @@
     "useIgnoreFile": true
   },
   "files": {
-    "includes": ["**", "!**/__generated__", "!**/build", "!**/*.svg", "!.claude", "!apps/server/schema.graphql"]
+    "includes": [
+      "**",
+      "!**/__generated__",
+      "!**/build",
+      "!**/*.svg",
+      "!.claude",
+      "!apps/server/schema.graphql",
+      "!apps/server/persisted-operations",
+      "!apps/server/src/database/types.ts"
+    ]
   },
   "formatter": {
     "enabled": true,

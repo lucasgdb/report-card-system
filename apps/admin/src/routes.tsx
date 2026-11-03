@@ -5,7 +5,7 @@ import EnvironmentLayout from '~/layout/EnvironmentLayout';
 import SuspenseRouter from './components/SuspenseRouter';
 
 // The signed-in shell (menu, notifications) isn't needed on the login, so it loads with the first page.
-const NavbarLayout = React.lazy(() => import('./layout/Navbar/NavbarLayout'));
+const AdminLayout = React.lazy(() => import('./layout/AdminLayout'));
 
 const ErrorPage = React.lazy(() => import('~/pages/Error/ErrorPage'));
 const ForgotPasswordPage = React.lazy(() => import('~/pages/ForgotPassword/ForgotPasswordPage'));
@@ -22,7 +22,7 @@ export default function AppRoutes() {
     <HashRouter>
       <Routes>
         <Route path="/" element={<EnvironmentLayout />}>
-          <Route element={<NavbarLayout />}>
+          <Route element={<AdminLayout />}>
             <Route index element={<StudentListPage />} />
 
             <Route path="/solicitacoes-de-recuperacao-de-senha" element={<StudentPasswordRecoveryRequestListPage />} />

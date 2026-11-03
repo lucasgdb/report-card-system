@@ -3,9 +3,10 @@
   "compilerOptions": {
     "strict": true,
     "types": ["node"],
-    "paths": {
-      "~/*": ["./src/*"]
-    }
+    "lib": ["ESNext"],
+    // Node runs these sources as they are (type stripping): only erasable TypeScript syntax.
+    "erasableSyntaxOnly": true,
+    "verbatimModuleSyntax": true
   },
-  "include": ["src", "@types", "migrations", "seeds", "knexfile.ts", "tsdown.config.mts"]
+  "include": ["src", "tsdown.config.ts"]
 }

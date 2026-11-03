@@ -28,8 +28,8 @@ const inputGroupAddonVariants = cva(
   {
     variants: {
       align: {
-        'inline-start': 'order-first pl-3.5 has-[>button]:ml-[-0.3rem] has-[>kbd]:ml-[-0.15rem]',
-        'inline-end': 'order-last pr-3.5 has-[>button]:mr-[-0.3rem] has-[>kbd]:mr-[-0.15rem]',
+        'inline-start': 'order-first pl-3.5 has-[>button]:pl-[3px] has-[>kbd]:ml-[-0.15rem]',
+        'inline-end': 'order-last pr-3.5 has-[>button]:pr-[3px] has-[>kbd]:mr-[-0.15rem]',
         'block-start':
           'order-first w-full justify-start px-2.5 pt-2 group-has-[>input]/input-group:pt-2 [.border-b]:pb-2',
         'block-end': 'order-last w-full justify-start px-2.5 pb-2 group-has-[>input]/input-group:pb-2 [.border-t]:pt-2',
@@ -68,8 +68,9 @@ const inputGroupButtonVariants = cva('flex items-center gap-2 text-sm shadow-non
     size: {
       xs: "h-6 gap-1 rounded-[calc(var(--radius)-3px)] px-1.5 [&>svg:not([class*='size-'])]:size-3.5",
       sm: '',
-      'icon-xs': 'size-6 rounded-[calc(var(--radius)-3px)] p-0 has-[>svg]:p-0',
-      'icon-sm': "size-8 p-0 has-[>svg]:p-0 [&>svg:not([class*='size-'])]:size-5",
+      'icon-xs': "size-7 rounded-md p-0 has-[>svg]:p-0 [&>svg:not([class*='size-'])]:size-4",
+      // About 85% of the field's height, with the same gap around it on every side.
+      'icon-sm': "size-9 rounded-md p-0 has-[>svg]:p-0 [&>svg:not([class*='size-'])]:size-5",
     },
   },
   defaultVariants: {
@@ -115,8 +116,9 @@ function InputGroupInput({ className, ...props }: React.ComponentProps<'input'>)
     <Input
       data-slot="input-group-control"
       className={cn(
+        // The browser's own search clear button is hidden: pages add an InputGroupButton instead.
         // h-full keeps the control inside the group's border (autofill paints the control's whole box).
-        'h-full flex-1 rounded-none border-0 bg-transparent shadow-none ring-0 enabled:hover:ring-0 focus-visible:ring-0 disabled:bg-transparent aria-invalid:ring-0 dark:bg-transparent dark:disabled:bg-transparent',
+        'h-full flex-1 rounded-none border-0 [&::-webkit-search-cancel-button]:appearance-none bg-transparent shadow-none ring-0 enabled:hover:ring-0 focus-visible:ring-0 disabled:bg-transparent aria-invalid:ring-0 dark:bg-transparent dark:disabled:bg-transparent',
         className
       )}
       {...props}

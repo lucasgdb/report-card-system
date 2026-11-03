@@ -7,7 +7,9 @@ const StudentLoginMutation = graphql`
         field
         userMessage
       }
-      jwtToken
+      student {
+        id
+      }
     }
   }
 `;

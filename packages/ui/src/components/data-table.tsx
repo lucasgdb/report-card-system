@@ -51,6 +51,8 @@ export type DataTableProps<Row extends GridValidRowModel> = {
   columnVisibilityModel?: Record<string, boolean>;
   /** `false` makes the table fill its container (empty space goes above the footer). */
   autoHeight?: boolean;
+  /** Shown in place of the rows when there are none (e.g. nothing matches a search). */
+  emptyMessage?: React.ReactNode;
   className?: string;
 };
 
@@ -76,6 +78,7 @@ export function DataTable<Row extends GridValidRowModel>({
   columns,
   columnVisibilityModel,
   autoHeight = true,
+  emptyMessage = 'Nada por aqui ainda.',
   className,
 }: DataTableProps<Row>) {
   const visibleColumns = useMemo(
@@ -121,7 +124,8 @@ export function DataTable<Row extends GridValidRowModel>({
   };
 
   const columnStyle = (column: GridColDef<Row>): React.CSSProperties =>
-    column.flex ? { minWidth: column.width ?? 50 } : { width: column.width ?? 100 };
+    // Flexible columns grow with the table; `width` is the least they keep (the table scrolls below it).
+    column.flex ? { minWidth: column.width ?? 160 } : { width: column.width ?? 100 };
 
   return (
     <div
@@ -186,6 +190,13 @@ export function DataTable<Row extends GridValidRowModel>({
           </TableRow>
         </TableHeader>
         <TableBody>
+          {rows.length === 0 && (
+            <TableRow className="hover:bg-transparent">
+              <TableCell colSpan={visibleColumns.length} className="h-32 text-center text-muted-foreground">
+                {emptyMessage}
+              </TableCell>
+            </TableRow>
+          )}
           {table.getRowModel().rows.map((row) => (
             <TableRow key={row.id} className="h-[52px]">
               {visibleColumns.map((column) => {

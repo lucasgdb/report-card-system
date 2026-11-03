@@ -7,7 +7,9 @@ const AdminLoginMutation = graphql`
         field
         userMessage
       }
-      jwtToken
+      admin {
+        id
+      }
     }
   }
 `;
